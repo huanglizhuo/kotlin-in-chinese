@@ -1,4 +1,3 @@
-# Summary
 
 * [准备开始](GettingStarted/README.md)
    * [基本语法](GettingStarted/Basic_Syntax.md)
