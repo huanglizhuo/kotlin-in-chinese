@@ -1,7 +1,3 @@
-# kotlin-in-chinese
-kotlin-in-chinese学习笔记
-边学边翻译
-
 
 * [准备开始](GettingStarted/README.md)
    * [基本语法](GettingStarted/Basic_Syntax.md)
@@ -14,7 +10,7 @@ kotlin-in-chinese学习笔记
    * [控制流](Basics/ControlFlow.md)
    * [返回与跳转](Basics/ReturnsAndJumps.md)
 
-*[类和对象](ClassesAndObjects/README.md)
+* [类和对象](ClassesAndObjects/README.md)
    * [类和继承](ClassesAndObjects/ClassesAndInheritance.md.md)
    * [属性和字段](ClassesAndObjects/PropertiesAndFilds.md)
    * [接口](ClassesAndObjects/Interfaces.md)
@@ -48,18 +44,18 @@ kotlin-in-chinese学习笔记
    * [反射](Other/Reflection.md)
    * [动态类型](Other/Dynamic-Type.md)
 
-*[参考](Reference/README.md)
+* [参考](Reference/README.md)
 
-*[互用性](Interop/README.md)
+* [互用性](Interop/README.md)
    * [动态类型](Interop/Java-Interop.md)
 
-*[工具](Tools/README.md)
+* [工具](Tools/README.md)
    * [Kotlin代码文档](Tools/Documenting-Kotlin-Code.md)
    * [使用Maven](Tools/Using-Maven.md)
    * [使用Ant](Tools/Using-Ant.md.md)
    * [使用Griffon](Tools/Using-Griffon.md)
    * [使用Gradle](Tools/Using-Gradle.md)
 
-*[FAQ](FAQ/README.md)
+* [FAQ](FAQ/README.md)
    * [与java对比](FAQ/Comparison2Java.md)
    * [与Scala对比](FAQ/Comparison2Scala.md)
