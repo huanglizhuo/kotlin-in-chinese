@@ -5,10 +5,10 @@
    * [编码风格](GettingStarted/Coding-Conventions.md)
 
 * [基础](Basics/README.md)
-   * [基本类型](Basics/BasicTypes.md)
+   * [基本类型](Basics/Basic-Types.md)
    * [包](Basics/Packages.md)
-   * [控制流](Basics/ControlFlow.md)
-   * [返回与跳转](Basics/ReturnsAndJumps.md)
+   * [控制流](Basics/Control-Flow.md)
+   * [返回与跳转](Basics/Returns-and-Jumps.md)
 
 * [类和对象](ClassesAndObjects/README.md)
    * [类和继承](ClassesAndObjects/ClassesAndInheritance.md.md)
