@@ -1,8 +1,8 @@
 
 * [准备开始](GettingStarted/README.md)
    * [基本语法](GettingStarted/Basic-Syntax.md)  完成
-   * [常用术语](GettingStarted/Idioms.md)
-   * [编码风格](GettingStarted/Coding-Conventions.md)
+   * [习惯用语](GettingStarted/Idioms.md) 完成
+   * [编码风格](GettingStarted/Coding-Conventions.md) 完成
 
 * [基础](Basics/README.md)
    * [基本类型](Basics/BasicTypes.md)
