@@ -1,6 +1,6 @@
 
 * [准备开始](GettingStarted/README.md)
-   * [基本语法](GettingStarted/Basic_Syntax.md)
+   * [基本语法](GettingStarted/Basic-Syntax.md)  完成
    * [常用术语](GettingStarted/Idioms.md)
    * [编码风格](GettingStarted/Codong_Conventions.md)
 
