@@ -2,7 +2,7 @@
 * [准备开始](GettingStarted/README.md)
    * [基本语法](GettingStarted/Basic-Syntax.md)
    * [常用术语](GettingStarted/Idioms.md)
-   * [编码风格](GettingStarted/Codong_Conventions.md)
+   * [编码风格](GettingStarted/Coding-Conventions.md)
 
 * [基础](Basics/README.md)
    * [基本类型](Basics/BasicTypes.md)
