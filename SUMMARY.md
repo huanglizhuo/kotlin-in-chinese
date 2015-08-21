@@ -11,7 +11,7 @@
    * [返回与跳转](Basics/Returns-and-Jumps.md)
 
 * [类和对象](ClassesAndObjects/README.md)
-   * [类和继承](ClassesAndObjects/ClassesAndInheritance.md.md)
+   * [类和继承](ClassesAndObjects/Classes-and-Inheritance.md.md)
    * [属性和字段](ClassesAndObjects/PropertiesAndFilds.md)
    * [接口](ClassesAndObjects/Interfaces.md)
    * [可见性](ClassesAndObjects/VisibilityModifiers.md)
