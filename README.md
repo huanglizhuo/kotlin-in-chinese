@@ -15,8 +15,8 @@
    * [属性和字段](ClassesAndObjects/Properties-and-Filds.md)　完成
    * [接口](ClassesAndObjects/Interfaces.md) 完成
    * [可见性修饰词](ClassesAndObjects/Visibility-Modifiers.md) 完成
-   * [继承](ClassesAndObjects/Extensions.md)
-   * [数据对象](ClassesAndObjects/DataClasses.md)
+   * [扩展](ClassesAndObjects/Extensions.md)
+   * [数据对象](ClassesAndObjects/Data-Classes.md)
    * [泛型](ClassesAndObjects/Generics.md)
    * [泛化函数](ClassesAndObjects/GenericsFunctions.md)
    * [泛化约束](ClassesAndObjects/GenericsConstrains.md)
