@@ -61,4 +61,5 @@ interface Collection<E> ... {
 
 这个通配符参数 `? extents T` 意味着这个方法接受一些 T 类型的子类而非 T 类型本身。这就是说我们可以安全的读 `T's`(这里表示 T 子类元素的集合)，但不能写，因为我们不知道 T 的子类究竟是什么样的，针对这样的限制，我们很想要这样的行为：`Collection<String>` 是 `Collection<? extens Object>`的子类。In “clever words”, the wildcard with an extends-bound (upper bound) makes the type covariant.
 
-明白这招为什么可以奏效很简单：如果你只能从集合中取东西，然后使用一系列集合，并且从对象中读取信息是 ok 的。相反，如果你只能给集合中添加东西
+The key to understanding why this trick works is rather simple: if you can only take items from a collection, then using a collection of Strings and reading Objects from it is fine. Conversely, if you can only put items into the collection, it’s OK to take a collection of Objects and put Strings into it: in Java we have List<? super String> a supertype of List<Object>.
+

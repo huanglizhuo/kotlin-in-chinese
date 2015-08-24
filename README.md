@@ -18,8 +18,6 @@
    * [扩展](ClassesAndObjects/Extensions.md)
    * [数据对象](ClassesAndObjects/Data-Classes.md)
    * [泛型](ClassesAndObjects/Generics.md)
-   * [泛化函数](ClassesAndObjects/GenericsFunctions.md)
-   * [泛化约束](ClassesAndObjects/GenericsConstrains.md)
    * [嵌套类](ClassesAndObjects/NestedClasses.md)
    * [枚举类](ClassesAndObjects/EnumClasses.md)
    * [对象表达式和声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md)
