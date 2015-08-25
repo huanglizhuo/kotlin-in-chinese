@@ -50,10 +50,10 @@
 * [工具](Tools/README.md)
    * [Kotlin代码文档](Tools/Documenting-Kotlin-Code.md)
    * [使用Maven](Tools/Using-Maven.md)
-   * [使用Ant](Tools/Using-Ant.md.md)
+   * [使用Ant](Tools/Using-Ant.md)
    * [使用Griffon](Tools/Using-Griffon.md)
    * [使用Gradle](Tools/Using-Gradle.md)
 
 * [FAQ](FAQ/README.md)
-   * [与java对比](FAQ/Comparison2Java.md)
+   * [与java对比](FAQ/Comparison2java.md)
    * [与Scala对比](FAQ/Comparison2Scala.md)
