@@ -15,17 +15,17 @@
    * [属性和字段](ClassesAndObjects/Properties-and-Filds.md)　完成
    * [接口](ClassesAndObjects/Interfaces.md) 完成
    * [可见性修饰词](ClassesAndObjects/Visibility-Modifiers.md) 完成
-   * [扩展](ClassesAndObjects/Extensions.md)
-   * [数据对象](ClassesAndObjects/Data-Classes.md)
+   * [扩展](ClassesAndObjects/Extensions.md) 完成
+   * [数据对象](ClassesAndObjects/Data-Classes.md) 完成
    * [泛型](ClassesAndObjects/Generics.md)
-   * [嵌套类](ClassesAndObjects/NestedClasses.md)
-   * [枚举类](ClassesAndObjects/EnumClasses.md)
-   * [对象表达式和声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md)
-   * [委派模式](ClassesAndObjects/Delegation.md)
-   * [委派属性](ClassesAndObjects/DelegationProperties.md)
+   * [嵌套类](ClassesAndObjects/NestedClasses.md) 完成
+   * [枚举类](ClassesAndObjects/EnumClasses.md) 完成
+   * [对象表达式和声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md) 完成
+   * [委派模式](ClassesAndObjects/Delegation.md) 完成
+   * [委派属性](ClassesAndObjects/DelegationProperties.md) 完成
 
 * [函数和lambda表达式](FunctionsAndLambdas/README.md)
-   * [函数](FunctionsAndLambdas/Functions.md)
+   * [函数](FunctionsAndLambdas/Functions.md) 完成
    * [高级函数和lambda表达式](FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md.md)
    * [内联函数](FunctionsAndLambdas/InlineFunctions.md)
 
