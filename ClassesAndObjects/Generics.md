@@ -63,3 +63,4 @@ interface Collection<E> ... {
 
 The key to understanding why this trick works is rather simple: if you can only take items from a collection, then using a collection of Strings and reading Objects from it is fine. Conversely, if you can only put items into the collection, it’s OK to take a collection of Objects and put Strings into it: in Java we have List<? super String> a supertype of List<Object>.
 
+未完
