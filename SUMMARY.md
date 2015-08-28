@@ -26,12 +26,12 @@
 
 * [函数和lambda表达式](FunctionsAndLambdas/README.md)
    * [函数](FunctionsAndLambdas/Functions.md) 完成
-   * [高级函数和lambda表达式](FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md.md)
+   * [高级函数和lambda表达式](FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
    * [内联函数](FunctionsAndLambdas/InlineFunctions.md)
 
 * [其它](Other/README.md)
    * [多重申明](Other/Multi-Declarations.md)
-   * [Ranges](FunctionsAndLambdas/Ranges.md)
+   * [Ranges](Other/Ranges.md)
    * [类型检查和自动转换](Other/Type-Checks-and-Casts.md)
    * [This表达式](Other/This-Expression.md)
    * [等式](Other/Equality.md)
