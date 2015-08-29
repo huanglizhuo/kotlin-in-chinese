@@ -1,3 +1,4 @@
+还在翻译中，如果有兴趣一起翻译，欢迎 fork 
 
 * [准备开始](GettingStarted/README.md) 完成
    * [基本语法](GettingStarted/Basic-Syntax.md) 
