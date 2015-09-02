@@ -31,17 +31,17 @@
    * [内联函数](FunctionsAndLambdas/InlineFunctions.md) 完成
 
 * [其它](Other/README.md)
-   * [多重申明](Other/Multi-Declarations.md)
-   * [Ranges](Other/Ranges.md)
-   * [类型检查和自动转换](Other/Type-Checks-and-Casts.md)
-   * [This表达式](Other/This-Expression.md)
-   * [等式](Other/Equality.md)
-   * [运算符重载](Other/Opetator-overloading.md)
-   * [空安全](Other/Null-Safety.md)
-   * [异常](Other/Exceptions.md)
-   * [注解](Other/Annotations.md)
-   * [反射](Other/Reflection.md)
-   * [动态类型](Other/Dynamic-Type.md)
+   * [多重申明](Other/Multi-Declarations.md) 完成
+   * [Ranges](Other/Ranges.md) 
+   * [类型检查和自动转换](Other/Type-Checks-and-Casts.md) 完成
+   * [This表达式](Other/This-Expression.md) 完成
+   * [等式](Other/Equality.md) 完成
+   * [运算符重载](Other/Opetator-overloading.md) 完成
+   * [空安全](Other/Null-Safety.md) 完成
+   * [异常](Other/Exceptions.md) 完成
+   * [注解](Other/Annotations.md) 完成
+   * [反射](Other/Reflection.md) 完成
+   * [动态类型](Other/Dynamic-Type.md) 完成
 
 * [参考](Reference/README.md)
 
