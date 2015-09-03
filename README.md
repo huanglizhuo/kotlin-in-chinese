@@ -46,7 +46,7 @@
 * [参考](Reference/README.md)
 
 * [互用性](Interop/README.md)
-   * [动态类型](Interop/Java-Interop.md)
+   * [与 java 交互](Interop/Java-Interop.md)
 
 * [工具](Tools/README.md)
    * [Kotlin代码文档](Tools/Documenting-Kotlin-Code.md)
