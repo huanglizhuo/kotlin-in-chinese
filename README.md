@@ -44,7 +44,8 @@
    * [动态类型](Other/Dynamic-Type.md) 完成
 
 * [参考](Reference/README.md)
-
+    * [API][Reference/API-Reference.md]
+    * [语法](Reference/Grammar.md)
 * [互用性](Interop/README.md)
    * [与 java 交互](Interop/Java-Interop.md)
 
