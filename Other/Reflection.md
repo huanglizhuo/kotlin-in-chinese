@@ -4,20 +4,20 @@
 
 >On the Java platform, the runtime component required for using the reflection features is distributed as a separate JAR file (kotlin-reflect.jar). This is done to reduce the required size of the runtime library for applications that do not use reflection features. If you do use reflection, please make sure that the .jar file is added to the classpath of your project.
 
-###类参考
+###类引用
 
-最基本的反射特性就是得到运行时的类参考。要获取参考并使之成为静态类可以使用字面类语法：
+最基本的反射特性就是得到运行时的类引用。要获取引用并使之成为静态类可以使用字面类语法：
 
 ```kotlin
 val c = MyClass::class
 ```
 
-参考是一种 [KClass](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html)类型的值。你可以使用 `KClass.properties` 和 `KClass.extensionProperties` 获取类和父类的所有属性参考的列表。
+引用是一种 [KClass](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-class/index.html)类型的值。你可以使用 `KClass.properties` 和 `KClass.extensionProperties` 获取类和父类的所有属性引用的列表。
 
-注意这与 java 类的参考是不一样的。参看 [java interop section](http://kotlinlang.org/docs/reference/java-interop.html#object-methods)
+注意这与 java 类的引用是不一样的。参看 [java interop section](http://kotlinlang.org/docs/reference/java-interop.html#object-methods)
 
 
-###函数参考
+###函数引用
 
 当有一个像下面这样的函数声明时：
 
@@ -48,7 +48,7 @@ fun compose<A, B, C>(f: (B) -> C, g: (A) -> B): (A) -> C {
 }
 ```
 
-它返回一个由俩个传递进去的函数的组合。现在你可以把它用在可调用的参考上了：
+它返回一个由俩个传递进去的函数的组合。现在你可以把它用在可调用的引用上了：
 
 ```kotlin
 fun length(s: String) = s.size
@@ -58,7 +58,7 @@ val strings = listOf("a", "ab", "abc")
 println(strings.filter(oddLength)) // Prints "[a, abc]"
 ```
 
-###属性参考
+###属性引用
 
 在 kotlin 中访问顶级类的属性，我们也可以使用 `::` 操作符：
 
@@ -79,7 +79,7 @@ fun main(args: Array<String>) {
 
 ```kotlin
 class A(val p: Int)
- 
+
 fun main(args: Array<String>) {
     val prop = A::p
     println(prop.get(A(1))) // prints "1"
@@ -91,7 +91,7 @@ fun main(args: Array<String>) {
 ```kotlin
 val String.lastChar: Char
   get() = this[size - 1]
- 
+
 fun main(args: Array<String>) {
   println(String::lastChar.get("abc")) // prints "c"
 }
@@ -103,18 +103,18 @@ fun main(args: Array<String>) {
 
 ```kotlin
 import kotlin.reflect.jvm.*
- 
+
 class A(val p: Int)
- 
+
 fun main(args: Array<String>) {
     println(A::p.javaGetter) // prints "public final int A.getP()"
     println(A::p.javaField)  // prints "private final int A.p"
 }
 ```
 
-###构造函数参考
+###构造函数引用
 
-构造函数可以像方法或属性那样参考。只需要使用 `::` 操作符并加上类名。下面的函数是一个没有参数并且返回类型是 `Foo`:
+构造函数可以像方法或属性那样引用。只需要使用 `::` 操作符并加上类名。下面的函数是一个没有参数并且返回类型是 `Foo`:
 
 ```kotlin
 calss Foo
