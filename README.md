@@ -22,8 +22,8 @@
    * [嵌套类](ClassesAndObjects/NestedClasses.md) 完成
    * [枚举类](ClassesAndObjects/EnumClasses.md) 完成
    * [对象表达式和声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md) 完成
-   * [委派模式](ClassesAndObjects/Delegation.md) 完成
-   * [委派属性](ClassesAndObjects/DelegationProperties.md) 完成
+   * [代理模式](ClassesAndObjects/Delegation.md) 完成
+   * [代理属性](ClassesAndObjects/DelegationProperties.md) 完成
 
 * [函数和lambda表达式](FunctionsAndLambdas/README.md)
    * [函数](FunctionsAndLambdas/Functions.md) 完成
