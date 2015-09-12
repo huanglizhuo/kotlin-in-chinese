@@ -49,12 +49,12 @@
 * [互用性](Interop/README.md)
    * [与 java 交互](Interop/Java-Interop.md)
 
-* [工具](Tools/README.md)
+* [工具](Tools/README.md) 
    * [Kotlin代码文档](Tools/Documenting-Kotlin-Code.md)
    * [使用Maven](Tools/Using-Maven.md) 完成
-   * [使用Ant](Tools/Using-Ant.md)
-   * [使用Griffon](Tools/Using-Griffon.md)
-   * [使用Gradle](Tools/Using-Gradle.md)
+   * [使用Ant](Tools/Using-Ant.md) 完成
+   * [使用Griffon](Tools/Using-Griffon.md) 完成
+   * [使用Gradle](Tools/Using-Gradle.md)　完成
 
 * [FAQ](FAQ/README.md)
    * [与java对比](FAQ/Comparison2java.md)
