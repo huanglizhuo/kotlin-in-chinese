@@ -57,5 +57,5 @@
    * [使用Gradle](Tools/Using-Gradle.md)　完成
 
 * [FAQ](FAQ/README.md)
-   * [与java对比](FAQ/Comparison2java.md)
-   * [与Scala对比](FAQ/Comparison2Scala.md)
+   * [与java对比](FAQ/Comparison2java.md) 完成
+   * [与Scala对比](FAQ/Comparison2Scala.md) 完成
