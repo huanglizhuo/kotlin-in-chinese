@@ -1,8 +1,7 @@
 基本翻译结束，欢迎指出错误和翻译不好的地方 
 
-欢迎　fork fork fork
+star fork
 
-如果觉得有帮助一定要 star star star 重要的事情说三遍 :)
 
 * [准备开始](GettingStarted/README.md) 完成
    * [基本语法](GettingStarted/Basic-Syntax.md) 
