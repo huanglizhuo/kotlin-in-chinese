@@ -1,6 +1,10 @@
+Kotlin 1.0 Beta 发布了 快来看看[新特性吧](https://github.com/JetBrains/kotlin/releases/tag/build-1.0.0-beta-1103)
+
+这意味着主要语言变化已经完成 快快加入Kotlin大军吧！
+
+![kotlin](./kotlin.beta.png)
+
 基本翻译结束，欢迎指出错误和翻译不好的地方 
-
-
 
 * [准备开始](GettingStarted/README.md) 
    * [基本语法](GettingStarted/Basic-Syntax.md) 
