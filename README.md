@@ -1,6 +1,5 @@
 基本翻译结束，欢迎指出错误和翻译不好的地方 
 
-star fork
 
 
 * [准备开始](GettingStarted/README.md) 
