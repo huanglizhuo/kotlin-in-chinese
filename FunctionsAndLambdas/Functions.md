@@ -2,7 +2,7 @@
 
 ###函数声明
 
-在 kotlin 中用关键字 fun 声明函数：
+在 kotlin 中用关键字 `fun` 声明函数：
 
 ```kotlin
 fun double(x: Int): Int {
@@ -15,22 +15,26 @@ fun double(x: Int): Int {
 通过传统的方法调用函数
 
 ```kotlin
-val result = double(2)
+val result = double(2) 
 ```
-通过 . 注解调用
+
+通过`.`调用成员函数 
 
 ```kotlin
-Sample().foo()
+Sample().foo() // 创建Sample类的实例,调用foo方法
 ```
-###中缀标记
-函数也可以通过中缀表达式调用，只要符和下面的规则
+
+###中缀符号
+
+在满足以下条件时,函数也可以通过中缀符号进行调用:
 
 >　它们是成员函数或者是[扩展函数](http://kotlinlang.org/docs/reference/extensions.html)
 >　只有一个参数
+>  使用`infix`关键词进行标记
 
 ```kotlin
 //给 Int 定义一个扩展方法
-fun Int.shl(x: Int): Int {
+infix fun Int.shl(x: Int): Int {
 ...
 }
 
@@ -51,7 +55,7 @@ fun powerOf(number: Int, exponent: Int) {
 
 ###默认参数
 
-函数参数可以有默认参数。这样相比其他语言可以减少重载。
+函数参数可以设置默认值,当参数被忽略时会使用默认值。这样相比其他语言可以减少重载。
 
 ```kotlin
 fun read(b: Array<Byte>, off: Int = 0, len: Int = b.size() ) {
@@ -59,9 +63,11 @@ fun read(b: Array<Byte>, off: Int = 0, len: Int = b.size() ) {
 }
 ```
 
+默认值可以通过在type类型后使用`=`号进行赋值
+
 ###命名参数
 
-在调用函数时可以参数可以命名。这对于有很多参数或只有一个的函数来说很方便。
+在调用函数时可以参数可以命名。这对于那种有大量参数的函数是很方便的.
 
 下面是一个例子：
 
@@ -77,7 +83,7 @@ fun reformat(str: String, normalizeCase: Boolean = true,upperCaseFirstLetter: Bo
 
 >reformat(str)
 
-然而当调用非默认参数是就会像下面这样：
+然而当调用非默认参数是就需要像下面这样：
 
 ```kotlin
 reformat(str, true, true, false, '_')
@@ -100,9 +106,11 @@ reformat(str,
 reformat(str, wordSeparator = '_')
 ```
 
+注意,命名参数语法不能够被用于调用Java函数中,因为Java的字节码不能确保方法参数命名的不变性
+
 ###不带返回值的参数
 
-如果函数不返回一个有用的值，就可以返回一个 `Unit` .`Unit` 不必有明确的返回
+如果函数不会返回任何有用值，那么他的返回类型就是 `Unit` .`Unit` 是一个只有唯一值`Unit`的类型.这个值并不需要被直接返回:
 
 ```kotlin
 fun printHello(name: String?): Unit {
@@ -123,7 +131,7 @@ fun printHello(name: String?) {
 ```
 ###单表达是函数
 
-当函数只返回一个表达式时，大括号可以省略并且函数体可以在 ＝ 后面只直接指定
+当函数只返回单个表达式时，大括号可以省略并在 = 后面定义函数体
 
 ```kotlin
 fun double(x: Int): Int = x*2
@@ -131,15 +139,11 @@ fun double(x: Int): Int = x*2
 
 ###明确返回类型
 
-下面的例子中必须有明确返回值：
-
->带表达式的函数体必须是 public 或 protected 。这些都被认为是公共接口的 API 。没有明确的函数返回值会使得不小心就会改变类型值。这就是为什么 [属性](http://kotlinlang.org/docs/reference/properties.html#getters-and-setters) 必须要有明确的的类型
-
->函数体有大括号的话就必须有明确的返回值，除非它想要返回 `Uint` 。Kotlin 不会对带大括号的函数做返回类型推断，因为这样的函数可能会很复杂。
+下面的例子中必须有明确返回类型,除非他是返回 `Unit`类型的值,Kotlin 并不会对函数体重的返回类型进行推断,因为函数体中可能有复杂的控制流,他的返回类型未必对读者可见(甚至对编译器而言也有可能是不可见的)：
 
 ###变长参数
 
-函数最后一个参数可以用 vararg 注解标记：
+函数的参数(通常是最后一个参数)可以用 vararg 修饰符进行标记：
 
 ```kotlin
 fun asList<T>(vararg ts: T): List<T> {
@@ -150,13 +154,13 @@ fun asList<T>(vararg ts: T): List<T> {
 }
 ```
 
-允许给函数传递可变长度的参数：
+标记后,允许给函数传递可变长度的参数：
 
 ```kotlin
 val list = asList(1, 2, 3)
 ```
 
-只有一个参数可以注解为 `vararg` 。可以是最后一个参数，或倒数第二个，因为最后一个参数有可能是一个函数(允许在外面传递 lambda 表达式)
+只有一个参数可以被标注为 `vararg` 。加入`vararg`并不是列表中的最后一个参数,那么后面的参数需要通过命名参数语法进行传值,再或者如果这个参数是函数类型,就需要通过lambda法则.
 
 当调用变长参数的函数时，我们可以一个一个的传递参数，比如 `asList(1, 2, 3)`，或者我们要传递一个 array 的内容给函数，我们就可以使用 * 前缀操作符：
 
@@ -167,11 +171,11 @@ val list = asList(-1, 0, *a, 4)
 
 ###函数范围
 
-Kotlin 中可以在文件个根级声明函数，这就意味者你不用创建一个类来持有函数。除了顶级函数，Kotlin 函数可以声明为局部的，作为成员函数或扩展函数。
+Kotlin 中可以在文件顶级声明函数，这就意味者你不用像在Java,C#或是Scala一样创建一个类来持有函数。除了顶级函数，Kotlin 函数可以声明为局部的，作为成员函数或扩展函数。
 
 ####局部函数
 
-Kotlin 支持局部函数，比如在另一个函数使用另一函数。
+Kotlin 支持局部函数，比如在一个函数包含另一函数。
 
 ```kotlin
 fun dfs(graohL Graph) {
@@ -279,4 +283,4 @@ private fun findFixPoint(): Double {
 }
 ```
 
-使用 `tailRecursive` 注解必须在最后一个操作中掉用自己。在递归调用代码后面是不允许有其它代码的，并且也不可以用 try/catch/finall 块。当前的尾递归只在 JVM 的后端中可以用
+使用 `tailRecursive` 注解必须在最后一个操作中掉用自己。在递归调用代码后面是不允许有其它代码的，并且也不可以在 try/catch/finall 块中进行使用。当前的尾递归只在 JVM 的后端中可以用
