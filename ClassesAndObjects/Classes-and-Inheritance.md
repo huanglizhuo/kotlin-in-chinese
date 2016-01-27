@@ -118,7 +118,7 @@ val customer = Customer("Joe Smith")
 >构造函数和初始化代码块
 [函数](http://kotlinlang.org/docs/reference/functions.html)
 [属性](http://kotlinlang.org/docs/reference/properties.html)
-[包含内不类](http://kotlinlang.org/docs/reference/nested-classes.html)
+[包含内部类](http://kotlinlang.org/docs/reference/nested-classes.html)
 [对象声明](http://kotlinlang.org/docs/reference/object-declarations.html)
 
 ###继承
