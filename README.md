@@ -1,10 +1,20 @@
-Kotlin 1.0 Beta 发布了 快来看看[新特性吧](https://github.com/JetBrains/kotlin/releases/tag/build-1.0.0-beta-1103)
+##号外 号外 Kotlin 1.0 正式发布
 
-这意味着主要语言变化已经完成 快快加入Kotlin大军吧！
+Android 世界的 Swift 终于发布1.0版本 
 
-![kotlin](./kotlin.beta.png)
+Kotlin 是一个实用性很强的语言，专注于互通，安全，简洁，工具健全...
 
-基本翻译结束，欢迎指出错误和翻译不好的地方 
+无缝支持 Java+Kotlin 项目，可以更少的使用样版代码，确保类型安全。
+
+[Kotlin 1.0 更新日志](http://blog.jetbrains.com/kotlin/2016/02/kotlin-1-0-released-pragmatic-language-for-jvm-and-android/)
+
+还换了新图标 :)
+
+Kotlin LOC (软件规模代码行) 如下图
+
+![kotlin](./kotlinLOC.png)
+
+近期我会重新读一遍 Kotlin 官方文档 并对现在的这份文档进行更新(又立 flag 了) -- 2016.2.16
 
 * [准备开始](GettingStarted/README.md) 
    * [基本语法](GettingStarted/Basic-Syntax.md) 
