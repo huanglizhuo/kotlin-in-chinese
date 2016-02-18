@@ -41,7 +41,7 @@ public fun sum(a: Int, b: Int): Int = a + b
 函数返回一个没有意义的值：
 
 ```java
-fun printSum(a: Int, b: Int): Uint{
+fun printSum(a: Int, b: Int): Unit{
 	print( a + b)
 }
 ```
