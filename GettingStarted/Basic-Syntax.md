@@ -229,13 +229,13 @@ fun main(args: Array<Atring>){
 
 ```java
 fun cases(obj: Any) {
-	when (obj) {
-	1	-> print("one")
-	"hello"	-> print("Greeting")
-	is Long	-> print("Long")
-	! is Long	-> print("Not a string")
-	else	-> print("Ubknow")
-	}
+    when (obj) {
+        1 -> print("one")
+        "hello" -> print("Greeting")
+        is Long -> print("Long")
+        !is Long -> print("Not a string")
+        else -> print("Unknown")
+    }
 }
 ```
 
@@ -278,8 +278,11 @@ if (text in names) //将会调用nemes.contains(text)方法
 使用字面函数过滤和映射集合：
 
 ```java
-names filter { it.startsWith("A") } sortBy { it } map { it.toUperCase() }
-forEach { print(it) }
+names
+     .filter { it.startsWith("A") }
+     .sortedBy { it }
+     .map { it.toUpperCase() }
+     .forEach { print(it) }
 ```
 
 参看[高级函数和lambda表达式](http://kotlinlang.org/docs/reference/lambdas.html)
