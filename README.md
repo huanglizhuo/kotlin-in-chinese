@@ -8,7 +8,7 @@ Kotlin 是一个实用性很强的语言，专注于互通，安全，简洁，�
 
 [Kotlin 1.0 更新日志](http://blog.jetbrains.com/kotlin/2016/02/kotlin-1-0-released-pragmatic-language-for-jvm-and-android/)
 
-还换了新图标 :)
+还换了logo :)
 
 Kotlin LOC (软件规模代码行) 如下图
 
