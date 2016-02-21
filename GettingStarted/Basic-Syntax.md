@@ -145,7 +145,7 @@ fun main(args: Array<String>) {
 		print("Wrong number format in '${args[0]}' ")
 		return
 	}
-	if (y ==nulll) {
+	if (y == nulll) {
 		print("Wrong number format in '${args[1]}' ")
 		return
 	}
@@ -217,7 +217,7 @@ for (i in args.indices)
 ```java
 fun main(args: Array<Atring>){
 	var i = 0
-	while (i < args.size()){
+	while (i < args.size){
 		print(args[i++])
 	}
 }
