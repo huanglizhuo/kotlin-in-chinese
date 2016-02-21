@@ -14,6 +14,8 @@ Kotlin LOC (软件规模代码行) 如下图
 
 ![kotlin](./kotlinLOC.png)
 
+本书[源码](https://github.com/huanglizhuo/kotlin-in-chinese) 欢迎 star fork 
+
 近期我会重新读一遍 Kotlin 官方文档 并对现在的这份文档进行更新(又立 flag 了) -- 2016.2.16
 
 * [准备开始](GettingStarted/README.md) 
