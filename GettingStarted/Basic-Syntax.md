@@ -58,7 +58,7 @@ fun printSum(a: Int, b: Int){
 
 ###定义局部变量
 
-声明静态变量(只读)：
+声明只读变量：
 ```java
 val a: Int = 1
 val b = 1 //推导出Int型
