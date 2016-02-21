@@ -145,7 +145,7 @@ fun main(args: Array<String>) {
 		print("Wrong number format in '${args[0]}' ")
 		return
 	}
-	if (y == nulll) {
+	if (y == null) {
 		print("Wrong number format in '${args[1]}' ")
 		return
 	}
