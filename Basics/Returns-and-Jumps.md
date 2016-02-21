@@ -6,7 +6,7 @@ Kotlin 有三种机构跳转操作符
 > break 结束最近的闭合循环
 > continue 跳到最近的闭合循环的下一次循环
 
-###break 和 contimue 标签
+###break 和 continue 标签
 
 在 Kotlin 中表达式可以添加标签。标签通过 @ 结尾来表示，比如：`abc@`，`fooBar@` 都是有效的(参看[语法](http://kotlinlang.org/docs/reference/grammar.html#label))。使用标签语法只需像这样：
 
