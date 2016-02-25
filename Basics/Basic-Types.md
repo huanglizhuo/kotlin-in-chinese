@@ -159,7 +159,7 @@ fun decimalDigitValue(c: Char): Int {
 
 ###Array
 
-Arrays在 Kotin 中由 `Array` 类表示，有 `get` 和 `set` 方法(通过运算符重载可以由[]调用)，以及 `size` 方法，以及一些常用的函数：
+Arrays在 Kotlin 中由 `Array` 类表示，有 `get` 和 `set` 方法(通过运算符重载可以由[]调用)，以及 `size` 方法，以及一些常用的函数：
 
 ```kotlin
 class Array<T> private () {
