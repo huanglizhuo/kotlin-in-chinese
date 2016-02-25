@@ -29,7 +29,7 @@ fun sum(a: Int , b: Int) : Int{
 该函数有一个表达式函数体以及一个推断型的返回值：
 
 ```java
-fun sum(a: Int, b Int) = a + b
+fun sum(a: Int, b: Int) = a + b
 ```
 
 要想函数在模块外面可见就必须有一个确定的返回值：
