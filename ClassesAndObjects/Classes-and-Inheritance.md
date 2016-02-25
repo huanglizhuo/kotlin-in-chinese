@@ -5,7 +5,7 @@
 在 Kotlin 中类用 class 声明：
 
 ```kotlin
-calss Invoice{
+class Invoice{
 }
 ```
 
@@ -20,14 +20,14 @@ class Empty
 在 Kotlin 中类可以有一个主构造函数以及多个二级构造函数。主构造函数是类头的一部分：跟在类名后面(可以有可选的参数)。
 
 ```kotlin
-calss Person constructor(firstName: String){
+class Person constructor(firstName: String){
 }
 ```
 
 如果主构造哦函数没有注解或可见性说明，则 constructor 关键字是可以省略：
 
 ```korlin
-calss Person(firstName: String){
+class Person(firstName: String){
 }
 ```
 
@@ -44,7 +44,7 @@ class Customer(name: String){
 注意主构造函数的参数可以用在初始化块内，也可以用在类的属性初始化声明处：
 
 ```kotlin
-calss Customer(name: String) {
+class Customer(name: String) {
 	val customerKry = name.toUpperCase()
 }
 ```
@@ -61,7 +61,7 @@ class Person(val firstName: String, val lastName: String, var age: Int){
 如果构造函数有注解或可见性声明，则 constructor 关键字是不可少的，并且注解应该在前：
 
 ```kotlin
-calss Customer public inject constructor (name: String) {...}
+class Customer public inject constructor (name: String) {...}
 ```
 
 参看[可见性](http://kotlinlang.org/docs/reference/visibility-modifiers.html#constructors)
@@ -98,7 +98,7 @@ class DontCreateMe private constructor () {
 >注意：在 JVM 虚拟机中，如果主构造函数的所有参数都有默认值，编译器会生成一个附加的无参的构造函数。
 
 ```kotlin
-calss Customer(val customerName: String = "")
+class Customer(val customerName: String = "")
 ```
 
 ###创建类的实例
@@ -126,7 +126,7 @@ val customer = Customer("Joe Smith")
 Kotin 中所有的类都有共同的父类 Any ，下面是一个没有父类声明的类：
 
 ```kotlin
-class Example //　隐式继承与 Any
+class Example //　隐式继承于 Any
 ```
 
 `Any` 不是 `java.lang.Object`；事实上它除了 `equals()`,`hashCode()`以及`toString()`外没有任何成员了。参看[ Java interoperability]( Java interoperability)了解更多详情。
@@ -144,7 +144,7 @@ class Derived(p: Int) : Base(p)
 如果类没有主构造函数，则必须在每一个构造函数中用 super 关键字初始化基类，或者在代理另一个构造函数做这件事。注意在这种情形中不同的二级构造函数可以调用基类不同的构造方法：
 
 ```kotlin
-calss MyView : View {
+class MyView : View {
 	constructor(ctx: Context) : super(ctx) {
 	}
 	constructor(ctx: Context, attrs: AttributeSet) : super(ctx,attrs) {
@@ -169,7 +169,7 @@ class Derived() : Base() {
 }
 ```
 
-对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示／如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要门不要重写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
+对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示／如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要重写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
 
 标记为 override 的成员是 open的，它可以在子类中被重写。如果你不想被重写就要加 final:
 
@@ -218,7 +218,7 @@ class C() : A() , B{
 
 ###抽象类
 
-一个类或依稀些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。因此当子类继承抽象成员时，它并不算一个实现：
+一个类或一些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。因此当子类继承抽象成员时，它并不算一个实现：
 
 ```kotlin
 abstract class A {
