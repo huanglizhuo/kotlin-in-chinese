@@ -24,7 +24,7 @@ class Person constructor(firstName: String){
 }
 ```
 
-如果主构造哦函数没有注解或可见性说明，则 constructor 关键字是可以省略：
+如果主构造函数没有注解或可见性说明，则 constructor 关键字是可以省略：
 
 ```korlin
 class Person(firstName: String){
