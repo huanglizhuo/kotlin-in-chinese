@@ -71,7 +71,7 @@ class Customer public inject constructor (name: String) {...}
 类也可以有二级构造函数，该函数前缀是 constructor:
 
 ```kotlin
-calss Person {
+class Person {
 	constructor(parent: Person) {
 		parent.children.add(this)
 	}
