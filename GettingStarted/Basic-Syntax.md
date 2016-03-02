@@ -8,7 +8,7 @@
 
 在源文件的开头定义包名：
 
-```java
+```kotlin
 package my.demo
 import java.util.*
 //...
@@ -16,32 +16,26 @@ import java.util.*
 
 包名不必和文件夹路径一致：源文件可以放在任意位置。
 
-参看[包名](../Basics/Packages.md)
+更多请参看 [包(package)](../Basics/Packages.md)
 ###定义函数
 
-该函数接受俩个 int 型参数，并返回一个 int ：
+定义一个函数接受两个 int 型参数，返回值为 int ：
 
-```java
+```kotlin
 fun sum(a: Int , b: Int) : Int{
 	return a + b
 }
 ```
 
-该函数有一个表达式函数体以及一个推断型的返回值：
+该函数只有一个表达式函数体以及一个自推导型的返回值：
 
-```java
+```kotlin
 fun sum(a: Int, b: Int) = a + b
 ```
 
-要想函数在模块外面可见就必须有一个确定的返回值：
+返回一个没有意义的值：
 
-```java
-public fun sum(a: Int, b: Int): Int = a + b
-```
-
-函数返回一个没有意义的值：
-
-```java
+```kotlin
 fun printSum(a: Int, b: Int): Unit{
 	print( a + b)
 }
@@ -49,47 +43,63 @@ fun printSum(a: Int, b: Int): Unit{
 
 Uint 的返回类型可以省略：
 
-```java
+```kotlin
 fun printSum(a: Int, b: Int){
 	print( a + b)
 }
 ```
 
-更多请参看[函数](http://kotlinlang.org/docs/reference/functions.html)
+更多请参看[函数](../FunctionsAndLambdas/Functions.md)
 
 ###定义局部变量
 
 声明只读变量：
-```java
+```kotlin
 val a: Int = 1
 val b = 1 //推导出Int型
-val c: Int //当没有初始化值时类型是必须声明的
+val c: Int //当没有初始化值时必须声明 类型
 c = 1 // 赋值
 ```
 
 可变的变量：
 
-```java
+```kotlin
  var x = 5 //推导出Int型
 x += 1
 ```
 
-更多请参看[属性和字段](http://kotlinlang.org/docs/reference/properties.html)
+更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Filds.md)
+
+###注释
+
+与 java 和 javaScript 一样，Kotlin 支持单行注释和块注释。
+
+```kotlin
+// 单行注释
+
+/*  哈哈哈哈
+    这是块注释 */
+```
+
+与 java 不同的是 Kotlin 的 块注释可以级联。
+
+参看[文档化 Kotlin 代码](http://kotlinlang.org/docs/reference/kotlin-doc.html)学习更多关于文档化注释的语法。
 
 ###使用字符串模板
 
-```java
+```kotlin
 fun main(args: Array<String>) {
 	if (args.size == 0) return
+
 	print("First argument: ${args[0]}")
 }
 ```
 
-更多请参看[字符串模板](http://kotlinlang.org/docs/reference/basic-types.html#string-templates)
+更多请参看[字符串模板](../Basics/Basic-Types.md)
 
 ###使用条件表达式
 
-```java
+```kotlin
 fun max(a: Int, b: Int): Int {
 	if (a > b)
 		return a
@@ -100,19 +110,19 @@ fun max(a: Int, b: Int): Int {
 
 把if当表达式：
 
-```java
+```kotlin
 	fun max(a: Int,  b: Int) = if (a > b) a else b
 ```
 
-更多请参看[if表达式](http://kotlinlang.org/docs/reference/control-flow.html#if-expression)
+更多请参看[if表达式](../Basics/Control-Flow.md)
 
 ###使用可空变量以及空值检查
 
-当空值可能出现时应该明确指出可空。
+当空值可能出现时应该明确指出该引用可空。
 
-下面的函数是当 str 不能转成 Int 值时返回空:
+下面的函数是当 str 中不包含整数时返回空:
 
-```java
+```kotlin
 fun parseInt(str : String): Int?{
 	//...
 }
@@ -120,7 +130,7 @@ fun parseInt(str : String): Int?{
 
 使用一个返回可空值的函数：
 
-```java
+```kotlin
 fun main(args: Array<String>) {
 	if (args.size <2 ){
 		print("Two integers expected")
@@ -130,7 +140,7 @@ fun main(args: Array<String>) {
 	val x = parseInt(args[0])
 	val y = parseInt(args[1])
 
-	//直接使用 x*y 会因为它们中有空值产生错误
+	//直接使用 x*y 会产生错误因为它们中有可能会有空值
 	if (x != null && y !=null){
 		//x 和 y 将会在空值检测后自动转换为非空值
 		print(x * y)
@@ -140,7 +150,7 @@ fun main(args: Array<String>) {
 
 或者这样
 
-```java
+```kotlin
 	//...
 	if (x == null) {
 		print("Wrong number format in '${args[0]}' ")
@@ -154,13 +164,13 @@ fun main(args: Array<String>) {
 	print(x * y)
 ```
 
-更多请参看[空安全](http://kotlinlang.org/docs/reference/null-safety.html)
+更多请参看[空安全](../Other/Null-Safety.md)
 
 ###使用值检查并自动转换
 
-使用 is 操作符检查一个表达式是否是某个类型的实例。如果对一个不可变的局部变量属性检查是否是某种特定类型，就没有必要明确转换：
+使用 is 操作符检查一个表达式是否是某个类型的实例。如果对不可变的局部变量或属性进行过了类型检查，就没有必要明确转换：
 
-```java
+```kotlin
 fun getStringLength(obj: Any): Int? {
 	if ( obj is string ){
 		//obj 将会在这个分支中自动转换为 String 类型
@@ -173,7 +183,7 @@ fun getStringLength(obj: Any): Int? {
 
 或者这样
 
-```java
+```kotlin
 fun getStringLength(obj: Any): Int? {
 	if ( obj is string )
 		return obj.length
@@ -185,7 +195,7 @@ fun getStringLength(obj: Any): Int? {
 
 甚至可以这样
 
-```java
+```kotlin
 fun getStringLength(obj: Any): Int? {
 	if (obj is String && obj.length > 0)
 		return obj.Length
@@ -193,11 +203,11 @@ fun getStringLength(obj: Any): Int? {
 }
 ```
 
-更多请参看 [类](http://kotlinlang.org/docs/reference/classes.html) 和 [类型转换](http://kotlinlang.org/docs/reference/typecasts.html)
+更多请参看 [类](../ClassesAndObjects/Classes-and-Inheritance.md) 和 [类型转换](../Other/Type-Checks-and-Casts.md)
 
 ###使用循环
 
-```java
+```kotlin
 fun main(args: Array<String>){
 	for (arg in args)
 		print(arg)
@@ -206,7 +216,7 @@ fun main(args: Array<String>){
 
 或者
 
-```java
+```kotlin
 for (i in args.indices)
 	print(args[i])
 ```
@@ -215,7 +225,7 @@ for (i in args.indices)
 
 ###使用 while 循环
 
-```java
+```kotlin
 fun main(args: Array<Atring>){
 	var i = 0
 	while (i < args.size){
@@ -228,7 +238,7 @@ fun main(args: Array<Atring>){
 
 ###使用 when 表达式
 
-```java
+```kotlin
 fun cases(obj: Any) {
     when (obj) {
         1 -> print("one")
@@ -246,14 +256,14 @@ fun cases(obj: Any) {
 
 检查 in 操作符检查数值是否在某个范围内：
 
-```java
+```kotlin
 if (x in 1..y-1)
 	print("OK")
 ```
 
 检查数值是否在范围外：
 
-```java
+```kotlin
 if (x !in 0..array.lastIndex)
 	print("Out")
 ```
@@ -264,21 +274,21 @@ if (x !in 0..array.lastIndex)
 
 对一个集合进行迭代：
 
-```java
+```kotlin
 for (name in names)
 	println(name)
 ```
 
 使用 in 操作符检查集合中是否包含某个对象
 
-```java
+```kotlin
 if (text in names) //将会调用nemes.contains(text)方法
 	print("Yes)
 ```
 
 使用字面函数过滤和映射集合：
 
-```java
+```kotlin
 names
      .filter { it.startsWith("A") }
      .sortedBy { it }
