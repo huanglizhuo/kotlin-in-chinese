@@ -10,18 +10,13 @@ data class Customer(val name: String,val email: String)
 
 给 Customer 类提供如下方法：
 
->  --为所有属性添加 getters 并为所有变量添加 setters
+>  --为所有属性添加 getters ，如果是类为 var 类型同时添加 setters
 >  --equals()
 >  --haseCode()
 >  --toString()
 >  --copy()
->  --component1() , component1() , ... 参看[数据类](http://kotlinlang.org/docs/reference/data-classes.html)
+>  --component1() , component1() , ... 参看[数据类](../ClassesAndObjects/Data-Classes.md)
 
-###声明局部 final 变量
-
-```kotlin
-val a = foo()
-```
 ###函数默认值
 
 ```kotlin
@@ -88,15 +83,15 @@ println(map["key"])
 map["key"] = value
 ```
 
-###Lazy property(不知道怎么翻译 :(  )
+###懒属性(延迟加载)
 
 ```kotlin
-val p: String by Delegates.lazy {
+val p: String by lazy {
 
 }
 ```
 
-###扩展函数(给现有类增添新函数)
+###扩展函数
 ```kotlin
 fun String.spcaceToCamelCase() { ... }
 "Convert this to camelcase".spcaceToCamelCase()
@@ -109,23 +104,22 @@ object Resource {
 }
 ```
 
-###If not null shorthand(没想到怎么翻译)
+###如果为空则... 的简写
 ```kotlin
- val files = File("Test").listFiles()
+val files = File("Test").listFiles()
 println(files?.size)
 ```
 
-###If not null and else shorthand(没想到怎么翻译)
+###如果为空...否则... 的简写
 ```kotlin
  val files = File("test").listFiles()
 println(files?.size ?: "empty")
 ```
 
-###如果为空执行某操作
+###如果声明为空执行某操作
 ```kotlin
 val data = ...
-val email = data["email"] ?: throw
-IllegalStateException("Email is missing!")
+val email = data["email"] ?: throw IllegalStateException("Email is missing!")
 ```
 
 ###如果不为空执行某操作
@@ -148,7 +142,7 @@ fun transform(color: String): Int {
 }
 ```
 
-###返回 try-catch 语句块
+###返回 try-catch 表达式
 
 ```kotlin
 fun test() {
@@ -160,7 +154,7 @@ fun test() {
 	//处理 result
 }
 ```
-###返回 if 判断
+### if 表达式
 ```kotlin
 fun foo(param: Int){
 	val result = if (param == 1) {
@@ -170,6 +164,14 @@ fun foo(param: Int){
 	} else {
 		"three"
 	}
+}
+```
+
+###方法使用生成器模式返回 Unit
+
+```kotlin
+fun arrOfMinusOnes(size: Int): IntArray{
+	return IntArray(size).apply{ fill(-1) }
 }
 ```
 
@@ -184,7 +186,7 @@ fun theAnswer(): Int {
 	return 42
 }
 ```
-这个可以和其它习语组合成高效简洁的代码。譬如说 when 表达式：
+这个可以和其它习惯用语组合成高效简洁的代码。譬如说 when 表达式：
 
 ```kotlin
 fun transform(color: String): Int = when (color) {
@@ -192,5 +194,32 @@ fun transform(color: String): Int = when (color) {
 	"Green" -> 1
 	"Blue" -> 2
 	else -> throw IllegalArgumentException("Invalid color param value")
+}
+```
+###利用 with 调用一个对象实例的多个方法
+
+```kotlin
+class Turtle { fun penDown()
+	fun penUp()
+	fun turn(degrees: Double) 
+	fun forward(pixels: Double)
+}
+val myTurtle = Turtle()
+with(myTurtle) { //draw a 100 pix square
+	penDown()
+	for(i in 1..4) {
+        forward(100.0)
+		turn(90.0) 
+	}
+	penUp() 
+}
+```
+
+###Java 7’s try with resources
+
+```kotlin
+val stream = Files.newInputStream(Paths.get("/some/file.txt"))
+stream.buffered().reader().use { reader ->
+	println(reader.readText()) 
 }
 ```
