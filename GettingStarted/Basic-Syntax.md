@@ -296,4 +296,4 @@ names
      .forEach { print(it) }
 ```
 
-参看[高级函数和lambda表达式](http://kotlinlang.org/docs/reference/lambdas.html)
+参看[高级函数和lambda表达式](../FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
