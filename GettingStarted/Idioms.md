@@ -78,7 +78,7 @@ val list = listOf("a", "b", "c")
 ###只读map
 
 ```kotllin
-val map = maoOf("a" to 1, "b" to 2, "c" to 3)
+val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
 ###获取map中的值
