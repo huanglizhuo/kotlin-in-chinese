@@ -1,3 +1,11 @@
+2015.3.4
+
+gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlin.glowface.net/)啦 :)
+
+国内服务器由[稀土掘金](http://gold.xitu.io/about)赞助
+
+稀土掘金：挖掘最优质的互联网技术 / 联合编辑每日精选内容 / 移动端优质阅读体验
+
 ##号外 号外 Kotlin 1.0 正式发布
 
 Android 世界的 Swift 终于发布1.0版本 
