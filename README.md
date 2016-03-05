@@ -6,6 +6,12 @@ gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlin.glo
 
 稀土掘金：挖掘最优质的互联网技术 / 联合编辑每日精选内容 / 移动端优质阅读体验
 
+本书源码在 [github](https://github.com/huanglizhuo/kotlin-in-chinese) 
+
+记得要 start 
+
+发现有翻译的不好的或者错误欢迎到 github 提issue
+
 ##号外 号外 Kotlin 1.0 正式发布
 
 Android 世界的 Swift 终于发布1.0版本 
