@@ -154,9 +154,9 @@ class MyView : View {
 
 open 注解与java 中的 final相反:它允许别的类继承这个类。默认情形下，kotlin 中所有的类都是 final 对应 [Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html) ：Design and document for inheritance or else prohibit it.
 
-###重写成员
+###复写成员
 
-像之前提到的，我们在 kotlin 中坚持做明确的事。不像 java ，kotlin 需要把可以重写的成员都明确注解出来，并且重写它们：
+像之前提到的，我们在 kotlin 中坚持做明确的事。不像 java ，kotlin 需要把可以复写的成员都明确注解出来，并且重写它们：
 
 ```kotlin
 open class Base {
@@ -169,9 +169,9 @@ class Derived() : Base() {
 }
 ```
 
-对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示／如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要重写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
+对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示／如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要复写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
 
-标记为 override 的成员是 open的，它可以在子类中被重写。如果你不想被重写就要加 final:
+标记为 override 的成员是 open的，它可以在子类中被复写。如果你不想被重写就要加 final:
 
 ```kotlin
 open class AnotherDerived() : Base() {
@@ -181,7 +181,7 @@ open class AnotherDerived() : Base() {
 
 **等等！我现在怎么hack我的库？！**
 
-有个问题就是如何重写子类中那些作者不想被重写的类，下面介绍一些令人讨厌的方案。
+有个问题就是如何复写子类中那些作者不想被重写的类，下面介绍一些令人讨厌的方案。
 
 我们认为这是不好的，原因如下：
 
@@ -191,9 +191,9 @@ open class AnotherDerived() : Base() {
 
 >如果你真的想 hack 那么你可以在 java 中写好 hack 方案，然后在 kotlin 中调用 (参看[java调用](http://kotlinlang.org/docs/reference/java-interop.html))，专业的构架可以很好的做到这一点
 
-###重写规则
+###复写规则
 
-在 kotlin 中，实现继承通常遵循如下规则：如果一个类从它的直接父类继承了同一个成员的多个实现，那么它必须重写这个成员并且提供自己的实现(或许只是直接用了继承来的实现)。为表示使用父类中提供的方法我们用 `super<Base>`表示:
+在 kotlin 中，实现继承通常遵循如下规则：如果一个类从它的直接父类继承了同一个成员的多个实现，那么它必须复写这个成员并且提供自己的实现(或许只是直接用了继承来的实现)。为表示使用父类中提供的方法我们用 `super<Base>`表示:
 
 ```kotlin
 open class A {
@@ -214,7 +214,7 @@ class C() : A() , B{
 }
 ```
 
-可以同时从 A B 中继承方法，而且 C 继承 a() 或 b() 的实现没有任何问题，因为它们都只有一个实现。但是 f() 有俩个实现，因此我们在 C 中必须重写 f() 并且提供自己的实现来消除歧义。
+可以同时从 A B 中继承方法，而且 C 继承 a() 或 b() 的实现没有任何问题，因为它们都只有一个实现。但是 f() 有俩个实现，因此我们在 C 中必须复写 f() 并且提供自己的实现来消除歧义。
 
 ###抽象类
 
@@ -230,12 +230,12 @@ interface B {
 }
 
 class C() : A() , B {
-	//我们是必须重写 f() 方法
+	//我们是必须复写 f() 方法
 }
 ```
 记住我们不用给一个抽象类或函数添加 open 注解，它默认是带着的。
 
-我们可以用一个抽象成员去重写一个带 open 注解的非抽象方法。
+我们可以用一个抽象成员去复写一个带 open 注解的非抽象方法。
 
 ```kotlin
 open class Base {
