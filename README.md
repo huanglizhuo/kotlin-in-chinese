@@ -1,6 +1,6 @@
 2015.3.4
 
-gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlin.glowface.net/)啦 :)
+gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.com/)啦 :)
 
 国内服务器由[掘金](http://gold.xitu.io)赞助
 
