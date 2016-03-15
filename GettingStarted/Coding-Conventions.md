@@ -16,8 +16,6 @@
 
 > --public 方法要写说明文档，这样它就可以出现在 Kotllin Doc 中
 
-不要在属性前面加前缀，比如 _ 或者 m_ 这样的符号。如果你要访问一个属性的支持字段，使用 $ 前缀: $foo 指定 foo 属性的支持字段；千万不要给私有属性起名为 _foo
-
 ###冒号
 
 在冒号区分类型和父类型中要有空格，在实例和类型之间是没有空格的：
@@ -27,6 +25,16 @@ interface Foo<out T : Any> : Bar {
 	fun foo(a: Int): T
 }
 ```
+
+###Lambdas
+
+在 Lambdas 表达式中，大括号与表达式间要有空格，箭头与参数和函数体间要有空格。尽可能的把 lambda 放在括号外面传入
+
+```Kotlin
+list.filter { it > 10 }.map { element -> element * 2 }
+```
+
+在 lambdas 中建议使用 `it` 而不是申明参数。有嵌套多个参数的 lambdas 中参数是必须明确申明的
 
 ###Unit
 

@@ -1,8 +1,8 @@
 ##习惯用语
 
-这里是一些在kotlin中随机但经常使用的习语。如果你有特别喜欢的习语想要贡献出来，赶快发起 pull request 吧。
+这里是一些在 Kotlin 中经常使用的习语。如果你有特别喜欢的习语想要贡献出来，赶快发起 pull request 吧。
 
-###创建DTO's(POJO's/POCO's)
+###创建DTO's(POJO's/POCO's)  数据类 
 
 ```kotlin
 data class Customer(val name: String,val email: String)
@@ -10,12 +10,12 @@ data class Customer(val name: String,val email: String)
 
 给 Customer 类提供如下方法：
 
->  --为所有属性添加 getters ，如果是类为 var 类型同时添加 setters
->  --equals()
->  --haseCode()
->  --toString()
->  --copy()
->  --component1() , component1() , ... 参看[数据类](../ClassesAndObjects/Data-Classes.md)
+>  --为所有属性添加 getters ，如果为 var 类型同时添加 setters
+>  --`equals()`
+>  --`haseCode()`
+>  --`toString()`
+>  --`copy()`
+>  --`component1()` , `component1()` , ... 参看[数据类](../ClassesAndObjects/Data-Classes.md)
 
 ###函数默认值
 
@@ -27,7 +27,6 @@ fun foo(a: Int = 0, b: String = "") {...}
 
 ```kotlin
 val positives = list.filter { x -> x >0 }
-
 ```
 或者更短：
 
@@ -76,7 +75,7 @@ val list = listOf("a", "b", "c")
 val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
-###获取map中的值
+###访问 map 
 
 ```kotllin
 println(map["key"])
@@ -142,7 +141,7 @@ fun transform(color: String): Int {
 }
 ```
 
-###返回 try-catch 表达式
+###try-catch 表达式
 
 ```kotlin
 fun test() {
@@ -199,7 +198,8 @@ fun transform(color: String): Int = when (color) {
 ###利用 with 调用一个对象实例的多个方法
 
 ```kotlin
-class Turtle { fun penDown()
+class Turtle {
+	fun penDown()
 	fun penUp()
 	fun turn(degrees: Double) 
 	fun forward(pixels: Double)
