@@ -40,14 +40,14 @@ fun <T> MutableList<T>.swap(x: Int, y: Int) {
 需要强调的是扩展函数是静态分发的，举个例子,它们并不是接受者类型的虚拟方法。如果有同名同参数的成员函数和扩展函数，调用的时候必然会使用成员函数，比如：
 
 ```kotlin
-class C {
-	fun foo() { Println("member") }
-}
 
-func C.foo { println("extension") }
+class C {
+	fun foo() { println("member") }
+}
+fun C.foo() { println("extension") }
 ```
 
-当我们对C的实力c调用`c.foo()`的时候,他会输出"member",而不是"extension"
+当我们对C的实例c调用`c.foo()`的时候,他会输出"member",而不是"extension"
 
 ###空接受者
 
