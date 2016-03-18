@@ -31,7 +31,7 @@ fun <T> MutableList<T>.swap(x: Int, y: Int) {
 }
 ```
 
-我们在函数名前声明了通用类型，从而使他可以接受任何参数。参看[通用函数](http://kotlinlang.org/docs/reference/generics.html)。
+我们在函数名前声明了通用类型，从而使他可以接受任何参数。参看[泛型函数](http://kotlinlang.org/docs/reference/generics.html)。
 
 ###扩展是**静态**解析的
 
