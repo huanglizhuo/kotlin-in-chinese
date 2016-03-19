@@ -136,6 +136,12 @@ fun printHello(name: String?) {
 ```kotlin
 fun double(x: Int): Int = x*2
 ```
+在编译器可以推断出返回值类型的时候,返回值的类型可以省略:
+
+```kotlin
+fun double(x: Int) = x * 2
+
+```
 
 ###明确返回类型
 
@@ -178,13 +184,14 @@ Kotlin 中可以在文件顶级声明函数，这就意味者你不用像在Java
 Kotlin 支持局部函数，比如在一个函数包含另一函数。
 
 ```kotlin
-fun dfs(graohL Graph) {
-	fun dfs(current: Vertex, vistied: Set<Vertex>) {
-		if (!visited.add(current)) return 
-		for (v in currnt.neighbors)
-			dfs(v, visited)
-	}
-	dfs(graoh,vertices[0], HashSet())
+fun dfs(graph: Graph) {
+  fun dfs(current: Vertex, visited: Set<Vertex>) {
+    if (!visited.add(current)) return
+    for (v in current.neighbors)
+      dfs(v, visited)
+  }
+
+  dfs(graph.vertices[0], HashSet())
 }
 ```
 
@@ -262,10 +269,10 @@ fun sigletonArray<T>(item: T): Array<T> {
 
 ###尾递归函数
 
-Kotlin 支持函数式编程的尾递归。这个允许一些算法可以通过循环而不是递归解决问题，从而避免了栈溢出。当函数被标记为 `tailRecursive` 时，编译器会优化递归，并用高效迅速的循环代替它。
+Kotlin 支持函数式编程的尾递归。这个允许一些算法可以通过循环而不是递归解决问题，从而避免了栈溢出。当函数被标记为 `tailrec` 时，编译器会优化递归，并用高效迅速的循环代替它。
 
 ```kotlin
-tailRecursive fun findFixPoint(x: Double = 1.0): Double 
+tailrec fun findFixPoint(x: Double = 1.0): Double 
 	= if (x == Math.cos(x)) x else findFixPoint(Math.cos(x))
 ```
 
@@ -283,4 +290,4 @@ private fun findFixPoint(): Double {
 }
 ```
 
-使用 `tailRecursive` 注解必须在最后一个操作中掉用自己。在递归调用代码后面是不允许有其它代码的，并且也不可以在 try/catch/finall 块中进行使用。当前的尾递归只在 JVM 的后端中可以用
+使用 `tailrec` 修饰符必须在最后一个操作中调用自己。在递归调用代码后面是不允许有其它代码的，并且也不可以在 try/catch/finall 块中进行使用。当前的尾递归只在 JVM 的后端中可以用
