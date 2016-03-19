@@ -43,6 +43,7 @@ fun <T> MutableList<T>.swap(x: Int, y: Int) {
 
 class C {
 	fun foo() { println("member") }
+
 }
 fun C.foo() { println("extension") }
 ```
