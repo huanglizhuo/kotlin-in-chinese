@@ -85,8 +85,7 @@ val Foo.bar = 1 //error: initializers are not allowed for extension properties
 class MyClass {
 	companion object {} 
 }
-
-fun Myclass.Companion,foo() {
+fun MyClass.Companion.foo(){
 
 }
 ```
