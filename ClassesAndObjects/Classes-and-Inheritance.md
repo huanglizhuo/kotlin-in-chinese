@@ -134,7 +134,7 @@ class Example //　隐式继承于 Any
 声明一个明确的父类，需要在类头后加冒号再加父类：
 
 ```kotlin
-open class Base(p: Ont)
+open class Base(p: Int)
 
 class Derived(p: Int) : Base(p)
 ```
