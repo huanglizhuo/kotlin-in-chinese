@@ -8,7 +8,7 @@ gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.
 
 本书源码在 [github](https://github.com/huanglizhuo/kotlin-in-chinese) 
 
-记得要点 star
+记得要点 star star star
 
 发现有翻译的不好的或者错误欢迎到 github 提 issue
 
@@ -27,8 +27,6 @@ Kotlin 是一个实用性很强的语言，专注于互通，安全，简洁，�
 Kotlin LOC (软件规模代码行) 如下图
 
 ![kotlin](./kotlinLOC.png)
-
-本书源码在 github 托管[地址](https://github.com/huanglizhuo/kotlin-in-chinese) 欢迎 star fork 
 
 近期我会重新读一遍 Kotlin 官方文档 并对现在的这份文档进行更新(又立 flag 了) -- 2016.2.16
 
