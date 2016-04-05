@@ -17,7 +17,7 @@ class Empty
 
 ###构造函数
 
-在 Kotlin 中类可以有一个主构造函数以及多个二级构造函数。主构造函数是类头的一部分：跟在类名后面(可以有可选的参数)。
+在 Kotlin 中类可以有一个主构造函数以及多个二级构造函数。主构造函数是类头的一部分：跟在类名后面(可以有可选的类型参数)。
 
 ```kotlin
 class Person constructor(firstName: String){
@@ -49,31 +49,31 @@ class Customer(name: String) {
 }
 ```
 
-事实上，声明属性并在主构造函数中初始化它们可以更简单：
+事实上，声明属性并在主构造函数中初始化,在 Kotlin 中有更简单的语法：
 
 ```kotlin
 class Person(val firstName: String, val lastName: String, var age: Int){
 }
 ```
 
-像平常的属性，在主构造函数中的属性可以是可变或只读。
+像普通的属性，在主构造函数中的属性可以是可变或只读。
 
-如果构造函数有注解或可见性声明，则 constructor 关键字是不可少的，并且注解应该在前：
+如果构造函数有注解或可见性声明，则 constructor 关键字是不可少的，并且可见性应该在前：
 
 ```kotlin
-class Customer public inject constructor (name: String) {...}
+class Customer public @inject constructor (name: String) {...}
 ```
 
 参看[可见性](http://kotlinlang.org/docs/reference/visibility-modifiers.html#constructors)
 
 ###二级构造函数
 
-类也可以有二级构造函数，该函数前缀是 constructor:
+类也可以有二级构造函数，需要加前缀 constructor:
 
 ```kotlin
-class Person {
+class Person { 
 	constructor(parent: Person) {
-		parent.children.add(this)
+		parent.children.add(this) 
 	}
 }
 ```
@@ -95,7 +95,7 @@ class DontCreateMe private constructor () {
 }
 ```
 
->注意：在 JVM 虚拟机中，如果主构造函数的所有参数都有默认值，编译器会生成一个附加的无参的构造函数。
+>注意：在 JVM 虚拟机中，如果主构造函数的所有参数都有默认值，编译器会生成一个附加的无参的构造函数，这个构造函数会直接使用默认值。这使得 Kotlin 可以更简单的使用像 Jackson 或者 JPA 这样使用无参构造函数来创建类实例的库。
 
 ```kotlin
 class Customer(val customerName: String = "")
@@ -116,10 +116,14 @@ val customer = Customer("Joe Smith")
 
 类可以包含：
 >构造函数和初始化代码块
-[函数](http://kotlinlang.org/docs/reference/functions.html)
-[属性](http://kotlinlang.org/docs/reference/properties.html)
-[包含内部类](http://kotlinlang.org/docs/reference/nested-classes.html)
-[对象声明](http://kotlinlang.org/docs/reference/object-declarations.html)
+
+>[函数](FunctionsAndLambdas/Functions.md) 
+
+>[属性](ClassesAndObjects/Properties-and-Filds.md)　
+
+>[内部类](ClassesAndObjects/NestedClasses.md) 
+
+>[对象声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md) 
 
 ###继承
 
@@ -152,7 +156,7 @@ class MyView : View {
 }
 ```
 
-open 注解与java 中的 final相反:它允许别的类继承这个类。默认情形下，kotlin 中所有的类都是 final 对应 [Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html) ：Design and document for inheritance or else prohibit it.
+open 注解与java 中的 final相反:它允许别的类继承这个类。默认情形下，kotlin 中所有的类都是 final ,对应 [Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html) ：Design and document for inheritance or else prohibit it.
 
 ###复写成员
 
@@ -169,7 +173,7 @@ class Derived() : Base() {
 }
 ```
 
-对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示／如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要复写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
+对于 `Derived.v()` 来说 override 注解是必须的。如果没有加的话，编译器会提示。如果没有 open 注解，像 `Base.nv()` ,在子类中声明一个同样的函数是不合法的，要么加 override 要么不要复写。在 final 类(就是没有open注解的类)中，open 类型的成员是不允许的。
 
 标记为 override 的成员是 open的，它可以在子类中被复写。如果你不想被重写就要加 final:
 
@@ -218,22 +222,7 @@ class C() : A() , B{
 
 ###抽象类
 
-一个类或一些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。因此当子类继承抽象成员时，它并不算一个实现：
-
-```kotlin
-abstract class A {
-	abstract fun f()
-}
-
-interface B {
-	open fun f() { print("B") }
-}
-
-class C() : A() , B {
-	//我们是必须复写 f() 方法
-}
-```
-记住我们不用给一个抽象类或函数添加 open 注解，它默认是带着的。
+一个类或一些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。记住我们不用给一个抽象类或函数添加 open 注解，它默认是带着的。
 
 我们可以用一个抽象成员去复写一个带 open 注解的非抽象方法。
 
@@ -254,3 +243,30 @@ abstract class Derived : Base() {
 如果你要写一个没有实例类就可以调用的方法，但需要访问到类内部(比如说一个工厂方法)，你可以把它写成它所在类的一个成员(you can write it as a member of an object declaration inside that class)
 
 更高效的方法是，你可以在你的类中声明一个[伴随对象](http://kotlinlang.org/docs/reference/object-declarations.html#companion-objects)，这样你就可以像 java/c# 那样把它当做静态方法调用，只需要它的类名做一个识别就好了
+
+###密封类
+
+密封类用于代表严格的类结构，值只能是有限集合中的某中类型，不可以是任何其它类型。这就相当于一个枚举类的扩展：枚举值集合的类型是严格限制的，但每个枚举常量只有一个实例，而密封类的子类可以有包含不同状态的多个实例。
+
+声明密封类需要在 class 前加一个 sealed 修饰符。密封类可以有子类但必须全部嵌套在密封类声明内部、
+
+```Kotlin
+sealed class Expr {
+	class Const(val number: Double) : Expr() 
+	class Sum(val e1: Expr, val e2: Expr) : Expr() 
+	object NotANumber : Expr()
+}
+```
+
+注意密封类子类的扩展可以在任何地方，不必在密封类声明内部进行。
+
+使用密封类的最主要的的好处体现在你使用 [when 表达式]()。可以确保声明可以覆盖到所有的情形，不需要再使用 else 情形。
+
+```Kotlin
+fun eval(expr: Expr): Double = when(expr) { 
+	is Const -> expr.number
+	is Sum -> eval(expr.e1) + eval(expr.e2) 
+	NotANumber -> Double.NaN
+    // the `else` clause is not required because we've covered all the cases
+}
+```
