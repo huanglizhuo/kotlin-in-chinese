@@ -24,7 +24,7 @@ fun copyAddress(address: Address) : Address {
 }
 ```
 
-###Getter 和 Setter 访问器
+###Getter 和 Setter 
 
 声明一个属性的完整语法如下：
 
