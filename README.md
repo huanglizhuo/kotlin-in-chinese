@@ -10,7 +10,7 @@ gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.
 
 记得要点 star star star
 
-发现有翻译的不好的或者错误欢迎到 github 提 issue
+发现有翻译的不好的或者错误欢迎到 github 提 [issue](https://github.com/huanglizhuo/kotlin-in-chinese/issues/new)
 
 ##号外 号外 Kotlin 1.0 正式发布
 
