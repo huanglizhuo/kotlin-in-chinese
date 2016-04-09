@@ -1,8 +1,8 @@
 ##接口
 
-Kotlin 的接口很像 java 8。它们都可以包含抽象方法，以及方法的实现。和抽象类不同的是，接口不能保存状态。可以有属性但必须是抽象的。
+Kotlin 的接口很像 java 8。它们都可以包含抽象方法，以及方法的实现。和抽象类不同的是，接口不能保存状态。可以有属性但必须是抽象的，或者提供访问器的实现。
 
-接口是通过关键字 interface 来定义的：
+接口用关键字 interface 来定义：
 
 ```kotlin
 interface MyInterface {
@@ -27,18 +27,22 @@ class Child : MyInterface {
 
 ###接口中的属性
 
-可以在接口中申明属性。接口中的属性可以是既是抽象的，也可以实现访问器。接口属性不可以有后备属性。而且访问器不可以引用它们。
+可以在接口中申明属性。接口中的属性要么是抽象的，要么提供访问器的实现。接口属性不可以有后备字段。而且访问器不可以引用它们。
 
 ```kotlin
 interface MyInterface {
-    val property: Int //抽象属性
-    fun foo() {
-        print(property)
-    }
+	val property: Int // abstract
+	
+	val propertyWithImplementation: String
+		get() = "foo"
+
+	fun foo() { 
+		print(property)
+	} 
 }
 
-class Child : MyInterface {
-    override val property: Int = 29
+class Child : MyInterface { 
+	override val property: Int = 29
 }
 ```
 
@@ -70,4 +74,4 @@ class D : A, B {
 
 ```
 
-A B 接口都有声明了 foo() bar() 函数。它们都实现了 foo() 方法，但只有 B 实现了 bar() ,bar() 在 A 中并没有声明它是抽象的，这是因为在接口中如果函数没有函数体，那么默认是抽像的。现在，如果我们从 A 中派生一个 C 实体类，显然我们需要重写 bar() ，并实现它。而我们从 A 和 B 派生一个 D ，我们不用重写 bar() 方法，因为我们的一个继承中有一个已经实现了它。但我们继承了俩个 foo() 的实现，因此编译器不知道应该选哪个，并强制我们重写 foo() 并且明确指出我们想怎么实现。
+A B 接口都有声明了 foo() bar() 函数。它们都实现了 foo() 方法，但只有 B 实现了 bar() ,bar() 在 A 中并没有声明它是抽象的，这是因为在接口中如果函数没有函数体，那么默认是抽像的。现在，如果我们从 A 中派生一个 C 实体类，显然我们需要重写 bar() ，并实现它。而我们从 A 和 B 派生一个 D ，我们不用重写 bar() 方法，因为我们的一个继承中有一个已经实现了它。但我们继承了两个 foo() 的实现，因此编译器不知道应该选哪个，并强制我们重写 foo() 并且明确指出我们想怎么实现。

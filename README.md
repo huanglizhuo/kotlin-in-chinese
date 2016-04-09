@@ -8,6 +8,8 @@ gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.
 
 本书源码在 [github](https://github.com/huanglizhuo/kotlin-in-chinese) 
 
+[pd下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
+
 记得要点 star star star
 
 发现有翻译的不好的或者错误欢迎到 github 提 [issue](https://github.com/huanglizhuo/kotlin-in-chinese/issues/new)
