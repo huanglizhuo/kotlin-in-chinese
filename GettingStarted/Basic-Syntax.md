@@ -53,7 +53,7 @@ fun printSum(a: Int, b: Int){
 
 ###定义局部变量
 
-声明只读变量：
+声明常量：
 ```kotlin
 val a: Int = 1
 val b = 1 //推导出Int型
@@ -61,7 +61,7 @@ val c: Int //当没有初始化值时必须声明 类型
 c = 1 // 赋值
 ```
 
-可变的变量：
+变量：
 
 ```kotlin
  var x = 5 //推导出Int型
