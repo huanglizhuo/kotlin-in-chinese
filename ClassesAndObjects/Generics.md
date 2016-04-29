@@ -1,6 +1,6 @@
 ##泛型
 
-像 java 一样，Kotlin 中可以所有类型参数：
+像 java 一样，Kotlin 中可以拥有类型参数：
 
 ```kotlin
 class Box<T>(t: T){
