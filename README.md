@@ -40,7 +40,7 @@ Kotlin LOC (软件规模代码行) 如下图
 * [基础](Basics/README.md) 
    * [基本类型](Basics/Basic-Types.md)
    * [包](Basics/Packages.md)
-   * [控制流](Basics/Contro-lFlow.md)
+   * [控制流](Basics/Control-Flow.md)
    * [返回与跳转](Basics/Returns-and-Jumps.md)
 
 * [类和对象](ClassesAndObjects/README.md)
