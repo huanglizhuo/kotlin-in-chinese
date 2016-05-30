@@ -127,7 +127,7 @@ class MyClass {
 }
 ```
 
-当然你可以通过 `@platfoemStatic` 注解使 JVM 将伴随对象生成为静态方法和字段。参看 [java interoperabillity](http://kotlinlang.org/docs/reference/java-interop.html#static-methods-and-fields)
+如果你在 JVM 上使用 `@JvmStatic` 注解，你可以有多个伴随对象生成为真实的静态方法和属性。参看 [java interoperabillity](https://kotlinlang.org/docs/reference/java-interop.html#static-methods-and-fields)。
 
 ###对象表达式和声明的区别
 
