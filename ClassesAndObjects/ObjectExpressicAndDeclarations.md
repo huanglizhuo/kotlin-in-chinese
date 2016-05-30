@@ -70,7 +70,7 @@ object DataProviderManager {
 }
 ```
 
-这叫做对象声明。如果在 object 关键字后面有个名字，我们不能把它当做表达式了。虽然不能把它赋值给变量，，但可以通过名字赋值。这样的对象可以有父类：
+这叫做对象声明。如果在 object 关键字后面有个名字，我们不能把它当做表达式了。虽然不能把它赋值给变量，但是我们可以直接通过名字来使用这个类。这样的对象可以有父类：
 
 ```kotlin
 object DefaultListener : MouseAdapter() {
