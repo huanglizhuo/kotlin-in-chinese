@@ -1,3 +1,4 @@
+[![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
 2016.3.4
 
 gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.com/)啦 :)
