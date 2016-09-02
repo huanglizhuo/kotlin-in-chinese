@@ -28,4 +28,4 @@ class Outer {
 val demo = Outer().Inner().foo() //==1
 ```
 
-参看[这里](http://kotlinlang.org/docs/reference/this-expressions.html)了解更过 this 在内部类的用法
+参看[这里](http://kotlinlang.org/docs/reference/this-expressions.html)了解更多 this 在内部类的用法
