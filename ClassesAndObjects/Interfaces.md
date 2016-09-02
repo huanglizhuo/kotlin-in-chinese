@@ -51,7 +51,7 @@ class Child : MyInterface {
 当我们在父类中声明了许多类型，有可能出现一个方法的多种实现。比如：
 
 ```kotlin
-interdace A {
+interface A {
     fun foo() { print("A") }
     fun bar()
 }
