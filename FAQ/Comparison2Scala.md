@@ -44,10 +44,13 @@ Kotlin 设计时的俩个主要目标是：
 
 > 并行集合(Parallel collections)
 
-###Scala 有而 Kotlin 没有的
+###Kotlin 有而 Scala 没有的
 
->零开销的空安全   Sacla 的是可选的，是在句法和运行时的包裹
+>零开销的null安全
+- Scala的是Option，是在句法和运行时的包装
 
 >[ Smart casts](http://kotlinlang.org/docs/reference/typecasts.html)
+
 >[Kotlin 的内联函数非局部的跳转](http://kotlinlang.org/docs/reference/inline-functions.html#inline-functions)
+
 > [First-class delegation](http://kotlinlang.org/docs/reference/delegation.html)。也通过第三方插件：Autoproxy实现
