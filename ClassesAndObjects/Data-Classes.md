@@ -1,27 +1,40 @@
 ##数据类
 
-我们经常创建一个只保存数据的类。在这样的类中一些函数只是机械的对它们持有的数据进行一些推导。在 kotlin 中这样的类可以标注为 `data` :
+我们经常创建一个只保存数据的类。在这样的类中一些函数只是机械的对它们持有的数据进行一些推导。在 kotlin 中这样的类称之为 data 类，用 `data` 标注:
 
 ```kotlin
 data class User(val name: String, val age: Int)
 ```
 
-这叫做数据对象。编译器会根据主构造函数自动给所有属性添加如下方法：
+编译器会自动根据主构造函数中声明的所有属性添加如下方法：
 
->`equals()`/`hashCode`　
+>`equals()`/`hashCode` 函数
 
 > `toString` 格式是 "User(name=john, age=42)"
 
 > [compontN()functions] (http://kotlinlang.org/docs/reference/multi-declarations.html) 对应按声明顺序出现的所有属性
 
-> `copy()` 
+> `copy()` 函数
 
-如果在类中明确声明或从基类继承了这些方法，编译器就不会自动生成了／
+如果在类中明确声明或从基类继承了这些方法，编译器不会自动生成。
+
+为确保这些生成代码的一致性，并实现有意义的行为，数据类要满足下面的要求：
 
 注意如果构造函数参数中没有 `val` 或者 `var` ，就不会在这些函数中出现；
 
->在 JVM 中如果构造函数是无参的，则所有的属性必须有默认的值
-data class User(val name: String = "", val age: Int = 0)
+> 主构造函数应该至少有一个参数；
+
+> 主构造函数的所有参数必须标注为 `val` 或者 `var` ；
+
+> 数据类不能是 abstract，open，sealed，或者 inner ；
+
+> 数据类不能继承其它的类（但可以实现接口）。
+
+
+
+> 在 JVM 中如果构造函数是无参的，则所有的属性必须有默认的值，(参看[Constructors](http://kotlinlang.org/docs/reference/classes.html#constructors));
+>
+> data class User(val name: String = "", val age: Int = 0)
 
 ###复制
 
@@ -31,7 +44,7 @@ data class User(val name: String = "", val age: Int = 0)
 fun copy(name: String = this.name, age: Int = this.age) = User(name, age)
 ```
 
-这样就允许改写了
+有了 copy 我们就可以像下面这样写了：
 
 ```kotlin
 val jack = User(name = "jack", age = 1)
@@ -45,7 +58,7 @@ val olderJack = jack.copy(age = 2)
 ```kotlin
 val jane = User("jane", 35)
 val (name, age) = jane
-println("$name, $age years of age")
+println("$name, $age years of age") //打印出 "Jane, 35 years of age"
 ```
 
 ###标准数据类
