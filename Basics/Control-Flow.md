@@ -143,7 +143,7 @@ for (i in array.indices)
 
 ###while 循环
 
-while 和 do...while 像网常那样
+while 和 do...while 像往常那样
 
 ```kotlin
 while (x > 0) {
