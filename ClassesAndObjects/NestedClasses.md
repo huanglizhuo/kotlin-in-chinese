@@ -32,7 +32,7 @@ val demo = Outer().Inner().foo() //==1
 
 ### 匿名内部类
 
-匿名内部类的实例是通过 [对象表达式](http://kotlinlang.org/docs/reference/object-declarations.html#object-expressions) 创建的：
+匿名内部类的实例是通过 [对象表达式](ClassesAndObjects/ObjectExpressicAndDeclarations.md)  创建的：
 
 ```kotlin
 window.addMouseListener(object: MouseAdapter() {
@@ -46,7 +46,7 @@ window.addMouseListener(object: MouseAdapter() {
 })
 ```
 
-如果对象是函数式的 java 接口（比如只有一个抽象方法的 java 接口），你可以用一个带接口类型的 lambda 表达式创建它。
+如果对象是函数式的 java 接口的实例（比如只有一个抽象方法的 java 接口），你可以用一个带接口类型的 lambda 表达式创建它。
 
 
 
