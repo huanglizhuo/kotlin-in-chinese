@@ -1,10 +1,10 @@
 ##对象表达式和声明
 
-有时候我们需要创建一个对当前类做轻微修改的对象，而不用重新声明一个子类。java 用匿名内部类来解决这个问题。Kotlin 更希望推广用对象表达式和声明来解决这个问题。
+有时候我们想要创建一个对当前类有一点小修改的对象，但不想重新声明一个子类。java 用匿名内部类的概念解决这个问题。Kotlin 用对象表达式和对象声明巧妙的实现了这一概念。
 
 ###对象表达式
 
-我们通过下面这样的方式创建继承自某种(或某些)匿名类的对象：
+通过下面的方式可以创建继承自某种(或某些)匿名类的对象：
 
 ```kotlin
 window.addMouseListener(object: MouseAdapter () {
@@ -14,7 +14,7 @@ window.addMouseListener(object: MouseAdapter () {
 })
 ```
 
-如果父类有构造函数，则必须传递相应的构造函数。多个父类可以用逗号隔开，跟在冒号后面：
+如果父类有构造函数，则必须传递相应的构造参数。多个父类可以用逗号隔开，跟在冒号后面：
 
 ```kotlin
 open class A(x: Int) {
@@ -39,7 +39,7 @@ val adHoc = object {
 print(adHoc.x + adHoc.y)
 ```
 
-像 java 的匿名内部类一样，对象表达式可以访问闭合范围内的变量 (和 java 不一样的是，这些不用声明为 final)
+像 java 的匿名内部类一样，对象表达式可以访问闭合范围内的变量 (和 java 不一样的是，这些变量不用是 final 修饰的)
 
 ```kotlin
 fun countClicks(windows: JComponent) {
@@ -62,28 +62,38 @@ fun countClicks(windows: JComponent) {
 
 ```kotlin
 object DataProviderManager {
-	fun registerDataProvider(provider: Dataprovider) {
-		//...
-	}
-	val allDataProviders : Collection<DataProvider>
-		get() = //...
+    fun registerDataProvider(provider: DataProvider) {
+        // ...
+    }
+
+    val allDataProviders: Collection<DataProvider>
+        get() = // ...
 }
 ```
 
-这叫做对象声明。如果在 object 关键字后面有个名字，我们不能把它当做表达式了。虽然不能把它赋值给变量，但是我们可以直接通过名字来使用这个类。这样的对象可以有父类：
+这叫做对象声明，跟在 object 关键字后面是对象名。和变量声明一样，对象声明并不是表达式，而且不能作为右值用在赋值语句。
+
+想要访问这个类，直接通过名字来使用这个类：
+
+```kotlin
+DataProviderManager.registerDataProvider(...)
+```
+
+这样类型的对象可以有父类型：
 
 ```kotlin
 object DefaultListener : MouseAdapter() {
-	override fun mouseClicked(e: MouseEvent) {
-		// ...
-	}
-	override fun mouseEntered(e: MouseEvent) {
-		// ...
-	}
+    override fun mouseClicked(e: MouseEvent) {
+        // ...
+    }
+
+    override fun mouseEntered(e: MouseEvent) {
+        // ...
+    }
 }
 ```
 
-**注意**：对象声明不可以是局部的(比如不可以直接在函数内部声明)，但可以在其它对象的声明或非内部类中使用
+**注意**：对象声明不可以是局部的(比如不可以直接在函数内部声明)，但可以在其它对象的声明或非内部类中进行内嵌入
 
 ###伴随对象
 
@@ -133,6 +143,8 @@ class MyClass {
 
 他俩之间只有一个特别重要的区别：
 
->　对象声明是 lazily 初始化的，我们只能访问一次
-
 >　对象表达式在我们使用的地方立即初始化并执行的
+>
+>　对象声明是懒加载的，是在我们第一次访问时初始化的。
+>
+>​    伴随对象是在对应的类加载时初始化的，和 Java 的静态初始是对应的。
