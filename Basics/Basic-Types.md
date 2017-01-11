@@ -191,7 +191,7 @@ val asc = Array(5, {i -> (i * i).toString() })
 Kotlin 有专门的类来表示原始类型从而避免过度装箱： ByteArray, ShortArray, IntArray 等等。这些类与 Array 没有继承关系，但它们有一样的方法与属性。每个都有对应的库函数：
 
 ```kotlin
-val x: IntArray = intArray(1, 2, 3)
+val x: IntArray = intArrayOf(1, 2, 3)
 x[0] = x[1] + x[2]
 ```
 
