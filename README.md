@@ -1,4 +1,15 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
+
+2017.3.8
+
+Kotlin 1.1 正式发布，这次最令人振奋的莫过于协程的发布，有了协程就可以更优雅的完成异步编程了
+
+更多新特性请参看[what's new in kotlin 1.1](https://kotlinlang.org/docs/reference/whatsnew11.html)
+
+新特性的文档正在翻译中... 
+
+翻译时间并不是很充裕（qi shi shi lan）我会尽力的 :(
+
 2016.3.4
 
 gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.com/)啦 :)
