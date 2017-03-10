@@ -122,3 +122,21 @@ map.forEach { _, value -> println("$value!") }
 ```kotlin
 val (_, status) = getResult()
 ```
+
+阅读[KEEP](https://github.com/Kotlin/KEEP/blob/master/proposals/underscore-for-unused-parameters.md)获取更详细信息
+
+##数字值中的下划线
+
+像 java8 一样 Kotlin 现在支持在数字值中使用下划线划分组：
+
+```Kotlin
+val oneMillion = 1_000_000
+val hexBytes = 0xFF_EC_DE_5E
+val bytes = 0b11010010_01101001_10010100_10010010
+```
+
+阅读[[KEEP](https://github.com/Kotlin/KEEP/blob/master/proposals/underscores-in-numeric-literals.md)获取更详细信息
+
+##属性简写
+
+带有 get 
