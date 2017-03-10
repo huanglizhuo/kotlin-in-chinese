@@ -103,15 +103,15 @@ object Resource {
 }
 ```
 
-###如果为空则... 的简写
+###如果不为空则... 的简写
 ```kotlin
 val files = File("Test").listFiles()
 println(files?.size)
 ```
 
-###如果为空...否则... 的简写
+###如果不为空...否则... 的简写
 ```kotlin
- val files = File("test").listFiles()
+val files = File("test").listFiles()
 println(files?.size ?: "empty")
 ```
 
