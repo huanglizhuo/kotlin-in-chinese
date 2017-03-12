@@ -26,7 +26,7 @@ Kotlin 允许我们实现一些我们自定义类型的运算符实现。这些�
 **表达式**|**转换**
 ---|---
 a++| a.inc() + see below
-a--| a.des() + see below
+a--| a.dec() + see below
 
 这些操作符允许修改接收者和返回类型。
 
