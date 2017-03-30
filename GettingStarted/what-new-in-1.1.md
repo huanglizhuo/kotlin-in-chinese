@@ -139,4 +139,89 @@ val bytes = 0b11010010_01101001_10010100_10010010
 
 ##属性简写
 
-带有 get 
+用表达式定义个 get 属性，现在可以省略属性类型了：
+
+```kotlin
+data class Person(val name: String, val age: Int){
+	val isAdult get() = age >= 20 // 属性类型被推断为 'Boolean'
+}
+```
+
+##内联属性访问器
+
+现在没有 backing field 的属性访问器可以用 'inline' 修饰。
+
+这些属性访问器和内联函数的编译方式是一样的。
+
+```kotlin
+public val <T> List<T>.lastIndex: Int
+inline get() = this.size -1
+```
+
+[documentation](http://kotlinlang.org/docs/reference/inline-functions.html#inline-properties-since-11)[KEEP](https://github.com/Kotlin/KEEP/blob/master/proposals/inline-properties.md) 了解更多详细信息。
+
+## 本地代理属性
+
+现在可以在本地变量上使用 [代理属性](http://kotlinlang.org/docs/reference/delegated-properties.html) 了。一个应用场景就是定义一个懒求值的本地变量：
+
+```kotlin
+val answer by lazy {
+    println("Calculating the answer...")
+    42
+}
+if (needAnswer()) {                     // returns the random value
+    println("The answer is $answer.")   // answer is calculated at this point
+}
+else {
+    println("Sometimes no answer is the answer...")
+}
+```
+
+阅读 [KEEP](https://github.com/Kotlin/KEEP/blob/master/proposals/local-delegated-properties.md) 了解更多详细信息。
+
+##拦截代理属性绑定
+
+代理属性现在可以通过 'provideDelegate' 运算符拦截属性绑定。比如，在绑定属性名之前，想要检查属性名字，可以像下面这样做：
+
+```kotlin 
+class ResourceLoader<T>(id: ResourceID<T>) {
+    operator fun provideDelegate(thisRef: MyUI, prop: KProperty<*>): ReadOnlyProperty<MyUI, T> {
+        checkProperty(thisRef, prop.name)
+        ... // property creation
+    }
+
+    private fun checkProperty(thisRef: MyUI, name: String) { ... }
+}
+
+fun <T> bindResource(id: ResourceID<T>): ResourceLoader<T> { ... }
+
+class MyUI {
+    val image by bindResource(ResourceID.image_id)
+    val text by bindResource(ResourceID.text_id)
+}
+```
+
+'provideDelegate' 方法可以可以在创建 MyUI 实例的每个属性时调用，并做相应的验证检查。
+
+##通用枚举值的访问
+
+现在可以用通用方法罗列枚举类的所有值。
+
+```kotlin
+enum class RGB { RED, GREEN, BLUE }
+
+inline fun <reified T : Enum<T>> printAllValues() {
+    print(enumValues<T>().joinToString { it.name })
+}
+
+##标准库
+
+### string to number 的转换
+
+在 String 类新增了转为数字而不抛出异常的扩展： String.toIntOrNull(): Int?, String.toDoubleOrNull(): Double? etc.
+
+val port = System.getenv("PORT")?.toIntOrNull() ?: 80
+
+###onEach()
+
+'onEach' 是一个很小的扩展，但却对集合和序列很有用，这样就可以对集合和队列采用链式调用执行一些操作。
