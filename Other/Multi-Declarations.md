@@ -1,5 +1,4 @@
-##多重声明
-
+## 多重声明
 有时候可以通过给对象插入多个成员函数做区别是很方便的，比如：
 
 ```kotlin
@@ -30,8 +29,7 @@ for ((a, b) in collection) { ... }
 
 参数 `a` 和 `b` 是 `component1()`　`component2()` 的返回值
 
-###例子：一个函数返回俩个值
-
+### 例子：一个函数返回俩个值
 要是一个函数想返回俩个值。比如，一个对象结果，一个是排序的状态。在 Kotlin 中的一个紧凑的方案是声明 [data](http://kotlinlang.org/docs/reference/data-classes.html) 类并返回实例：
 
 ```kotlin
@@ -48,8 +46,7 @@ val (result, status) = function(...)
 
 注意：也可以使用标准类 `Pair` 并让函数返回 'Pair<Int , staus>'，但可读性不是很强
 
-###例子：多重声明和 Map
-
+### 例子：多重声明和 Map
 转换 map 的最好办法可能是下面这样：
 
 ```kotlin

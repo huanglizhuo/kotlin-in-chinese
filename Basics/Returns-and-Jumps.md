@@ -1,13 +1,11 @@
-##返回与跳转
-
+## 返回与跳转
 Kotlin 有三种机构跳转操作符
 
 > return 
 > break 结束最近的闭合循环
 > continue 跳到最近的闭合循环的下一次循环
 
-###break 和 continue 标签
-
+### break 和 continue 标签
 在 Kotlin 中表达式可以添加标签。标签通过 @ 结尾来表示，比如：`abc@`，`fooBar@` 都是有效的(参看[语法](http://kotlinlang.org/docs/reference/grammar.html#label))。使用标签语法只需像这样：
 
 ```kotlin
@@ -29,8 +27,7 @@ loop@ for (i in 1..100) {
 
 break 是跳转标签后面的表达式，continue 是跳转到循环的下一次迭代。
 
-### 返回到标签处
-在字面函数，局部函数，以及对象表达式中，函数可以在 Kotlin 中被包裹。return 允许我们返回到外层函数。最重要的例子就是从字面函数中返回，还记得我们之前的写法吗：
+###  返回到标签处在字面函数，局部函数，以及对象表达式中，函数可以在 Kotlin 中被包裹。return 允许我们返回到外层函数。最重要的例子就是从字面函数中返回，还记得我们之前的写法吗：
 
 ```kotlin
 fun foo() {

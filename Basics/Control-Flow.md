@@ -1,7 +1,5 @@
-##流程控制
-
-### if 表达式
-
+## 流程控制
+###  if 表达式
 在 Kotlin 中，if 是表达式，比如它可以返回一个值。是除了condition ? then : else)之外的唯一一个三元表达式
 
 ```kotlin
@@ -39,8 +37,7 @@ else{
 
 参看[if语法](http://kotlinlang.org/docs/reference/grammar.html#if)
 
-###When 表达式
-
+### When 表达式
 when 取代了 C 风格语言的 switch 。最简单的用法像下面这样
 
 ```kotlin
@@ -107,8 +104,7 @@ when {
 
 参看[when语法](http://kotlinlang.org/docs/reference/grammar.html#when)
 
-###for 循环
-
+### for 循环
 for 循环通过任何提供的迭代器进行迭代。语法是下面这样的：
 
 ```kotlin
@@ -141,8 +137,7 @@ for (i in array.indices)
 
 在没有其它对象创建的时候 "iteration through a range " 会被自动编译成最优的实现。
 
-###while 循环
-
+### while 循环
 while 和 do...while 像往常那样
 
 ```kotlin
@@ -157,6 +152,5 @@ do {
 
 参看[while 语法](has an instance- or extension-function hasNext() that returns Boolean.)
 
-###在循环中使用 break 和 continue
-
+### 在循环中使用 break 和 continue
 kotlin 支持传统的 break 和 continue 操作符。参看[返回和跳转](http://kotlinlang.org/docs/reference/returns.html)

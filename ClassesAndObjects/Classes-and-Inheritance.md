@@ -1,7 +1,5 @@
-##类和继承
-
-###类
-
+## 类和继承
+### 类
 在 Kotlin 中类用 class 声明：
 
 ```kotlin
@@ -15,8 +13,7 @@ class Invoice{
 class Empty
 ```
 
-###构造函数
-
+### 构造函数
 在 Kotlin 中类可以有一个主构造函数以及多个二级构造函数。主构造函数是类头的一部分：跟在类名后面(可以有可选的类型参数)。
 
 ```kotlin
@@ -66,8 +63,7 @@ class Customer public @inject constructor (name: String) {...}
 
 参看[可见性](http://kotlinlang.org/docs/reference/visibility-modifiers.html#constructors)
 
-###二级构造函数
-
+### 二级构造函数
 类也可以有二级构造函数，需要加前缀 constructor:
 
 ```kotlin
@@ -101,8 +97,7 @@ class DontCreateMe private constructor () {
 class Customer(val customerName: String = "")
 ```
 
-###创建类的实例
-
+### 创建类的实例
 我们可以像使用普通函数那样使用构造函数创建类实例：
 
 ```kotlin
@@ -112,8 +107,7 @@ val customer = Customer("Joe Smith")
 
 注意 Kotlin 没有 new 关键字。
 
-###类成员
-
+### 类成员
 类可以包含：
 >构造函数和初始化代码块
 
@@ -125,8 +119,7 @@ val customer = Customer("Joe Smith")
 
 >[对象声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md) 
 
-###继承
-
+### 继承
 Kotin 中所有的类都有共同的父类 Any ，下面是一个没有父类声明的类：
 
 ```kotlin
@@ -158,8 +151,7 @@ class MyView : View {
 
 open 注解与java 中的 final相反:它允许别的类继承这个类。默认情形下，kotlin 中所有的类都是 final ,对应 [Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html) ：Design and document for inheritance or else prohibit it.
 
-###复写成员
-
+### 复写成员
 像之前提到的，我们在 kotlin 中坚持做明确的事。不像 java ，kotlin 需要把可以复写的成员都明确注解出来，并且重写它们：
 
 ```kotlin
@@ -195,8 +187,7 @@ open class AnotherDerived() : Base() {
 
 >如果你真的想 hack 那么你可以在 java 中写好 hack 方案，然后在 kotlin 中调用 (参看[java调用](http://kotlinlang.org/docs/reference/java-interop.html))，专业的构架可以很好的做到这一点
 
-###复写规则
-
+### 复写规则
 在 kotlin 中，实现继承通常遵循如下规则：如果一个类从它的直接父类继承了同一个成员的多个实现，那么它必须复写这个成员并且提供自己的实现(或许只是直接用了继承来的实现)。为表示使用父类中提供的方法我们用 `super<Base>`表示:
 
 ```kotlin
@@ -220,8 +211,7 @@ class C() : A() , B{
 
 可以同时从 A B 中继承方法，而且 C 继承 a() 或 b() 的实现没有任何问题，因为它们都只有一个实现。但是 f() 有俩个实现，因此我们在 C 中必须复写 f() 并且提供自己的实现来消除歧义。
 
-###抽象类
-
+### 抽象类
 一个类或一些成员可能被声明成 abstract 。一个抽象方法在它的类中没有实现方法。记住我们不用给一个抽象类或函数添加 open 注解，它默认是带着的。
 
 我们可以用一个抽象成员去复写一个带 open 注解的非抽象方法。
@@ -236,16 +226,14 @@ abstract class Derived : Base() {
 }
 ```
 
-###伴随对象
-
+### 伴随对象
 在 kotlin 中不像 java 或者 C# 它没有静态方法。在大多数情形下，我们建议只用包级别的函数。
 
 如果你要写一个没有实例类就可以调用的方法，但需要访问到类内部(比如说一个工厂方法)，你可以把它写成它所在类的一个成员(you can write it as a member of an object declaration inside that class)
 
 更高效的方法是，你可以在你的类中声明一个[伴随对象](http://kotlinlang.org/docs/reference/object-declarations.html#companion-objects)，这样你就可以像 java/c# 那样把它当做静态方法调用，只需要它的类名做一个识别就好了
 
-###密封类
-
+### 密封类
 密封类用于代表严格的类结构，值只能是有限集合中的某中类型，不可以是任何其它类型。这就相当于一个枚举类的扩展：枚举值集合的类型是严格限制的，但每个枚举常量只有一个实例，而密封类的子类可以有包含不同状态的多个实例。
 
 声明密封类需要在 class 前加一个 sealed 修饰符。密封类可以有子类但必须全部嵌套在密封类声明内部、

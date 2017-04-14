@@ -20,6 +20,7 @@ func main() {
 	}
 }
 func addSpace2Sharp(filename string) {
+	modify := false
 	fmt.Println(filename)
 	tmpname := filename + ".tmp"
 	inFile, err := os.Open(filename)
@@ -34,15 +35,20 @@ func addSpace2Sharp(filename string) {
 	for scanner.Scan() {
 		if len(reg.FindAllString(scanner.Text(), -1)) != 0 {
 			src := reg.FindString(scanner.Text())
+			modify = true
 			writer.WriteString(reg.ReplaceAllString(scanner.Text(), src+" "))
 			fmt.Println(src)
 		} else {
 			writer.WriteString(scanner.Text() + "\n")
 		}
 	}
-	writer.Flush()
-	exec.Command("rm", filename).Run()
-	exec.Command("mv", tmpname, filename).Run()
+	if modify {
+		writer.Flush()
+		exec.Command("rm", filename).Run()
+		exec.Command("mv", tmpname, filename).Run()
+	} else {
+		exec.Command("rm", tmpname).Run()
+	}
 }
 
 func listFun(path string, f os.FileInfo, err error) error {

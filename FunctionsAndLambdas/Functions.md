@@ -1,7 +1,5 @@
-##函数
-
-###函数声明
-
+## 函数
+### 函数声明
 在 kotlin 中用关键字 `fun` 声明函数：
 
 ```kotlin
@@ -10,8 +8,7 @@ fun double(x: Int): Int {
 }
 ```
 
-###函数用法
-
+### 函数用法
 通过传统的方法调用函数
 
 ```kotlin
@@ -24,8 +21,7 @@ val result = double(2)
 Sample().foo() // 创建Sample类的实例,调用foo方法
 ```
 
-###中缀符号
-
+### 中缀符号
 在满足以下条件时,函数也可以通过中缀符号进行调用:
 
 >　它们是成员函数或者是[扩展函数](http://kotlinlang.org/docs/reference/extensions.html)
@@ -43,8 +39,7 @@ infix fun Int.shl(x: Int): Int {
 1.shl(2)
 ```
 
-###参数
-
+### 参数
 函数参数是用 Pascal 符号定义的　name:type。参数之间用逗号隔开，每个参数必须指明类型。
 
 ```kotlin
@@ -53,8 +48,7 @@ fun powerOf(number: Int, exponent: Int) {
 }
 ```
 
-###默认参数
-
+### 默认参数
 函数参数可以设置默认值,当参数被忽略时会使用默认值。这样相比其他语言可以减少重载。
 
 ```kotlin
@@ -65,8 +59,7 @@ fun read(b: Array<Byte>, off: Int = 0, len: Int = b.size() ) {
 
 默认值可以通过在type类型后使用`=`号进行赋值
 
-###命名参数
-
+### 命名参数
 在调用函数时可以参数可以命名。这对于那种有大量参数的函数是很方便的.
 
 下面是一个例子：
@@ -108,8 +101,7 @@ reformat(str, wordSeparator = '_')
 
 注意,命名参数语法不能够被用于调用Java函数中,因为Java的字节码不能确保方法参数命名的不变性
 
-###不带返回值的参数
-
+### 不带返回值的参数
 如果函数不会返回任何有用值，那么他的返回类型就是 `Unit` .`Unit` 是一个只有唯一值`Unit`的类型.这个值并不需要被直接返回:
 
 ```kotlin
@@ -129,8 +121,7 @@ fun printHello(name: String?) {
     ...
 }
 ```
-###单表达式函数
-
+### 单表达式函数
 当函数只返回单个表达式时，大括号可以省略并在 = 后面定义函数体
 
 ```kotlin
@@ -143,12 +134,10 @@ fun double(x: Int) = x * 2
 
 ```
 
-###明确返回类型
-
+### 明确返回类型
 下面的例子中必须有明确返回类型,除非他是返回 `Unit`类型的值,Kotlin 并不会对函数体重的返回类型进行推断,因为函数体中可能有复杂的控制流,他的返回类型未必对读者可见(甚至对编译器而言也有可能是不可见的)：
 
-###变长参数
-
+### 变长参数
 函数的参数(通常是最后一个参数)可以用 vararg 修饰符进行标记：
 
 ```kotlin
@@ -175,12 +164,10 @@ val a = array(1, 2, 3)
 val list = asList(-1, 0, *a, 4)
 ```
 
-###函数范围
-
+### 函数范围
 Kotlin 中可以在文件顶级声明函数，这就意味者你不用像在Java,C#或是Scala一样创建一个类来持有函数。除了顶级函数，Kotlin 函数可以声明为局部的，作为成员函数或扩展函数。
 
-####局部函数
-
+#### 局部函数
 Kotlin 支持局部函数，比如在一个函数包含另一函数。
 
 ```kotlin
@@ -225,8 +212,7 @@ fun reachable(from: Vertex, to: Vertex): Boolean {
 }
 ```
 
-###成员函数
-
+### 成员函数
 成员函数是定义在一个类或对象里边的
 
 ```kotlin
@@ -243,8 +229,7 @@ Sample.foo()
 
 更多请参看[类](http://kotlinlang.org/docs/reference/classes.html)和[继承](http://kotlinlang.org/docs/reference/classes.html#inheritance)
 
-###泛型函数
-
+### 泛型函数
 函数可以有泛型参数，样式是在函数后跟上尖括号。
 
 ```kotlin
@@ -255,20 +240,16 @@ fun sigletonArray<T>(item: T): Array<T> {
 
 更多请参看[泛型](http://kotlinlang.org/docs/reference/generics.html)
 
-###内联函数
-
+### 内联函数
 参看[这里](http://kotlinlang.org/docs/reference/inline-functions.html)
 
-###扩展函数
-
+### 扩展函数
 参看[这里](http://kotlinlang.org/docs/reference/extensions.html)
 
-###高阶函数和 lambda 表达式
-
+### 高阶函数和 lambda 表达式
 参看[这里](http://kotlinlang.org/docs/reference/lambdas.html)
 
-###尾递归函数
-
+### 尾递归函数
 Kotlin 支持函数式编程的尾递归。这个允许一些算法可以通过循环而不是递归解决问题，从而避免了栈溢出。当函数被标记为 `tailrec` 时，编译器会优化递归，并用高效迅速的循环代替它。
 
 ```kotlin

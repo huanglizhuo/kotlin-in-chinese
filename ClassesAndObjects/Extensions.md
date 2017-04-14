@@ -1,9 +1,7 @@
-##扩展
-
+## 扩展
 与 C# 和 Gosu 类似, Kotlin 也提供了一种,可以在不继承父类，也不使用类似装饰器这样的设计模式的情况下对指定类进行扩展。我们可以通过一种叫做扩展的特殊声明来实现他。Kotlin 支持函数扩展和属性扩展。
 
-###函数扩展
-
+### 函数扩展
 为了声明一个函数扩展，我们需要在函数前加一个接收者类型作为前缀。下面我们会为 `MutableList<Int>` 添加一个 `swap` 函数：
 
 ```kotlin
@@ -33,8 +31,7 @@ fun <T> MutableList<T>.swap(x: Int, y: Int) {
 
 我们在函数名前声明了通用类型，从而使它可以接受任何参数。参看[泛型函数](http://kotlinlang.org/docs/reference/generics.html)。
 
-###扩展是被**静态**解析的
-
+### 扩展是被**静态**解析的
 扩展实际上并没有修改它所扩展的类。定义一个扩展，你并没有在类中插入一个新的成员，只是让这个类的实例对象能够通过`.`调用新的函数。
 
 需要强调的是扩展函数是静态分发的，举个例子,它们并不是接受者类型的虚拟方法。这意味着扩展函数的调用时由发起函数调用的表达式的类型决定的，而不是在运行时动态获得的表达式的类型决定。比如
@@ -74,8 +71,7 @@ fun C.foo(i:Int) { println("extention") }
 
 `C().foo(1)` 的调用会打印 “extentions”。
 
-###可空的接收者
-
+### 可空的接收者
 注意扩展可以使用空接收者类型进行定义。这样的扩展使得，即使是一个空对象仍然可以调用该扩展，然后在扩展的内部进行 `this == null` 的判断。这样你就可以在 Kotlin 中任意调用 toString() 方法而不进行空指针检查：空指针检查延后到扩展函数中完成。
 
 ```kotlin
@@ -86,8 +82,7 @@ fun Any?.toString(): String {
 }
 ```
 
-###属性扩展
-
+### 属性扩展
 和函数类似， Kotlin 也支持属性扩展：
 
 ```kotlin
@@ -102,8 +97,7 @@ val <T> List<T>.lastIndex:  Int
 val Foo.bar = 1 //error: initializers are not allowed for extension properties
 ```
 
-###伴随对象扩展
-
+### 伴随对象扩展
 如果一个对象定义了伴随对象，你也可以给伴随对象添加扩展函数或扩展属性：
 
 ```kotlin
@@ -121,8 +115,7 @@ fun MyClass.Companion.foo(){
 MyClass.foo()
 ```
 
-###扩展的域
-
+### 扩展的域
 大多数时候我们在 top level 定义扩展，就在包下面直接定义：
 
 ```kotlin
@@ -146,8 +139,7 @@ fun usage(baz: Baz) {
 }
 ```
 
-###动机
-
+### 动机
 在 java 中，我们通常使用一系列名字为 "*Utils" 的类: `FileUtils`,`StringUtils`等等。很有名的 `java.util.Collections` 也是其中一员的，但我们不得不像下面这样使用他们：
 
 ```java

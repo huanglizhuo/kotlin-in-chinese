@@ -1,7 +1,5 @@
-##使用 Gradle
-
-###插件和版本
-
+## 使用 Gradle
+### 插件和版本
 kotlin-gradle-plugin 可以编译 Kotlin 文件和模块
 
 > X.Y.SNAPSHOT:对应版本 X.Y 的快照，在 CI 服务器上的每次成功构建的版本。这些版本不是真正的稳定版，只是推荐用来测试新编辑器的功能的。现在所有的构建都是作为 0.1-SNAPSHOT 发表的。你可以参看[configure a snapshot repository in the pom file]()
@@ -26,8 +24,7 @@ M6.1|0.6.602
 M6|0.6.69
 M5.3|0.5.998
 
-###面向 Jvm
-
+### 面向 Jvm
 对于 jvm，需要应用 kotlin 插件
 
 > apply plugin: "kotlin"
@@ -51,8 +48,7 @@ sourceSets {
 }
 ```
 
-###面向JavaScript
-
+### 面向JavaScript
 但目标是 JavaScript 时：
 
 > apply plugin: "kotln2js"
@@ -73,8 +69,7 @@ compileKotlin2Js {
 }
 ```
 
-###目标是 android
-
+### 目标是 android
 Android Gradle 模块与普通的 Gradle 模块有些不同，所以如果你想建立 kotlin 写的android 项目，则需要下面这样：
 
 ```
@@ -85,8 +80,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 ```
 
-####  Android Studio
-
+####   Android Studio
 如果使用 Android Studio,需要添加下面的代码：
 
 ```
@@ -101,8 +95,7 @@ android {
 
 这是告诉 android studio kotlin 文件的目录位置方便 IDE 识别
 
-###配置依赖
-
+### 配置依赖
 我们需要添加 kotlin-gradle-plugin 和 kotlin 标准库依赖
 
 ```
@@ -126,8 +119,7 @@ dependencies {
 }
 ```
 
-###使用快照版本
-
+### 使用快照版本
 如果使用快照版本则如下所示：
 
 ```
@@ -158,8 +150,7 @@ dependencies {
 ```
 
 
-###例子
-
+### 例子
 [Kotlin](https://github.com/jetbrains/kotlin)仓库有如下例子：
 
 >[Kotlin](https://github.com/JetBrains/kotlin-examples/tree/master/gradle/hello-world)

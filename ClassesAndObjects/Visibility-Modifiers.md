@@ -1,10 +1,8 @@
-##可见性修饰词
-
+## 可见性修饰词
 类，对象，接口，构造函数，属性以及它们的 setter 方法都可以有可见性修饰词。( getter 方法作为属性时都是可见性)。在 Kotlin 中有四种修饰词：`private`,`protected`,`internal`,以及 `public` 。默认的修饰符是 `public`。
 下面将解释不同类型的声明作用域。
 
-###包
-
+### 包
 函数，属性和类，对象和接口可以在 "top-level" 声明：
 
 ```kotlin
@@ -35,8 +33,7 @@ private set // setter is visible only in example.kt
 internal val baz = 6 // visible inside the same module
 ```
 
-###类和接口
-
+### 类和接口
 当在类中声明时：
 
 > `private` 只在该类(以及它的成员)中可见
@@ -72,8 +69,7 @@ class Unrelated(o: Outer) {
 }
 ```
 
-###构造函数
-
+### 构造函数
 通过下面的语法来指定主构造函数(必须显示的使用 constructor 关键字)的可见性：
 
 ```kotlin
@@ -83,12 +79,10 @@ class C private constructor(a: Int) { ... }
 这里构造函数是 private 。所有的构造函数默认是 `public` ,实际上只要类是可见的它们就是可见的
 (注意 `internal` 类型的类中的 public 属性只能在同一个模块内才可以访问)
 
-###局部声明
-
+### 局部声明
 局部变量，函数和类是不允许使用修饰词的
 
-###模块
-
+### 模块
 `internal` 修饰符是指成员的可见性是只在同一个模块中才可见的。模块在 Kotlin 中就是一系列的 Kotlin 文件编译在一起：
 
 — an IntelliJ IDEA module;

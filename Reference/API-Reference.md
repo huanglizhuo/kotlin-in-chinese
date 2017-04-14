@@ -1,9 +1,7 @@
-##Kotlin 标准库
-
+## Kotlin 标准库
 Kotlin 标准库是一系列实现了常用模式的函数和类型，可以用在集合，文字，和文件上。
 
-###包
-
+### 包
 包名      |　信息
 --- |---
 [kotlin](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin/index.html) | 核心函数和类型，在所有支持平台均可用

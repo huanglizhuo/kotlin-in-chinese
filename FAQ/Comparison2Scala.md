@@ -1,5 +1,4 @@
-##与 Scala 对比
-
+## 与 Scala 对比
 Kotlin 设计时的俩个主要目标是：
 
 > 至少和 java 运行速度一样快
@@ -8,8 +7,7 @@ Kotlin 设计时的俩个主要目标是：
 
 考虑到这俩点，如果你喜欢 Scala ，你可能不需要 Kotlin
 
-###Scala 有而 Kotlin 没有的
-
+### Scala 有而 Kotlin 没有的
 > 隐式转换，隐式参数
 	--在 Scala 中，在不适用 debugger 的时候很难知道代码发生了什么，因为太多的东西是隐式的
 	--通过函数增加类型在 kotlin 中需要使用[扩展函数](http://kotlinlang.org/docs/reference/extensions.html)
@@ -44,8 +42,7 @@ Kotlin 设计时的俩个主要目标是：
 
 > 并行集合(Parallel collections)
 
-###Kotlin 有而 Scala 没有的
-
+### Kotlin 有而 Scala 没有的
 >零开销的null安全
 - Scala的是Option，是在句法和运行时的包装
 

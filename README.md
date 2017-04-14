@@ -26,8 +26,7 @@ gitbook 墙内访问速度很糟糕 现在有了[墙内地址](http://kotlindoc.
 
 发现有翻译的不好的或者错误欢迎到 github 提 [issue](https://github.com/huanglizhuo/kotlin-in-chinese/issues/new)
 
-##号外 号外 Kotlin 1.0 正式发布
-
+## 号外 号外 Kotlin 1.0 正式发布
 Android 世界的 Swift 终于发布1.0版本 
 
 Kotlin 是一个实用性很强的语言，专注于互通，安全，简洁，工具健全...

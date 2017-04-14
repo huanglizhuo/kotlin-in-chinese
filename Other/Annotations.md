@@ -1,15 +1,12 @@
-##注解
-
-###注解声明
-
+## 注解
+### 注解声明
 注解是一种将元数据附加到代码中的方法。声明注解需要在类前面使用 annotation 关键字：
 
 ```kotlin
 annotation class fancy
 ```
 
-###用法
-
+### 用法
 ```kotlin
 @fancy class Foo {
 	@fancy fun baz(@fancy foo: Int): Int {
@@ -45,8 +42,7 @@ class Foo {
 }
 ```
 
-###构造函数
-
+### 构造函数
 注解可以有带参数的构造函数。
 
 ```kotlin
@@ -54,8 +50,7 @@ annotation class special(val why: String)
 special("example") class Foo {}
 ```
 
-###Lambdas
-
+### Lambdas
 注解也可以用在 Lambda 中。这将会应用到 lambda 生成的 invoke() 方法。这对 [Quasar](http://www.paralleluniverse.co/quasar/)框架很有用，在这个框架中注解被用来并发控制
 
 ```kotlin
@@ -63,8 +58,7 @@ annotation class Suspendable
 val f = @Suspendable { Fiber.sleep(10) }
 ```
 
-###java 注解
-
+### java 注解
 java 注解在 kotlin 中是完全兼容的：
 
 ```kotlin

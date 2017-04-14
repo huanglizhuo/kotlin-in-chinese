@@ -1,7 +1,5 @@
-##高阶函数与 lambda 表达式
-
-###高阶函数
-
+## 高阶函数与 lambda 表达式
+### 高阶函数
 高阶函数就是可以接受函数作为参数并返回一个函数的函数。比如 `lock()` 就是一个很好的例子，它接收一个 lock 对象和一个函数，运行函数并释放 lock;
 
 ```kotlin
@@ -79,12 +77,10 @@ ints map {it * 2}
 strings filter {it.length == 5} sortBy {it} map {it.toUpperCase()}
 ```
 
-###内联函数
-
+### 内联函数
 有些时候可以用 [内联函数](http://kotlinlang.org/docs/reference/inline-functions.html) 提高高阶函数的性能。
 
-###字面函数和函数表达式
-
+### 字面函数和函数表达式
 字面函数或函数表达式就是一个 "匿名函数"，也就是没有声明的函数，但立即作为表达式传递下去。想想下面的例子：
 
 ```kotlin
@@ -96,8 +92,7 @@ max(strings, {a, b -> a.length < b.length })
 fun compare(a: String, b: String) : Boolean = a.length < b.length
 ```
 
-###函数类型
-
+### 函数类型
 一个函数要接受另一个函数作为参数，我们得给它指定一个类型。比如上面的 `max` 定义是这样的：
 
 ```kotlin
@@ -120,8 +115,7 @@ fun max<T>(collection: Collection<out T>, less: (T, T) -> Boolean): T? {
 val compare: (x: T,y: T) -> Int = ...
 ```
 
-###函数文本语法
-
+### 函数文本语法
 函数文本的完全写法是下面这样的：
 
 ```kotlin
@@ -142,8 +136,7 @@ ints.filter {it > 0}//这是 (it: Int) -> Boolean  的字面意思
 
 注意如果一个函数接受另一个函数做为最后一个参数，该函数文本参数可以在括号内的参数列表外的传递。参看 [callSuffix](http://kotlinlang.org/docs/reference/grammar.html#call-suffix)
 
-###函数表达式
-
+### 函数表达式
 上面没有讲到可以指定返回值的函数。在大多数情形中，这是不必要的，因为返回值是可以自动推断的。然而，如果你需要自己指定，可以用函数表达式来做：
 
 ```kotlin
@@ -170,8 +163,7 @@ ints.filter(fun(item) = item > 0)
 
 字面函数和表达式函数的另一个区别是没有本地返回。没有 lable 的返回总是返回到 fun 关键字所声明的地方。这意味着字面函数内的返回会返回到一个闭合函数，而表达式函数会返回到函数表达式自身。
 
-###闭包
-
+### 闭包
 一个字面函数或者表达式函数可以访问闭包，即访问自身范围外的声明的变量。不像 java 那样在闭包中的变量可以被捕获修改：
 
 ```kotlin
@@ -183,8 +175,7 @@ ins filter {it > 0} forEach {
 print(sum)
 ```
 
-###函数表达式扩展
-
+### 函数表达式扩展
 除了普通的功能，kotlin 支持扩展函数。这种方式对于字面函数和表达式函数都是适用的。它们最重要的使用是在 [Type-safe Groovy-style builders](http://kotlinlang.org/docs/reference/type-safe-builders.html)。
 
 表达式函数的扩展和普通的区别是它有接收类型的规范。

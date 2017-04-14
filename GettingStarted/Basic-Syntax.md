@@ -1,11 +1,8 @@
 [原文](http://kotlinlang.org/docs/reference/basic-syntax.html)
 
-#准备开始
-
-##基本语法
-
-###定义包名
-
+# 准备开始
+## 基本语法
+### 定义包名
 在源文件的开头定义包名：
 
 ```kotlin
@@ -17,8 +14,7 @@ import java.util.*
 包名不必和文件夹路径一致：源文件可以放在任意位置。
 
 更多请参看 [包(package)](../Basics/Packages.md)
-###定义函数
-
+### 定义函数
 定义一个函数接受两个 int 型参数，返回值为 int ：
 
 ```kotlin
@@ -51,8 +47,7 @@ fun printSum(a: Int, b: Int){
 
 更多请参看[函数](../FunctionsAndLambdas/Functions.md)
 
-###定义局部变量
-
+### 定义局部变量
 声明常量：
 ```kotlin
 val a: Int = 1
@@ -70,8 +65,7 @@ x += 1
 
 更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Filds.md)
 
-###注释
-
+### 注释
 与 java 和 javaScript 一样，Kotlin 支持单行注释和块注释。
 
 ```kotlin
@@ -85,8 +79,7 @@ x += 1
 
 参看[文档化 Kotlin 代码](http://kotlinlang.org/docs/reference/kotlin-doc.html)学习更多关于文档化注释的语法。
 
-###使用字符串模板
-
+### 使用字符串模板
 ```kotlin
 fun main(args: Array<String>) {
 	if (args.size == 0) return
@@ -97,8 +90,7 @@ fun main(args: Array<String>) {
 
 更多请参看[字符串模板](../Basics/Basic-Types.md)
 
-###使用条件表达式
-
+### 使用条件表达式
 ```kotlin
 fun max(a: Int, b: Int): Int {
 	if (a > b)
@@ -116,8 +108,7 @@ fun max(a: Int, b: Int): Int {
 
 更多请参看[if表达式](../Basics/Control-Flow.md)
 
-###使用可空变量以及空值检查
-
+### 使用可空变量以及空值检查
 当空值可能出现时应该明确指出该引用可空。
 
 下面的函数是当 str 中不包含整数时返回空:
@@ -166,8 +157,7 @@ fun main(args: Array<String>) {
 
 更多请参看[空安全](../Other/Null-Safety.md)
 
-###使用值检查并自动转换
-
+### 使用值检查并自动转换
 使用 is 操作符检查一个表达式是否是某个类型的实例。如果对不可变的局部变量或属性进行过了类型检查，就没有必要明确转换：
 
 ```kotlin
@@ -205,8 +195,7 @@ fun getStringLength(obj: Any): Int? {
 
 更多请参看 [类](../ClassesAndObjects/Classes-and-Inheritance.md) 和 [类型转换](../Other/Type-Checks-and-Casts.md)
 
-###使用循环
-
+### 使用循环
 ```kotlin
 fun main(args: Array<String>){
 	for (arg in args)
@@ -223,8 +212,7 @@ for (i in args.indices)
 
 参看[for循环](http://kotlinlang.org/docs/reference/control-flow.html#for-loops)
 
-###使用 while 循环
-
+### 使用 while 循环
 ```kotlin
 fun main(args: Array<Atring>){
 	var i = 0
@@ -236,8 +224,7 @@ fun main(args: Array<Atring>){
 
 参看[while循环](http://kotlinlang.org/docs/reference/control-flow.html#while-loops)
 
-###使用 when 表达式
-
+### 使用 when 表达式
 ```kotlin
 fun cases(obj: Any) {
     when (obj) {
@@ -252,8 +239,7 @@ fun cases(obj: Any) {
 
 参看[when表达式](http://kotlinlang.org/docs/reference/control-flow.html#when-expression)
 
-### 使用ranges
-
+###  使用ranges
 检查 in 操作符检查数值是否在某个范围内：
 
 ```kotlin
@@ -270,8 +256,7 @@ if (x !in 0..array.lastIndex)
 
 参看[Ranges](http://kotlinlang.org/docs/reference/ranges.html)
 
-###使用集合
-
+### 使用集合
 对一个集合进行迭代：
 
 ```kotlin

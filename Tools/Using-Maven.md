@@ -1,7 +1,5 @@
-##使用Maven
-
-###插件和版本
-
+## 使用Maven
+### 插件和版本
 Kotlin-maven-plugin 可以编译 Kotlin 资源和模块。现在只有 Maven V3 支持
 
 通过 Kotlin.version 定义你想要的 Kotlin 版本。可以有以下的值
@@ -28,8 +26,7 @@ M6.1|0.6.602
 M6|0.6.69
 M5.3|0.5.998
 
-###配置快照仓库
-
+### 配置快照仓库
 使用 kotlin 版本的快照，需要在 pom 中这样定义：
 
 ```pom
@@ -62,8 +59,7 @@ M5.3|0.5.998
 </pluginRepositories>
 ```
 
-###依赖
-
+### 依赖
 kotlin 有一些扩展标准库可以使用。在 pom 文件中使用如下的依赖：
 
 ```pom
@@ -76,8 +72,7 @@ kotlin 有一些扩展标准库可以使用。在 pom 文件中使用如下的�
 </dependencies>
 ```
 
-###只编译 kotlin 源码
-
+### 只编译 kotlin 源码
 编译源码需要在源码文件夹打一个标签：
 
 ```xml
@@ -107,8 +102,7 @@ kotlin 有一些扩展标准库可以使用。在 pom 文件中使用如下的�
 </plugin>
 ```
 
-###编译 kotlin 和 java 资源
-
+### 编译 kotlin 和 java 资源
 为了编译混合代码的应用，Kotlin 编译器应该在 java 编译器之前先工作。在 maven 中意味着 kotlin-maven-plug 应该在 maven-compiler-plugin 之前。
 
 ```xml
@@ -131,8 +125,7 @@ kotlin 有一些扩展标准库可以使用。在 pom 文件中使用如下的�
 </plugin>
 ```
 
-###使用扩展的注解
-
+### 使用扩展的注解
 kotlin 使用扩展的注解解析 java 库的信息。为了明确这些注解，你需要像下面这样：
 
 ```xml
@@ -147,6 +140,5 @@ kotlin 使用扩展的注解解析 java 库的信息。为了明确这些注解�
 	</configuration>
 ```
 
-###例子
-
+### 例子
 你可以在 [Github]() 仓库参考

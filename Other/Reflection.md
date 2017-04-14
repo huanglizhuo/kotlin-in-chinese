@@ -1,11 +1,9 @@
-##反射
-
+## 反射
 反射是一系列语言和库的特性，允许在运行是获取你代码结构。 Kotlin 把函数和属性作为语言的头等类，而且反射它们和使用函数式编程或反应是编程风格很像。
 
 >On the Java platform, the runtime component required for using the reflection features is distributed as a separate JAR file (kotlin-reflect.jar). This is done to reduce the required size of the runtime library for applications that do not use reflection features. If you do use reflection, please make sure that the .jar file is added to the classpath of your project.
 
-###类引用
-
+### 类引用
 最基本的反射特性就是得到运行时的类引用。要获取引用并使之成为静态类可以使用字面类语法：
 
 ```kotlin
@@ -17,8 +15,7 @@ val c = MyClass::class
 注意这与 java 类的引用是不一样的。参看 [java interop section](http://kotlinlang.org/docs/reference/java-interop.html#object-methods)
 
 
-###函数引用
-
+### 函数引用
 当有一个像下面这样的函数声明时：
 
 ```kotlin
@@ -38,8 +35,7 @@ println(numbers.filter( ::isOdd) ) //prints [1, 3]
 
 如果需要使用一系列类，或者扩展函数，必须是需合格的，并且结果是扩展函数类型，比如。`String::toCharArray` 就带来一个 `String: String.() -> CharArray` 类型的扩展函数。
 
-###例子：函数组合
-
+### 例子：函数组合
 考虑一下下面的函数：
 
 ```kotlin
@@ -58,8 +54,7 @@ val strings = listOf("a", "ab", "abc")
 println(strings.filter(oddLength)) // Prints "[a, abc]"
 ```
 
-###属性引用
-
+### 属性引用
 在 kotlin 中访问顶级类的属性，我们也可以使用 `::` 操作符：
 
 ```kotlin
@@ -97,8 +92,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-###与 java 反射调用
-
+### 与 java 反射调用
 在 java 平台上，标准库包括反射类的扩展，提供了到 java 反射对象的映射(参看 kotlin.reflect.jvm 包)。比如，想找到一个备用字段或者 java getter 方法，你可以这样写：
 
 ```kotlin
@@ -112,8 +106,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-###构造函数引用
-
+### 构造函数引用
 构造函数可以像方法或属性那样引用。只需要使用 `::` 操作符并加上类名。下面的函数是一个没有参数并且返回类型是 `Foo`:
 
 ```kotlin

@@ -1,5 +1,4 @@
-##Ranges
-
+## Ranges
 range 表达式拥有 `rangeTo` 函数操作符是 `..`  。 Range 可以对任何可比较的类型做操作，但对很多原语是优化过的。下面是些例子：
 
 ```kotlin
@@ -38,8 +37,7 @@ for (i in 4 downTo 1 step 2) print(i) // prints "42"
 for (i in 1.0..2.0 step 0.3) print("$i ") // prints "1.0 1.3 1.6 1.9 "
 ```
 
-###工作原理
-
+### 工作原理
 在标准库中有俩种接口：Range<T> 和 Progression<N>
 
 Range<T> 表示数学范围上的一个间隔。它有俩个端点：start 和 end 。主要的操作符是 contains 通常在 in/!in 操作符内：
@@ -57,8 +55,7 @@ for (int i = start; i >= end; i += increment) {
 }
 ```
 
-###范围指标
-
+### 范围指标
 使用例子：
 
 ```kotlin
@@ -93,8 +90,7 @@ for (x in 2.0 downTo 1.0 step 0.3) print("$x ") // prints "2.0 1.7 1.4 1.1 "
 for (str in "island".."isle") println(str) // error: string range cannot be iterated over
 ```
 
-###常见的接口的定义
-
+### 常见的接口的定义
 有俩种基本接口：`Range` `Progression`
 
 `Range` 接口定义了一个范围，或者是数学意义上的一个间隔。
@@ -130,8 +126,7 @@ for (int i = start; i >= end; i += increment) {
 }
 ```
 
-###类的实现
-
+### 类的实现
 为避免不需要的重复，让我们先考虑一个数字类型　`Int` 。其它的数字类型也一样。注意这些类的实例需要用相应的构造函数来创建，使用 rangeTo() downTo() reversed() stop() 实用函数。
 
 IntProgression 类很直接也很简单：
@@ -161,8 +156,7 @@ class ComparableRange<T : Comparable<T>>(override val start: T, override val end
 }
 ```
 
-###一些实用的函数
-
+### 一些实用的函数
 **rangeTo()**
 
 `rangeTo()` 函数仅仅是调用 *Range 的构造函数，比如：

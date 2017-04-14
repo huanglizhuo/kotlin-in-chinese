@@ -1,5 +1,4 @@
-##内联函数
-
+## 内联函数
 使用[高阶函数](http://kotlinlang.org/docs/reference/lambdas.html)带来了相应的运行时麻烦：每个函数都是一个对象，它捕获闭包，即这些变量可以在函数体内被访问。内存的分配，虚拟调用的运行都会带来开销
 
 但在大多数这种开销是可以通过内联文本函数避免。下面就是一个很好的例子。`lock()` 函数可以很容易的在内联点调用。思考一下下面的例子：
@@ -33,8 +32,7 @@ inline fun lock<T>(lock: Lock,body: ()-> T): T {
 
 内联可能会引起生成代码增长，但我们可以合理的解决它(不要内联太大的函数)
 
-###@noinline
-
+### @noinline
 为了你想要一些 lambda 表达式传递给内联函数时是内联的，你可以给你的一些函数参数标记 `@noinline` 注解：
 
 ```kotlin
@@ -47,8 +45,7 @@ inline fun foo(inlined: () -> Uint, @noinline notInlined: () -> Unit) {
 
 注意如果内联函数没有内联的函数参数并且没有具体类型的参数，编译器会报警告，这样内联函数就没有什么优点的(如果你认为内联是必须的你可以忽略警告)
 
-###返回到非局部
-
+### 返回到非局部
 在 kotlin 中，我们可以不加条件的使用 `return` 去退出一个命名函数或表达式函数。这意味这退出一个 lambda 函数，我们不得不使用[标签](http://kotlinlang.org/docs/reference/returns.html#return-at-labels)，而且空白的 `return` 在 lambda 函数中是禁止的，因为 lambda 函数不可以造一个闭合函数返回：
 
 ```kotlin
@@ -82,8 +79,7 @@ inline fun f(inlineOptions(InlineOption.ONLY_LOCAL_RETURN) body: () -> Unit) {
 
 内联 lambda 不允许用 break 或 continue ，但在以后的版本可能会支持。
 
-###实例化参数类型
-
+### 实例化参数类型
 有时候我们需要访问传递过来的类型作为参数：
 
 ```kotlin

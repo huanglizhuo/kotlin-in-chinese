@@ -1,7 +1,5 @@
-##与 java 的对比
-
-###一些 java 的问题
-
+## 与 java 的对比
+### 一些 java 的问题
 Kotlin 修复了 java 的一系列问题
 
 > Null 引用交给了[类型系统](http://kotlinlang.org/docs/reference/null-safety.html)控制
@@ -16,8 +14,7 @@ Kotlin 修复了 java 的一系列问题
 
 > Kotlin 不强制检查[异常](http://kotlinlang.org/docs/reference/exceptions.html)
 
-###java 有的而 kotlin 没有
-
+### java 有的而 kotlin 没有
 > 异常检查
 
 > 原始类型不是类
@@ -28,8 +25,7 @@ Kotlin 修复了 java 的一系列问题
 
 > 通配符类型
 
-###kotlin 有的而 java 没有
-
+### kotlin 有的而 java 没有
 >[字面函数](http://kotlinlang.org/docs/reference/lambdas.html)+[内联函数](http://kotlinlang.org/docs/reference/inline-functions.html)=高性能自定义控制结构
 >[扩展函数](http://kotlinlang.org/docs/reference/extensions.html)
 >[空安全](http://kotlinlang.org/docs/reference/null-safety.html)

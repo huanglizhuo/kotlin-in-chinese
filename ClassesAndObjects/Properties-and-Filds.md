@@ -1,7 +1,5 @@
-##属性和字段
-
-###属性声明
-
+## 属性和字段
+### 属性声明
 在 Kotlin 中类可以有属性，我们可以使用 var 关键字声明可变属性，或者用 val 关键字声明只读属性。
 
 ```kotlin
@@ -24,8 +22,7 @@ fun copyAddress(address: Address) : Address {
 }
 ```
 
-###Getter 和 Setter 
-
+### Getter 和 Setter 
 声明一个属性的完整语法如下：
 
 ```kotlin
@@ -79,8 +76,7 @@ var setterVithAnnotation: Any?
 	@Inject set // 用 Inject 注解 setter
 ```
 
-### 备用字段
-
+###  备用字段
 在 kotlin 中类不可以有字段。然而当使用自定义的访问器时有时候需要备用字段。出于这些原因 kotlin 使用 `field` 关键词提供了自动备用字段，
 
 ```kotllin
@@ -102,8 +98,7 @@ val isEmpty: Boolean
 	get() = this.size == 0
 ```
 
-###备用属性
-
+### 备用属性
 如果你想要做一些事情但不适合这种 "隐含备用字段" 方案，你可以试着用备用属性的方式：
 
 ```kotlin
@@ -118,8 +113,7 @@ public val table: Map<String, Int>
 
 综合来讲，这些和 java 很相似，可以避免函数访问私有属性而破坏它的结构
 
-###编译时常量
-
+### 编译时常量
 那些在编译时就能知道具体值的属性可以使用 `const` 修饰符标记为 *编译时常量*. 这种属性需要同时满足以下条件:
 
 * Top-level or member of an object   //宝宝不会翻 :( :( :( 
@@ -134,8 +128,7 @@ const val SUBSYSTEM_DEPRECATED: String = "This subsystem is deprecated"
 @Deprected(SUBSYSTEM_DEPRECATED) fun foo() { ... }
 ```
 
-###延迟初始化属性
-
+### 延迟初始化属性
 通常,那些被定义为拥有非空类型的属性,都需要在构造器中初始化.但有时候这并没有那么方便.例如在单元测试中,属性应该通过依赖注入进行初始化,
 或者通过一个 setup 方法进行初始化.在这种条件下,你不能在构造器中提供一个非空的初始化语句,但是你仍然希望在访问这个属性的时候,避免非空检查.
 
@@ -159,12 +152,10 @@ public class MyTest {
 
 在一个延迟初始化的属性初始化前访问他,会导致一个特定异常,告诉你访问的时候值还没有初始化.
 
-###复写属性
-
+### 复写属性
 参看[复写成员](http://kotlinlang.org/docs/reference/classes.html#overriding-members)
 
-###代理属性
-
+### 代理属性
 最常见的属性就是从备用属性中读（或者写）。另一方面，自定义的 getter 和 setter 可以实现属性的任何操作。有些像懒值( lazy values )，根据给定的关键字从 map 中读出，读取数据库，通知一个监听者等等，像这些操作介于 getter setter 模式之间。
 
 像这样常用操作可以通过代理属性作为库来实现。更多请参看[这里](http://kotlinlang.org/docs/reference/delegated-properties.html)。

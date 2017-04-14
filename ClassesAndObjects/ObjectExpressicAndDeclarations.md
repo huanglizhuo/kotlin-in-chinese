@@ -1,9 +1,7 @@
-##对象表达式和声明
-
+## 对象表达式和声明
 有时候我们想要创建一个对当前类有一点小修改的对象，但不想重新声明一个子类。java 用匿名内部类的概念解决这个问题。Kotlin 用对象表达式和对象声明巧妙的实现了这一概念。
 
-###对象表达式
-
+### 对象表达式
 通过下面的方式可以创建继承自某种(或某些)匿名类的对象：
 
 ```kotlin
@@ -56,8 +54,7 @@ fun countClicks(windows: JComponent) {
 }
 ```
 
-###对象声明
-
+### 对象声明
 [单例模式](http://en.wikipedia.org/wiki/Singleton_pattern)是一种很有用的模式，Kotln 中声明它很方便：
 
 ```kotlin
@@ -95,8 +92,7 @@ object DefaultListener : MouseAdapter() {
 
 **注意**：对象声明不可以是局部的(比如不可以直接在函数内部声明)，但可以在其它对象的声明或非内部类中进行内嵌入
 
-###伴随对象
-
+### 伴随对象
 在类声明内部可以用 companion 关键字标记对象声明：
 
 ```kotln
@@ -139,8 +135,7 @@ class MyClass {
 
 如果你在 JVM 上使用 `@JvmStatic` 注解，你可以有多个伴随对象生成为真实的静态方法和属性。参看 [java interoperabillity](https://kotlinlang.org/docs/reference/java-interop.html#static-methods-and-fields)。
 
-###对象表达式和声明的区别
-
+### 对象表达式和声明的区别
 他俩之间只有一个特别重要的区别：
 
 >　对象表达式在我们使用的地方立即初始化并执行的
