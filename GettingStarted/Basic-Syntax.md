@@ -281,4 +281,4 @@ names
      .forEach { print(it) }
 ```
 
-参看[高级函数和lambda表达式](../FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
+参看[高阶函数和lambda表达式](../FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
