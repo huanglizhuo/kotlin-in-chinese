@@ -8,14 +8,14 @@
 
 
 
-###  阻塞和挂起
+### 阻塞和挂起
 一般来说，协程是一种可以不阻塞线程但却可以被挂起的计算过程。线程阻塞总是昂贵的，尤其是在高负载的情形下，因为只有小部分的线程是实际运行的，因此阻塞它们会导致一些重要的任务被延迟。
 
 而协程的挂起基本没有什么开销。没有上下文切换或者任何的操作系统的介入。最重要的是，挂起是可以背用户库控制的，库的作者可以决定在挂起时根据需要进行一些优化／日志记录／拦截等操作。
 
 另一个不同就是协程不能被任意的操作挂起，而仅仅可以在被标记为 *挂起点*  的地方进行挂起。
 
-###  挂起函数
+### 挂起函数
 当一个函数被 `suspend` 修饰时表示可以背挂起。
 
 ```kotlin
@@ -23,9 +23,6 @@ suspend fun doSomething(foo: Foo): Bar{
  ... 
 }
 ```
-
-
-
 这样的函数被称为 *挂起函数*，因为调用它可能导致挂起协程（库可以在调用结果已经存在的情形下决定取消挂起）。挂起函数可以想正常函数那样接受参数返回结果，但只能在协程中调用或着被其他挂起函数调用。事实上启动一个协程至少需要一个挂起函数，而且常常时匿名的（比如lambda）。下面这个例子是一个简单的`async()` 函数（来自[`kotlinx.coroutines`](http://kotlinlang.org/docs/reference/coroutines.html#generators-api-in-kotlincoroutines)  库）：
 
 ```kotlin
@@ -40,6 +37,16 @@ async{
 }
 ```
 
+继续类比，`await()` 函数可以是一个挂起函数(因此在 `await(){}` 语句块内仍然可以调用)，该函数会挂起协程直至指定操作完成并返回结果：
 
+```kotlin
+async {
+    ...
+    val result = computation.await()
+    ...
+}
+```
 
-继续类比，`await()` 函数
+更多关于 `async/await` 原理的内容请看[这里](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions)
+
+注意 `await` 
