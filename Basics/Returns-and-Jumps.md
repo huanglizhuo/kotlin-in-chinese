@@ -54,7 +54,7 @@ fun foo() {
 ```kotlin
 fun foo() {
 	ints.forEach {
-		if (it ==0) return@forEach
+		if (it == 0) return@forEach
 		print(it)
 	}
 }

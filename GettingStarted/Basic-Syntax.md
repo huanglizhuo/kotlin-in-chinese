@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-Uint 的返回类型可以省略：
+Unit 的返回类型可以省略：
 
 ```kotlin
 fun printSum(a: Int, b: Int) {
