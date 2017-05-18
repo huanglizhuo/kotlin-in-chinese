@@ -195,7 +195,7 @@ for (c in str) {
 }
 ```
 
-Kotlin 有俩种类型的 string ：一种是可以带分割符的，一种是可以包含新行以及任意文本的。带分割符的 string 很像 java 的 string:
+Kotlin 有两种类型的 string ：一种是可以带分割符的，一种是可以包含新行以及任意文本的。带分割符的 string 很像 java 的 string:
 ```kotlin
 val s = "Hello World!\n"
 ```
