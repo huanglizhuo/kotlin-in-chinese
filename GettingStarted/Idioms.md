@@ -1,9 +1,9 @@
 ## 习惯用语
 这里是一些在 Kotlin 中经常使用的习语。如果你有特别喜欢的习语想要贡献出来，赶快发起 pull request 吧。
 
-### 创建DTO's(POJO's/POCO's)  数据类 
+### 创建DTOs(POJOs/POCOs)  数据类
 ```kotlin
-data class Customer(val name: String,val email: String)
+data class Customer(val name: String, val email: String)
 ```
 
 给 Customer 类提供如下方法：
@@ -32,7 +32,7 @@ val positives = list.filter { it > 0 }
 
 ### 字符串插值
 ```kotlin
-println( "Name $name" )
+println("Name $name")
 ```
 
 ### 实例检查
@@ -44,19 +44,27 @@ when (x) {
 }
 ```
 
-### 遍历 map/list```kotlin
+### 遍历 map/list
+```kotlin
 for ((k, v) in map) {
 	print("$k -> $v")
 }
 ```
 k,v 可以随便命名
 
-### 使用 ranges```kotlin
+### 使用 ranges
+```kotlin
+for (i in 1..100) { ... }  // 闭区间: 包括100
+for (i in 1 until 100) { ... } // 半开区间: 不包括100
+for (x in 2..10 step 2) { ... }
+for (x in 10 downTo 1) { ... }
+if (x in 1..10) { ... }
 for (i in 1..100) { ... }
 for (i in 2..10) { ... }
 ```
 
-### 只读 list```kotllin
+### 只读 list
+```kotllin
 val list = listOf("a", "b", "c")
 ```
 
@@ -65,7 +73,7 @@ val list = listOf("a", "b", "c")
 val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
-### 访问 map 
+### 访问 map
 ```kotllin
 println(map["key"])
 map["key"] = value
@@ -74,44 +82,51 @@ map["key"] = value
 ### 懒属性(延迟加载)
 ```kotlin
 val p: String by lazy {
-
+	// 生成string的值
 }
 ```
 
-### 扩展函数```kotlin
+### 扩展函数
+```kotlin
 fun String.spcaceToCamelCase() { ... }
 "Convert this to camelcase".spcaceToCamelCase()
 ```
 
-### 创建单例模式```kotlin
+### 创建单例模式
+```kotlin
 object Resource {
 	val name = "Name"
 }
 ```
 
-### 如果不为空则... 的简写```kotlin
+### 如果不为空则... 的简写
+```kotlin
 val files = File("Test").listFiles()
 println(files?.size)
 ```
 
-### 如果不为空...否则... 的简写```kotlin
+### 如果不为空...否则... 的简写
+```kotlin
 val files = File("test").listFiles()
 println(files?.size ?: "empty")
 ```
 
-### 如果声明为空执行某操作```kotlin
+### 如果声明为空执行某操作
+```kotlin
 val data = ...
 val email = data["email"] ?: throw IllegalStateException("Email is missing!")
 ```
 
-### 如果不为空执行某操作```kotlin
+### 如果不为空执行某操作
+```kotlin
 val date = ...
 data?.let{
 	...//如果不为空执行该语句块
 }
 ```
 
-### 返回 when 判断```kotlin
+### 返回 when 判断
+```kotlin
 fun transform(color: String): Int {
 	return when(color) {
 		"Red" -> 0
@@ -133,7 +148,8 @@ fun test() {
 	//处理 result
 }
 ```
-###  if 表达式```kotlin
+###  if 表达式
+```kotlin
 fun foo(param: Int){
 	val result = if (param == 1) {
 		"one"
@@ -152,7 +168,8 @@ fun arrOfMinusOnes(size: Int): IntArray{
 }
 ```
 
-### 只有一个表达式的函数```kotlin
+### 只有一个表达式的函数
+```kotlin
 fun theAnswer() = 42
 ```
 与下面的语句是等效的
@@ -177,17 +194,17 @@ fun transform(color: String): Int = when (color) {
 class Turtle {
 	fun penDown()
 	fun penUp()
-	fun turn(degrees: Double) 
+	fun turn(degrees: Double)
 	fun forward(pixels: Double)
 }
 val myTurtle = Turtle()
-with(myTurtle) { //draw a 100 pix square
+with(myTurtle) { // 画一个100像素的正方形
 	penDown()
 	for(i in 1..4) {
-        forward(100.0)
-		turn(90.0) 
+    forward(100.0)
+		turn(90.0)
 	}
-	penUp() 
+	penUp()
 }
 ```
 
@@ -195,6 +212,26 @@ with(myTurtle) { //draw a 100 pix square
 ```kotlin
 val stream = Files.newInputStream(Paths.get("/some/file.txt"))
 stream.buffered().reader().use { reader ->
-	println(reader.readText()) 
+	println(reader.readText())
+}
+```
+
+### 需要泛型信息的泛型函数的方便形式
+```kotlin
+//  public final class Gson {
+//     ...
+//     public <T> T fromJson(JsonElement json, Class<T> classOfT) throws JsonSyntaxException {
+//     ...
+
+inline fun <reified T: Any> Gson.fromJson(json): T = this.fromJson(json, T::class.java)
+```
+
+### 产生一个可能为空的布尔值
+```kotlin
+val b: Boolean? = ...
+if (b == true) {
+  ...
+} else {
+  // `b` 是false或者null
 }
 ```
