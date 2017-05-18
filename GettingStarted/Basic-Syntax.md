@@ -21,27 +21,44 @@ import java.util.*
 fun sum(a: Int , b: Int) : Int{
 	return a + b
 }
+
+fun main(args: Array<String>) {
+  print("sum of 3 and 5 is ")
+  println(sum(3, 5))
+}
 ```
 
 该函数只有一个表达式函数体以及一个自推导型的返回值：
 
 ```kotlin
 fun sum(a: Int, b: Int) = a + b
+
+fun main(args: Array<String>) {
+  println("sum of 19 and 23 is ${sum(19, 23)}")
+}
 ```
 
 返回一个没有意义的值：
 
 ```kotlin
-fun printSum(a: Int, b: Int): Unit{
-	print( a + b)
+fun printSum(a: Int, b: Int): Unit {
+  println("sum of $a and $b is ${a + b}")
+}
+
+fun main(args: Array<String>) {
+  printSum(-1, 8)
 }
 ```
 
 Uint 的返回类型可以省略：
 
 ```kotlin
-fun printSum(a: Int, b: Int){
-	print( a + b)
+fun printSum(a: Int, b: Int) {
+  println("sum of $a and $b is ${a + b}")
+}
+
+fun main(args: Array<String>) {
+  printSum(-1, 8)
 }
 ```
 
@@ -50,17 +67,23 @@ fun printSum(a: Int, b: Int){
 ### 定义局部变量
 声明常量：
 ```kotlin
-val a: Int = 1
-val b = 1 //推导出Int型
-val c: Int //当没有初始化值时必须声明 类型
-c = 1 // 赋值
+fun main(args: Array<String>) {
+  val a: Int = 1  // 立即初始化
+  val b = 2   // 推导出Int型
+  val c: Int  // 当没有初始化值时必须声明类型
+  c = 3       // 赋值
+  println("a = $a, b = $b, c = $c")
+}
 ```
 
 变量：
 
 ```kotlin
- var x = 5 //推导出Int型
-x += 1
+fun main(args: Array<String>) {
+  var x = 5 // 推导出Int类型
+  x += 1
+  println("x = $x")
+}
 ```
 
 更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Filds.md)
@@ -82,9 +105,14 @@ x += 1
 ### 使用字符串模板
 ```kotlin
 fun main(args: Array<String>) {
-	if (args.size == 0) return
+  var a = 1
+  // 使用变量名作为模板:
+  val s1 = "a is $a"
 
-	print("First argument: ${args[0]}")
+  a = 2
+  // 使用表达式作为模板:
+  val s2 = "${s1.replace("is", "was")}, but now is $a"
+  println(s2)
 }
 ```
 
@@ -92,18 +120,27 @@ fun main(args: Array<String>) {
 
 ### 使用条件表达式
 ```kotlin
-fun max(a: Int, b: Int): Int {
-	if (a > b)
-		return a
-	else
-		return b
+fun maxOf(a: Int, b: Int): Int {
+    if (a > b) {
+        return a
+    } else {
+        return b
+    }
+}
+
+fun main(args: Array<String>) {
+    println("max of 0 and 42 is ${maxOf(0, 42)}")
 }
 ```
 
 把if当表达式：
 
 ```kotlin
-	fun max(a: Int,  b: Int) = if (a > b) a else b
+fun maxOf(a: Int, b: Int) = if (a > b) a else b
+
+fun main(args: Array<String>) {
+    println("max of 0 and 42 is ${maxOf(0, 42)}")
+}
 ```
 
 更多请参看[if表达式](../Basics/Control-Flow.md)
@@ -122,37 +159,56 @@ fun parseInt(str : String): Int?{
 使用一个返回可空值的函数：
 
 ```kotlin
-fun main(args: Array<String>) {
-	if (args.size <2 ){
-		print("Two integers expected")
-		return
-	}
-	
-	val x = parseInt(args[0])
-	val y = parseInt(args[1])
+fun parseInt(str: String): Int? {
+  return str.toIntOrNull()
+}
 
-	//直接使用 x*y 会产生错误因为它们中有可能会有空值
-	if (x != null && y !=null){
-		//x 和 y 将会在空值检测后自动转换为非空值
-		print(x * y)
-	}
+fun printProduct(arg1: String, arg2: String) {
+  val x = parseInt(arg1)
+  val y = parseInt(arg2)
+
+  // 直接使用 x*y 会产生错误因为它们中有可能会有空值
+  if (x != null && y != null) {
+    // x 和 y 将会在空值检测后自动转换为非空值
+    println(x * y)
+  }
+  else {
+    println("either '$arg1' or '$arg2' is not a number")
+  }    
+}
+
+
+fun main(args: Array<String>) {
+  printProduct("6", "7")
+  printProduct("a", "7")
+  printProduct("a", "b")
 }
 ```
 
 或者这样
 
 ```kotlin
-	//...
-	if (x == null) {
-		print("Wrong number format in '${args[0]}' ")
-		return
-	}
-	if (y == null) {
-		print("Wrong number format in '${args[1]}' ")
-		return
-	}
-	//x 和 y 将会在空值检测后自动转换为非空值
-	print(x * y)
+fun parseInt(str: String): Int? {
+  return str.toIntOrNull()
+}
+
+fun printProduct(arg1: String, arg2: String) {
+  val x = parseInt(arg1)
+  val y = parseInt(arg2)
+
+  // ...
+  if (x == null) {
+    println("Wrong number format in arg1: '${arg1}'")
+    return
+  }
+  if (y == null) {
+    println("Wrong number format in arg2: '${arg2}'")
+    return
+  }
+
+  // x 和 y 将会在空值检测后自动转换为非空值
+  println(x * y)
+}
 ```
 
 更多请参看[空安全](../Other/Null-Safety.md)
@@ -162,12 +218,23 @@ fun main(args: Array<String>) {
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
-	if ( obj is string ){
-		//obj 将会在这个分支中自动转换为 String 类型
-		return obj.length
-	}
-	// obj 在种类检查外仍然是 Any 类型
-	return null
+  if (obj is String) {
+    // obj 将会在这个分支中自动转换为 String 类型
+    return obj.length
+  }
+
+  // obj 在种类检查外仍然是 Any 类型
+  return null
+}
+
+
+fun main(args: Array<String>) {
+  fun printLength(obj: Any) {
+    println("'$obj' string length is ${getStringLength(obj) ?: "... err, not a string"} ")
+  }
+  printLength("Incomprehensibilities")
+  printLength(1000)
+  printLength(listOf(Any()))
 }
 ```
 
@@ -175,11 +242,20 @@ fun getStringLength(obj: Any): Int? {
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
-	if ( obj is string )
-		return obj.length
+  if (obj !is String) return null
 
-	//obj 将会在这个分支中自动转换为 String 类型
-	return null
+  // obj 将会在这个分支中自动转换为 String 类型
+  return obj.length
+}
+
+
+fun main(args: Array<String>) {
+  fun printLength(obj: Any) {
+    println("'$obj' string length is ${getStringLength(obj) ?: "... err, not a string"} ")
+  }
+  printLength("Incomprehensibilities")
+  printLength(1000)
+  printLength(listOf(Any()))
 }
 ```
 
@@ -187,9 +263,22 @@ fun getStringLength(obj: Any): Int? {
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
-	if (obj is String && obj.length > 0)
-		return obj.Length
-	return null
+	// obj 将会在&&右边自动转换为 String 类型
+  if (obj is String && obj.length > 0) {
+    return obj.length
+  }
+
+  return null
+}
+
+
+fun main(args: Array<String>) {
+  fun printLength(obj: Any) {
+    println("'$obj' string length is ${getStringLength(obj) ?: "... err, is empty or not a string at all"} ")
+  }
+  printLength("Incomprehensibilities")
+  printLength("")
+  printLength(1000)
 }
 ```
 
@@ -197,28 +286,36 @@ fun getStringLength(obj: Any): Int? {
 
 ### 使用循环
 ```kotlin
-fun main(args: Array<String>){
-	for (arg in args)
-		print(arg)
+fun main(args: Array<String>) {
+  val items = listOf("apple", "banana", "kiwi")
+  for (item in items) {
+    println(item)
+  }
 }
 ```
 
 或者
 
 ```kotlin
-for (i in args.indices)
-	print(args[i])
+fun main(args: Array<String>) {
+  val items = listOf("apple", "banana", "kiwi")
+  for (index in items.indices) {
+    println("item at $index is ${items[index]}")
+  }
+}
 ```
 
 参看[for循环](http://kotlinlang.org/docs/reference/control-flow.html#for-loops)
 
 ### 使用 while 循环
 ```kotlin
-fun main(args: Array<Atring>){
-	var i = 0
-	while (i < args.size){
-		print(args[i++])
-	}
+fun main(args: Array<String>) {
+  val items = listOf("apple", "banana", "kiwi")
+  var index = 0
+  while (index < items.size) {
+    println("item at $index is ${items[index]}")
+    index++
+  }
 }
 ```
 
@@ -226,14 +323,21 @@ fun main(args: Array<Atring>){
 
 ### 使用 when 表达式
 ```kotlin
-fun cases(obj: Any) {
-    when (obj) {
-        1 -> print("one")
-        "hello" -> print("Greeting")
-        is Long -> print("Long")
-        !is Long -> print("Not a string")
-        else -> print("Unknown")
-    }
+fun describe(obj: Any): String =
+when (obj) {
+  1          -> "One"
+  "Hello"    -> "Greeting"
+  is Long    -> "Long"
+  !is String -> "Not a string"
+  else       -> "Unknown"
+}
+
+fun main(args: Array<String>) {
+  println(describe(1))
+  println(describe("Hello"))
+  println(describe(1000L))
+  println(describe(2))
+  println(describe("other"))
 }
 ```
 
@@ -243,15 +347,51 @@ fun cases(obj: Any) {
 检查 in 操作符检查数值是否在某个范围内：
 
 ```kotlin
-if (x in 1..y-1)
-	print("OK")
+fun main(args: Array<String>) {
+  val x = 10
+  val y = 9
+  if (x in 1..y+1) {
+      println("fits in range")
+  }
+}
 ```
 
 检查数值是否在范围外：
 
 ```kotlin
-if (x !in 0..array.lastIndex)
-	print("Out")
+fun main(args: Array<String>) {
+  val list = listOf("a", "b", "c")
+
+  if (-1 !in 0..list.lastIndex) {
+    println("-1 is out of range")
+  }
+  if (list.size !in list.indices) {
+    println("list size is out of valid list indices range too")
+  }
+}
+```
+
+在范围内迭代：
+
+```kotlin
+fun main(args: Array<String>) {
+  for (x in 1..5) {
+    print(x)
+  }
+}
+```
+
+或者使用步进：
+
+```kotlin
+fun main(args: Array<String>) {
+  for (x in 1..10 step 2) {
+    print(x)
+  }
+  for (x in 9 downTo 0 step 3) {
+    print(x)
+  }
+}
 ```
 
 参看[Ranges](http://kotlinlang.org/docs/reference/ranges.html)
@@ -260,25 +400,37 @@ if (x !in 0..array.lastIndex)
 对一个集合进行迭代：
 
 ```kotlin
-for (name in names)
-	println(name)
+fun main(args: Array<String>) {
+  val items = listOf("apple", "banana", "kiwi")
+  for (item in items) {
+    println(item)
+  }
+}
 ```
 
 使用 in 操作符检查集合中是否包含某个对象
 
 ```kotlin
-if (text in names) //将会调用nemes.contains(text)方法
-	print("Yes)
+fun main(args: Array<String>) {
+  val items = setOf("apple", "banana", "kiwi")
+  when {
+    "orange" in items -> println("juicy")
+    "apple" in items -> println("apple is fine too")
+  }
+}
 ```
 
-使用字面函数过滤和映射集合：
+使用lambda表达式过滤和映射集合：
 
 ```kotlin
-names
-     .filter { it.startsWith("A") }
-     .sortedBy { it }
-     .map { it.toUpperCase() }
-     .forEach { print(it) }
+fun main(args: Array<String>) {
+  val fruits = listOf("banana", "avocado", "apple", "kiwi")
+  fruits
+    .filter { it.startsWith("a") }
+    .sortedBy { it }
+    .map { it.toUpperCase() }
+    .forEach { println(it) }
+}
 ```
 
 参看[高阶函数和lambda表达式](../FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
