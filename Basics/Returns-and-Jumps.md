@@ -43,7 +43,7 @@ return 表达式返回到最近的闭合函数，比如 `foo` (注意这样非�
 ```kotlin
 fun foo() {
 	ints.forEach lit@ {
-		it (it ==0) return＠lit
+		if (it ==0) return＠lit
 		print(it)
 	}
 }
