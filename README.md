@@ -1,8 +1,20 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
 
-墙内地址跪了，只有 [gitbook](https://github.com/huanglizhuo/kotlin-in-chinese) 可以看了。
+2017.5.17
+
+Android Announces Support for Kotlin
+
+By Mike Cleron, Director, Android Platform
+
+Google 宣布官方支持 Kotlin [android-developers.googleblog](https://android-developers.googleblog.com/2017/05/android-announces-support-for-kotlin.html)
+
+Android Studio 3.0 将默认集成 Kotlin plug-in ，博客中还说到 Kotlin 有着出色的设计，并相信 Kotlin 会帮助开发者更快更好的开发 Android 应用
+
+Expedia, Flipboard, Pinterest, Square 等公司都有在自家的项目中使用 Kotlin 
 
 2017.3.8
+
+墙内地址跪了，只有 [gitbook](https://github.com/huanglizhuo/kotlin-in-chinese) 可以看了。
 
 Kotlin 1.1 正式发布，这次最令人振奋的莫过于协程的发布，有了协程就可以更优雅的完成异步编程了
 
