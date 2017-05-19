@@ -40,7 +40,7 @@ Kotlin 也支持传统的浮点数表示：
 
 ```kotlin
 val a: Int = 10000
-print (a === a ) //打印 'true'
+print (a == a ) //打印 'true'
 val boxedA: Int? =a
 val anotherBoxedA: Int? = a
 print (boxedA === anotherBoxedA ) //注意这里打印的是 'false'
