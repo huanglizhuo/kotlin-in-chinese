@@ -49,4 +49,24 @@ async {
 
 更多关于 `async/await` 原理的内容请看[这里](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#composing-suspending-functions)
 
-注意 `await` 
+注意 `await()`和 `doSomething()` 不能在像 main() 这样的普通函数中调用： 
+
+```kotlin
+fun main(args: Array<String>) {
+    doSomething() // 错误：挂起函数从非协程上下文调用
+}
+```
+还有一点，挂起函数可以是虚拟的，当覆盖它们时，必须指定 suspend 修饰符：
+
+```kotlin
+interface Base {
+    suspend fun foo()
+}
+
+class Derived: Base {
+    override suspend fun foo() { …… }
+}
+to be continue
+```
+
+
