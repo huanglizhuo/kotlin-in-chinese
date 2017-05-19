@@ -19,8 +19,8 @@ val box: Box<Int> = Box<Int>(1)
 val box = Box(1)//1是 Int 型，因此编译器会推导出我们调用的是 Box<Int>
 ```
 
-### 变动
-java 类型系统最狡猾的一部分就是通配符类型。但 kotlin 没有，代替它的是两种其它的东西：声明变化和类型预测(declaration-site variance and type projections)。
+### 变化
+java 类型系统最棘手的一部分就是通配符类型。但 kotlin 没有，代替它的是两种其它的东西：声明变化和类型投影(declaration-site variance and type projections)。
 
 首先，我们想想为什么 java 需要这些神秘的通配符。这个问题在[Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html),条目18中是这样解释的：使用界限通配符增加 API 的灵活性。首先 java 中的泛型是不变的，这就意味着 `List<String>` 不是 `List<Object>` 的子类型。为什么呢，如果 List 不是不变的，就会引发下面的问题：
 
@@ -61,4 +61,3 @@ interface Collection<E> ... {
 
 The key to understanding why this trick works is rather simple: if you can only take items from a collection, then using a collection of Strings and reading Objects from it is fine. Conversely, if you can only put items into the collection, it’s OK to take a collection of Objects and put Strings into it: in Java we have List<? super String> a supertype of List<Object>.
 
-未完

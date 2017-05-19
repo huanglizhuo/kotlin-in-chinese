@@ -158,7 +158,7 @@ Arrays在 Kotlin 中由 `Array` 类表示，有 `get` 和 `set` 方法(通过运
 class Array<T> private () {
 	fun size(): Int
 	fun get(index: Int): T
-	fun set(Index: Int, value: T): Uint
+	fun set(Index: Int, value: T): Unit
 	fun iterator(): Iterator<T>
 	//...
 }
