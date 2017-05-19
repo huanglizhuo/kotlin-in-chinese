@@ -187,7 +187,7 @@ x[0] = x[1] + x[2]
 ```
 
 ### 字符串
-字符串是有 `String` 表示的。字符串是不变的。字符串的元素可以通过索引操作读取: `s[i]` 。字符串可以用 for 循环迭代：
+字符串是由 `String` 表示的。字符串是不变的。字符串的元素可以通过索引操作读取: `s[i]` 。字符串可以用 for 循环迭代：
 
 ```kotlin
 for (c in str) {
@@ -195,7 +195,7 @@ for (c in str) {
 }
 ```
 
-Kotlin 有俩种类型的 string ：一种是可以带分割符的，一种是可以包含新行以及任意文本的。带分割符的 string 很像 java 的 string:
+Kotlin 有两种类型的 string ：一种是可以带分割符的，一种是可以包含新行以及任意文本的。带分割符的 string 很像 java 的 string:
 ```kotlin
 val s = "Hello World!\n"
 ```
