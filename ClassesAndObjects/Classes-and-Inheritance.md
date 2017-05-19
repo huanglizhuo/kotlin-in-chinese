@@ -120,7 +120,7 @@ val customer = Customer("Joe Smith")
 >[对象声明](ClassesAndObjects/ObjectExpressicAndDeclarations.md) 
 
 ### 继承
-Kotin 中所有的类都有共同的父类 Any ，下面是一个没有父类声明的类：
+Kotlin 中所有的类都有共同的父类 Any ，下面是一个没有父类声明的类：
 
 ```kotlin
 class Example //　隐式继承于 Any
