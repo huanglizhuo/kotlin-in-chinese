@@ -116,7 +116,7 @@ public val table: Map<String, Int>
 ### 编译时常量
 那些在编译时就能知道具体值的属性可以使用 `const` 修饰符标记为 *编译时常量*. 这种属性需要同时满足以下条件:
 
-* Top-level or member of an object   //宝宝不会翻 :( :( :( 
+* 在"top-level"声明的 或者 是一个object的成员(Top-level or member of an object)
 
 * 以`String`或基本类型进行初始化
 
