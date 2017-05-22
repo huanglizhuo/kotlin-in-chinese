@@ -344,7 +344,7 @@ fun main(args: Array<String>) {
 参看[when表达式](http://kotlinlang.org/docs/reference/control-flow.html#when-expression)
 
 ###  使用ranges
-检查 in 操作符检查数值是否在某个范围内：
+使用 in 操作符检查数值是否在某个范围内：
 
 ```kotlin
 fun main(args: Array<String>) {
