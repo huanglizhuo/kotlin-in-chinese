@@ -1,5 +1,5 @@
 ## Ranges
-range 表达式拥有 `rangeTo` 函数操作符是 `..`  。 Range 可以对任何可比较的类型做操作，但对很多原语是优化过的。下面是些例子：
+range 表达式是通过 rangeTo 函数形成的。rangeTo 函数拥有形如 .. 的操作符，该操作符是用 in 和 !in 实现的。 Range 可以对任何可比较的类型做操作，但对整数基本类型是优化过的。下面是些例子：
 
 ```kotlin
 if (i in 1..10) {
@@ -197,7 +197,7 @@ fun IntRange.reversed(): IntProgression {
 ```
 **step()**
 
-`step()` 扩展函数是给所有的 `*Range`和`*Progression` 类定义的，所有的返回级数都修改了 setp 值。注意 step 值总是正的，否则函数不会改变迭代的方向。
+`step()` 扩展函数是给所有的 `*Range`和`*Progression` 类定义的，所有的返回级数都修改了 step 值。注意 step 值总是正的，否则函数不会改变迭代的方向。
 
 ```kotlin
 fun IntProgression.step(step: Int): IntProgression {
