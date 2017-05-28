@@ -1,6 +1,6 @@
 ## 流程控制
 ###  if 表达式
-在 Kotlin 中，if 是表达式，比如它可以返回一个值。因此Kotlin没有三元运算符(condition ? then : else),因为if语句已经满足了效果。
+在 Kotlin 中，if 是表达式，它可以返回一个值。因此Kotlin没有三元运算符(condition ? then : else),因为if语句已经满足了效果。
 
 ```kotlin
 // 传统用法
@@ -19,7 +19,7 @@ else
 val max = if (a > b) a else b
 ```
 
-if分支可以作为块，最后一个表达是是该块的值：
+if分支可以作为块，最后一个表达式是该块的值：
 
 ```kotlin
 val max = if (a > b){
@@ -50,7 +50,7 @@ when (x) {
 }
 ```
 
-when会对所有的分支进行检查直到有一个条件满足。when 可以用做表达式或声明。如果用作表达式的话，那么满足条件的分支就是总表达式。如果用做声明，那么分支的的的值会被忽略。(像 if 表达式一样，每个分支是一个语句块，而且它的值就是最后一个表达式的值)
+when会对所有的分支进行检查直到有一个条件满足。when 可以用做表达式或声明。如果用作表达式的话，那么满足条件的分支就是总表达式。如果用做声明，那么分支的值会被忽略。(像 if 表达式一样，每个分支是一个语句块，而且它的值就是最后一个表达式的值)
 
 在其它分支都不匹配的时候默认匹配 else 分支。如果把 when 做为表达式的话 else 分支是强制的，除非编译器可以证明分支条件已经覆盖所有可能性。
 
@@ -120,13 +120,13 @@ for (item: Int in ints){
 }
 ```
 
-像之前提到的， for 可以对任何提供的迭代器进行迭代，比如：
+像之前提到的， for 可以对任何提供的迭代器进行迭代，迭代器的定义是：
 
-> -- has an instance- or extension-function iterator(), whose return type
+> -- 有一个 iterator() 成员函数或扩展函数，其返回类型
 
-> -- has an instance- or extension-function next(), and
+> -- 有一个 next() 成员函数或扩展函数, 并且
 
-> -- has an instance- or extension-function hasNext() that returns Boolean.  
+> -- 有一个返回 Boolean 的 hasNext() 成员函数或扩展函数。
 
 这三个函数都需要标记为运算符.
 
