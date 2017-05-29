@@ -86,7 +86,7 @@ fun main(args: Array<String>) {
 }
 ```
 
-更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Filds.md)
+更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Fields.md)
 
 ### 注释
 与 java 和 javaScript 一样，Kotlin 支持单行注释和块注释。
