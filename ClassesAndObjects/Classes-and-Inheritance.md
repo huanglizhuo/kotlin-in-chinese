@@ -113,7 +113,7 @@ val customer = Customer("Joe Smith")
 
 >[函数](FunctionsAndLambdas/Functions.md) 
 
->[属性](ClassesAndObjects/Properties-and-Filds.md)　
+>[属性](ClassesAndObjects/Properties-and-Fields.md)　
 
 >[内部类](ClassesAndObjects/NestedClasses.md) 
 
