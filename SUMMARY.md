@@ -12,7 +12,7 @@
 
 * [类和对象](ClassesAndObjects/README.md)
    * [类和继承](ClassesAndObjects/Classes-and-Inheritance.md)　完成
-   * [属性和字段](ClassesAndObjects/Properties-and-Filds.md)　完成
+   * [属性和字段](ClassesAndObjects/Properties-and-Fields.md)　完成
    * [接口](ClassesAndObjects/Interfaces.md) 完成
    * [可见性修饰词](ClassesAndObjects/Visibility-Modifiers.md) 完成
    * [扩展](ClassesAndObjects/Extensions.md) 完成
