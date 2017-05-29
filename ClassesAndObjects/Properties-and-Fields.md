@@ -70,9 +70,9 @@ var stringRepresentation: String
 如果你需要改变一个访问器的可见性或者给它添加注解，但又不想改变默认的实现，那么你可以定义一个不带函数体的访问器:
 
 ```kotlin
-var settVisibilite: String = "abc"//非空类型必须初始化
+var setterVisibility: String = "abc"//非空类型必须初始化
 	private set // setter 是私有的并且有默认的实现
-var setterVithAnnotation: Any?
+var setterWithAnnotation: Any?
 	@Inject set // 用 Inject 注解 setter
 ```
 

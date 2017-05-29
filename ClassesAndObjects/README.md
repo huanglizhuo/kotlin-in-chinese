@@ -1,6 +1,6 @@
 * [类和对象](README.md)
    * [类和继承](Classes-and-Inheritance.md)
-   * [属性和字段](Properties-and-Filds.md)
+   * [属性和字段](Properties-and-Fields.md)
    * [接口](Interfaces.md)
    * [可见性修饰词](Visibility-Modifiers.md)
    * [扩展](Extensions.md)

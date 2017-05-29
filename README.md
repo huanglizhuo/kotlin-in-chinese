@@ -70,7 +70,7 @@ Kotlin LOC (软件规模代码行) 如下图
 
 * [类和对象](ClassesAndObjects/README.md)
    * [类和继承](ClassesAndObjects/Classes-and-Inheritance.md)　
-   * [属性和字段](ClassesAndObjects/Properties-and-Filds.md)　
+   * [属性和字段](ClassesAndObjects/Properties-and-Fields.md)　
    * [接口](ClassesAndObjects/Interfaces.md) 
    * [可见性修饰词](ClassesAndObjects/Visibility-Modifiers.md) 
    * [扩展](ClassesAndObjects/Extensions.md) 
