@@ -32,8 +32,6 @@ Kotlin 1.1 正式发布，这次最令人振奋的莫过于协程的发布，有
 
 稀土掘金：挖掘最优质的互联网技术 / 联合编辑每日精选内容 / 移动端优质阅读体验
 
-本书源码在 [github](https://github.com/huanglizhuo/kotlin-in-chinese) 
-
 [pd下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
 
 记得要点 star star star
