@@ -1,9 +1,9 @@
 ## 代理属性
-很多常用属性，虽然我们可以在需要的时候手动实现它们，但更好的办法是一次实现多次使用，并放到库。比如：
+Kotlin 很多常用属性，虽然我们可以在每次需要的时候手动实现它们，但更好的办法是一次实现多次使用，并放到库里。比如：
 
-> 延迟属性：只在第一次访问是计算它的值
->观察属性：监听者从这获取这个属性更新的通知
->在 map 中存储的属性，而不是单独存在分开的字段
+> 延迟属性：只在第一次访问时计算它的值。
+> 可观察属性：监听者从这获取这个属性更新的通知。
+> 在 map 中存储的属性，而不是为每个属性创建一个字段。
 
 为了满足这些情形，Kotllin 支持代理属性：
 
@@ -13,23 +13,21 @@ class Example {
 }
 ```
 
-语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的属性就是代理，这样这个属性的 get() 和 set() 方法就代理给了它。
-
-属性代理不需要任何接口的实现，但必须要提供 `get()` 方法(如果是变量还需要 `set()` 方法)。像这样：
+语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValues()` 函数(如果是 var 还需要 `setValue()`)。像这样：
 
 ```kotlin
 class Delegate {
-	fun get(thisRef: Any?, prop: PropertyMetadata): String {
-		return "$thisRef, thank you for delegating '${prop.name}' to me !"
-	}
-	
-	fun set(thisRef: Any?, prop: PropertyMatada, value: String) {
-		println("$value has been assigned to '${prop.name} in $thisRef.'")
-	}
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return "$thisRef, thank you for delegating '${property.name}' to me!"
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        println("$value has been assigned to '${property.name} in $thisRef.'")
+    }
 }
 ```
 
-当我们从 `p` 也就是 `Delegate` 的代理，中读东西时，会调用 `Delegate` 的 `get()` 函数，因此第一个参数是我们从 `p` 中读取的，第二个参数是 `p` 自己的一个描述。比如：
+当我们从 `p` 也就是一个 `Delegate` 实例进行读取操作时，会调用 `Delegate` 的 `getValue()` 函数，因此第一个参数是我们从 `p` 中读取的，第二个参数是持有 `p` 的一个描述。比如：
 
 ```kotlin
 val e = Example()
@@ -40,7 +38,7 @@ pintln(e.p)
 
 >Example@33a17727, thank you for delegating ‘p’ to me!
 
-同样当我们分配 `p` 时 `set()` 函数就会调动。前俩个参数所以一样的，第三个持有分配的值：
+同样当我们给 `p` 赋值时 `setValue()` 函数就将被调用。前俩个参数所以一样的，第三个持有分配的值：
 
 ```kotlin
 e.p = "NEW"
@@ -50,113 +48,246 @@ e.p = "NEW"
 
 >NEW has been assigned to ‘p’ in Example@33a17727.
 
-### 代理属性的要求
-这里总结一些代理对象的要求。
+从 Kotlin 1.1 开始支持在函数内部或者代码块内声明代理，而不必是类成员。
 
-只读属性 (val)，代理必须提供一个名字叫 `get` 的方法并接受如下参数：
-
-> 接收者--必须是相同的，或者是属性拥有者的子类型
-
-> 元数据--必须是 `PropertyMetadata` 或这它的子类型
-
-这个函数必须返回同样的类型作为属性。
-
-可变属性 (var)，代理必须添加一个叫 `set` 的函数并接受如下参数：
-
-> 接受者--与 `get()` 一样
-> 元数据--与 `get()` 一样
->新值--必须和属性类型一致或是它的字类型
+> 
 
 ### 标准代理
-`kotlin.properties.Delegates` 对象是标准库提供的一个工厂方法并提供了很多有用的代理
+Kotlin 标准库为几种常用的代理提供了工厂方法
 
 #### 延迟
-`Delegate.lazy()` 是一个接受 lamdba 并返回一个实现延迟属性的代理：第一次调用 `get()` 执行 lamdba 并传递 `lazy()` 并记下结果，随后调用 `get()` 并简单返回之前记下的值。
+`lazy()` 是一个接受 lamdba 并返回一个实现延迟属性的代理：第一次调用 `get()` 执行 lamdba 并传递 `lazy()` 并存储结果，以后每次调用 `get()` 时只是简单返回之前存储的值。
 
 ```kotlin
-import kotlin.properties.Delegates
-
-val lazy: String by Delegates.lazy {
+val lazyValue: String by lazy {
     println("computed!")
     "Hello"
 }
 
 fun main(args: Array<String>) {
-    println(lazy)
-    println(lazy)
+    println(lazyValue)
+    println(lazyValue)
 }
 ```
 
+上面代码的输出是：
+
+```
+computed!
+Hello
+Hello
+```
+
+默认情况下延迟熟悉的计算是同步的：该值的计算只在一个线程里，其他所有线程都将读取同样的值。如果代理不需要同步初始化，而且允许出现多线程同时执行该操作，可以传 `LazyThreadSafetyMode.PUBLICATION` 参数给 `lazy()` 。如果你确信初始化只会在单线程中出现，那么可以使用 `LazyThreadSafetyMode.NONE` 该模式不会提供任何线程安全相关的保障。
+
 如果你想要线程安全，使用 `blockingLazy()`: 它还是按照同样的方式工作，但保证了它的值只会在一个线程中计算，并且所有的线程都获取的同一个值。
 
-#### 观察者
-`Delegates.observable()` 需要俩个参数：一个初始值和一个修改者的 handler 。每次我们分配属性时都会调用handler (在分配前执行)。它有三个参数：一个分配的属性，旧值，新值：
+#### 可观察熟悉
+`Delegates.observable()` 需要两个参数：一个初始值和一个用于修改的 handler 。每次我们给属性赋值时都会调用handler (在赋值操作进行之前)。它有三个参数：一个将被赋值的属性，旧值，新值：
 
 ```kotlin
+import kotlin.properties.Delegates
+
 class User {
-	var name: String by Delegates.observable("<no name>") {
-		d.old,new -> println("$old -> $new")
-	}
+    var name: String by Delegates.observable("<no name>") {
+        prop, old, new ->
+        println("$old -> $new")
+    }
 }
 
 fun main(args: Array<String>) {
-	val user = User()
-	user.name = "first"
-	user.name = "second"
+    val user = User()
+    user.name = "first"
+    user.name = "second"
 }
 ```
 打印结果
 
 ><no name> -> first
-first -> second
+>first -> second
 
-如果你想能够截取它的分配并取消它，用 `vetoable()`代替  `observable()`
-
-#### 非空
-有时我们有一个非空的 var ，但我们在构造函数中没有一个合适的值，比如它必须稍后再分配。问题是你不能持有一个未初始化并且是非抽象的属性：
-
-```kotlin
-class Foo {
-	var bar: Bat //错误必须初始化
-}
-```
-
-我们可以用 null 初始化它，但我们不用每次访问时都检查它。
-
-`Delegates.notNull()`可以解决这个问题
-
-```kotlin
-class Foo {
-	var bar: Bar by Delegates.notNull()
-}
-```
-
-如果这个属性在第一次写之前读，它就会抛出一个异常，只有分配之后才会正常。
+如果你想能够打断赋值并取消它，用 `vetoable()`代替  `observable()` 。传递给`vetoable`  的 handler 会在赋新值之前调用。
 
 #### 在 Map 中存储属性
-`Delegates.mapVal()` 拥有一个 map 实例并返回一个可以从 map 中读其中属性的代理。在应用中有很多这样的例子，比如解析 JSON 或者做其它的一些 "动态"的事情：
+把熟悉值存储在 map 中是一种常见的使用方式，这种操作经常出现在解析 JSON 或者其它动态的操作中。这种情况下你可以使用 map 来代理它的属性。
 
-```kotlin
+```k
 class User(val map: Map<String, Any?>) {
-	val name: String by Delegates.mapVal(map)
-	val age: Int     by Delegates.mapVal(map)
+    val name: String by map
+    val age: Int     by map
 }
 ```
 
-在这个例子中，构造函数持有一个 map :
+在这个例子中，构造函数接受一个 map :
 
 ```kotlin
-val user = User(mapOf (
-	"name" to "John Doe",
-	"age" to 25
+val user = User(mapOf(
+    "name" to "John Doe",
+    "age"  to 25
 ))
 ```
 
-代理从这个 map 中取指(通过属性的名字)：
+代理属性将从这个 map 中取指(通过属性的名字)：
 
 ```kotlin
 println(user.name) // Prints "John Doe"
 println(user.age)  // Prints 25
 ```
 
-var 可以用 `mapVar` 
+var 属性可以用 MutableMap 代替只读的 `Map`：
+
+```kotlin 
+class MutableUser(val map: MutableMap<String, Any?>) {
+    var name: String by map
+    var age: Int     by map
+}
+```
+
+### 本地代理属性（从1.1开始支持）
+
+你可以声明本地变量作为代理属性。比如你可以创建一个本来延迟变量：
+
+```kotlin 
+fun example(computeFoo: () -> Foo) {
+    val memoizedFoo by lazy(computeFoo)
+
+    if (someCondition && memoizedFoo.isValid()) {
+        memoizedFoo.doSomething()
+    }
+}
+```
+
+`memoizedFoo` 只会在第一次访问时求值。如果 `someCondition`  不符合，那么该变量将根本不会被计算。
+
+### 属性代理的要求
+
+这里总结一些代理对象的要求。
+
+只读属性 (val)，代理必须提供一个名字叫 `getValue` 的函数并接受如下参数：
+
+> `thisRef`接收者--必须是属性拥有者是同一种类型，或者是其父类
+
+> `property`  必须是 KProperty<*> 或这它的父类
+
+这个函数必须返回同样的类型或子类作为属性。
+
+可变属性 (var)，代理必须添加一个叫 `setValue` 的函数并接受如下参数：
+
+> `thisRef  `与 `getValue()` 一样
+>
+> `property` 与 `getValue()` 一样
+> 新值--必须和属性类型一致或是它的父类
+
+
+
+`getValue()` 和 `setValue()` 函数必须作为代理类的成员函数或者扩展函数。扩展函数对与想要对对象代理原本没有的函数是十分有用。两种 函数必须标记 `operator` 关键字。
+
+代理类可能实现 `ReadOnlyProperty` 和 `ReadWriteProperty` 中的一个并要求带有 `operator` 方法。这些接口在 Kotlin 标准库中有声明：
+
+```kotlin 
+interface ReadOnlyProperty<in R, out T> {
+    operator fun getValue(thisRef: R, property: KProperty<*>): T
+}
+
+interface ReadWriteProperty<in R, T> {
+    operator fun getValue(thisRef: R, property: KProperty<*>): T
+    operator fun setValue(thisRef: R, property: KProperty<*>, value: T)
+}
+```
+
+
+
+### 转换规则
+
+在每个代理属性的实现的背后，Kotlin 编译器都会生成辅助属性并代理给它。 例如，对于属性 `prop`，生成隐藏属性 `prop$delegate`，而访问器的代码只是简单地代理给这个附加属性：
+
+```
+class C {
+    var prop: Type by MyDelegate()
+}
+
+// this code is generated by the compiler instead:
+class C {
+    private val prop$delegate = MyDelegate()
+    var prop: Type
+        get() = prop$delegate.getValue(this, this::prop)
+        set(value: Type) = prop$delegate.setValue(this, this::prop, value)
+}
+```
+
+Kotlin 编译器在参数中提供了关于 `prop` 的所有必要信息：第一个参数 `this` 引用到类 `C` 外部的实例而 `this::prop` 是 `KProperty` 类型的反射对象，该对象描述 `prop` 自身。
+
+注意，直接在代码中引用[绑定的可调用引用](http://kotlinlang.org/docs/reference/reflection.html#bound-function-and-property-references-since-11)的语法 `this::prop` 自 Kotlin 1.1 起才可用。
+
+### 提供代理（自 1.1 起）
+
+通过定义 `provideDelegate` 操作符，可以扩展创建属性实现所代理对象的逻辑。 如果 `by` 右侧所使用的对象将 `provideDelegate` 定义为成员或扩展函数，那么会调用该函数来创建属性代理实例。
+
+`provideDelegate` 的一个可能的使用场景是在创建属性时检查属性一致性。
+
+例如，如果你想要在绑定之前检查属性名称，可以这样写：
+
+```
+class ResourceLoader<T>(id: ResourceID<T>) {
+    operator fun provideDelegate(
+            thisRef: MyUI,
+            prop: KProperty<*>
+    ): ReadOnlyProperty<MyUI, T> {
+        checkProperty(thisRef, prop.name)
+        // create delegate
+    }
+
+    private fun checkProperty(thisRef: MyUI, name: String) { ... }
+}
+
+fun <T> bindResource(id: ResourceID<T>): ResourceLoader<T> { ... }
+
+class MyUI {
+    val image by bindResource(ResourceID.image_id)
+    val text by bindResource(ResourceID.text_id)
+}
+```
+
+`provideDelegate` 的参数与 `getValue` 相同：
+
+- `thisRef` —— 必须与 *属性所有者* 类型（对于扩展属性——指被扩展的类型）相同或者是它的超类型，
+- `property` —— 必须是类型 `KProperty<*>` 或其超类型。
+
+在创建 `MyUI` 实例期间，为每个属性调用 `provideDelegate` 方法，并立即执行必要的验证。
+
+如果没有这种打断属性与其代理之间的绑定的能力，为了实现相同的功能， 你必须显式传递属性名，这不是很方便：
+
+```
+// Checking the property name without "provideDelegate" functionality
+class MyUI {
+    val image by bindResource(ResourceID.image_id, "image")
+    val text by bindResource(ResourceID.text_id, "text")
+}
+
+fun <T> MyUI.bindResource(
+        id: ResourceID<T>,
+        propertyName: String
+): ReadOnlyProperty<MyUI, T> {
+   checkProperty(this, propertyName)
+   // create delegate
+}
+```
+
+在生成的代码中， `provideDelegate` 方法用来初始化辅助 `prop$delegate` 属性的初始化。 相对于属性声明 `val prop: Type by MyDelegate()` 生成的代码与 [上面](http://kotlinlang.org/docs/reference/delegated-properties.html#translation-rules)（当 `provideDelegate` 方法不存在时）生成的代码：
+
+```
+class C {
+    var prop: Type by MyDelegate()
+}
+
+// this code is generated by the compiler 
+// when the 'provideDelegate' function is available:
+class C {
+    // calling "provideDelegate" to create the additional "delegate" property
+    private val prop$delegate = MyDelegate().provideDelegate(this, this::prop)
+    val prop: Type
+        get() = prop$delegate.getValue(this, this::prop)
+}
+```
+
+注意，`provideDelegate` 方法只影响辅助属性的创建，并不会影响为 getter 或 setter 生成的代码。
