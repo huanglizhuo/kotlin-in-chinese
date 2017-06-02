@@ -31,7 +31,7 @@ class Delegate {
 
 ```kotlin
 val e = Example()
-pintln(e.p)
+println(e.p)
 ```
 
 打印结果：　
