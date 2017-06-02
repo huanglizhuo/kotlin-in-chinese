@@ -273,7 +273,7 @@ fun <T> MyUI.bindResource(
 }
 ```
 
-在生成的代码中， `provideDelegate` 方法用来初始化辅助 `prop$delegate` 属性的初始化。 相对于属性声明 `val prop: Type by MyDelegate()` 生成的代码与 [上面](http://kotlinlang.org/docs/reference/delegated-properties.html#translation-rules)（当 `provideDelegate` 方法不存在时）生成的代码：
+在生成的代码中， `provideDelegate` 方法用来初始化辅助 `prop$delegate` 属性的初始化。 下面是属性声明 `val prop: Type by MyDelegate()` 生成的代码与 [上面](http://kotlinlang.org/docs/reference/delegated-properties.html#translation-rules)（当 `provideDelegate` 方法不存在时）生成的代码的对比：
 
 ```
 class C {
