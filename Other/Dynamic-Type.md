@@ -1,5 +1,5 @@
 ## 动态类型
-作为静态类型的语言，kotlin任然拥有与无类型或弱类型语言的调用，比如 javaScript。为了方便使用，`dynamic`应而生：
+作为静态类型的语言，kotlin任然拥有与无类型或弱类型语言的调用，比如 javaScript。为了方便使用，`dynamic`应运而生：
 
 ```kotlin
 val dyn: dynamic = ...
@@ -18,8 +18,7 @@ dyn.whatever(1, "foo", dyn) // 'whatever' is not defined anywhere
 dyn.whatever(*array(1, 2, 3))
 ```
 
-在 javaScript 平台上这样的代码会编译为 'as is': `dyn.whatever(1)` 在 kotlin 中变成了 javaScript 中的代码
-(On the JavaScript platform this code will be compiled “as is”: dyn.whatever(1) in Kotlin becomes dyn.whatever(1) in the generated JavaScript code.)
+在 javaScript 平台上这样的代码会按照现有的样子编译：Kotlin 中的 `dyn.whatever(1)` 在生成的代码中变成 JavaScript 语言的 `dyn.whatever(1)`。
 
 动态调用可以返回 `dynamic` 作为结果，因此我们可以轻松实现链式调用：
 
