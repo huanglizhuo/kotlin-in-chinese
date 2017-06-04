@@ -19,8 +19,8 @@ val box: Box<Int> = Box<Int>(1)
 val box = Box(1)//1是 Int 型，因此编译器会推导出我们调用的是 Box<Int>
 ```
 
-### 变化
-java 类型系统最棘手的一部分就是通配符类型。但 kotlin 没有，代替它的是两种其它的东西：声明变化和类型投影(declaration-site variance and type projections)。
+### 变型
+java 类型系统最棘手的一部分就是通配符类型。但 kotlin 没有，代替它的是两种其它的东西：声明变型和类型投影(declaration-site variance and type projections)。
 
 首先，我们想想为什么 java 需要这些神秘的通配符。这个问题在[Effective Java](http://www.oracle.com/technetwork/java/effectivejava-136174.html),条目18中是这样解释的：使用界限通配符增加 API 的灵活性。首先 java 中的泛型是不变的，这就意味着 `List<String>` 不是 `List<Object>` 的子类型。为什么呢，如果 List 不是不变的，就会引发下面的问题：
 
@@ -69,3 +69,72 @@ Joshua Bloch 称只能**读取**的对象为**生产者**，只能**写入**的�
 *PECS 代表生产者-Extens，消费者-Super（Producer-Extends, Consumer-Super）。*
 
 *注意*：如果你使用一个生产者对象，如 `List<? extends Foo>`，在该对象上不允许调用 `add()` 或 `set()`。但这并不意味着 该对象是**不可变的**：例如，没有什么阻止你调用 `clear()`从列表中删除所有项目，因为 `clear()` 根本无需任何参数。通配符（或其他类型的型变）保证的唯一的事情是**类型安全**。不可变性完全是另一回事。
+
+
+
+### 声明处变型
+
+假如有个范型接口`Source<T>`，没有任何接收 `T` 作为参数的方法，唯一的方法就是返回  `T`:
+
+```Kotlin 
+// Java
+interface Source<T> {
+  T nextT();
+}
+```
+
+存储一个`Source<String>`的实例引用给一个类型为 `Source<Object>` 是十分安全的。但 Java并不知道，而且依然禁止这么做：
+
+```Kotlin 
+// Java
+void demo(Source<String> strs) {
+  Source<Object> objects = strs; // !!! Not allowed in Java
+  // ...
+}
+```
+
+为次，我们不得不声明对象类型为 `Source<? extends Object>`，这样做并没有太大的意义，因为我们可以像以前一样调用所有方法，因此并没有通过复杂的类型添加什么值。但编译器不知道。
+
+在 Kotlin 中，有种可以讲这些东西解释给编译器的办法，叫做声明处变型：通过注解**类型参数** `T` 的来源，来确保它仅从 `Source<T>` 成员中**返回**（生产），并从不被消费。 为此，我们提供 **out** 修饰符：
+
+```Kotlin 
+abstract class Source<out T> {
+    abstract fun nextT(): T
+}
+
+fun demo(strs: Source<String>) {
+    val objects: Source<Any> = strs // This is OK, since T is an out-parameter
+    // ...
+}
+```
+
+一般原则是：当一个类 `C` 的类型参数 `T` 被声明为 **out** 时，它就只能出现在 `C` 的成员的**输出**-位置，结果是 `C<Base>` 可以安全地作为 `C<Derived>`的超类。
+
+更聪明的说法就是，当类 C 在类型参数 T 之下是协变的，或者 T 是一个斜变类型。可以把 C 想象成 T 的生产这，而不是 T 的消费者。
+
+`out` 修饰符本来被称之为变型注解，但由于同处与类型参数声明处，我们称之为声明处变型。这与 Java 中的使用处变型相反。
+
+另外除了 **out**，Kotlin 又补充了一个变型注释：**in**。它接受一个类型参数**逆变**：只可以被消费而不可以 被生产。非变型类的一个很好的例子是 `Comparable`：
+
+```Kotlin 
+abstract class Comparable<in T> {
+    abstract fun compareTo(other: T): Int
+}
+
+fun demo(x: Comparable<Number>) {
+    x.compareTo(1.0) // 1.0 has type Double, which is a subtype of Number
+    // Thus, we can assign x to a variable of type Comparable<Double>
+    val y: Comparable<Double> = x // OK!
+}
+```
+
+我们相信 **in** 和 **out** 两词是自解释的（因为它们已经在 C# 中成功使用很长时间了）， 因此上面提到的助记符不是真正需要的，并且可以将其改写为更高的目标：
+
+**[存在性（The Existential）](https://en.wikipedia.org/wiki/Existentialism) 转变：消费者 in, 生产者 out!** :-)
+
+### 类型投影
+
+#### 使用处变型：类型投影
+
+
+
