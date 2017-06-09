@@ -66,7 +66,8 @@ interface Base {
 class Derived: Base {
     override suspend fun foo() { …… }
 }
-to be continue
 ```
 
+### `@RestrictsSuspension` 注解
 
+to be continue
