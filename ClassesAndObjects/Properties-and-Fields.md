@@ -3,12 +3,12 @@
 在 Kotlin 中类可以有属性，我们可以使用 var 关键字声明可变属性，或者用 val 关键字声明只读属性。
 
 ```kotlin
-public class Address { 	
-	public var name: String = ...
-  	public var street: String = ...
-	public var city: String = ...
-  	public var state: String? = ...
-	public var zip: String = ...
+class Address { 	
+	var name: String = ...
+  var street: String = ...
+	var city: String = ...
+  var state: String? = ...
+	var zip: String = ...
 }
 ```
 
@@ -16,13 +16,15 @@ public class Address {
 
 ```kotlin
 fun copyAddress(address: Address) : Address {
-	val result = Address() //在 kotlin 中没有 new 关键字
-	result.name = address.name //accessors are called
+	val result = Address() // 在 kotlin 中没有 new 关键字
+	result.name = address.name // accessors are called
 	result.street = address.street
+	// ...
+	return result
 }
 ```
 
-### Getter 和 Setter 
+### Getters 和 Setters
 声明一个属性的完整语法如下：
 
 ```kotlin
@@ -40,7 +42,7 @@ var allByDefault: Int? // 错误: 需要一个初始化语句, 默认实现了 g
 var initialized = 1 // 类型为 Int, 默认实现了 getter 和 setter
 ```
 
-只读属性的声明语法和可变属性的声明语法相比有两点不同: 它以 val 而不是 var 开头，不允许 setter 函数：
+只读属性的声明语法和可变属性的声明语法相比有两点不同: 它以 `val` 而不是 `var` 开头，不允许 setter 函数：
 
 ```kotlin
 val simple: Int? // 类型为 Int ，默认实现 getter ，但必须在构造函数中初始化
@@ -65,13 +67,19 @@ var stringRepresentation: String
 }
 ```
 
-为了方便起见,setter 方法的参数名是value,你也可以自己任选一个自己喜欢的名称.
+为了方便起见,setter 方法的参数名是`value`,你也可以自己任选一个自己喜欢的名称.
+
+从Kotlin 1.1开始，如果可以从getter方法推断出类型则可以省略之：
+
+```kotlin
+val isEmpty get() = this.size == 0  //  拥有Boolean类型
+```
 
 如果你需要改变一个访问器的可见性或者给它添加注解，但又不想改变默认的实现，那么你可以定义一个不带函数体的访问器:
 
 ```kotlin
-var setterVisibility: String = "abc"//非空类型必须初始化
-	private set // setter 是私有的并且有默认的实现
+var setterVisibility: String = "abc"// 非空类型必须初始化
+	private set // setter是私有的并且有默认的实现
 var setterWithAnnotation: Any?
 	@Inject set // 用 Inject 注解 setter
 ```
@@ -80,7 +88,7 @@ var setterWithAnnotation: Any?
 在 kotlin 中类不可以有字段。然而当使用自定义的访问器时有时候需要备用字段。出于这些原因 kotlin 使用 `field` 关键词提供了自动备用字段，
 
 ```kotllin
-var counter = 0 //初始化值会直接写入备用字段
+var counter = 0 // 初始化值会直接写入备用字段
 	set(value) {
 		if (value >= 0)
 			field  = value
@@ -116,12 +124,12 @@ public val table: Map<String, Int>
 ### 编译时常量
 那些在编译时就能知道具体值的属性可以使用 `const` 修饰符标记为 *编译时常量*. 这种属性需要同时满足以下条件:
 
-* 在"top-level"声明的 或者 是一个object的成员(Top-level or member of an object)
+* 在top-level声明的 或者 是一个`object`的成员(Top-level or member of an object)
 
 * 以`String`或基本类型进行初始化
 
 * 没有自定义getter
-	
+
 这种属性可以被当做注解使用:
 ```kotlin
 const val SUBSYSTEM_DEPRECATED: String = "This subsystem is deprecated"
@@ -137,20 +145,20 @@ const val SUBSYSTEM_DEPRECATED: String = "This subsystem is deprecated"
 ```kotlin
 public class MyTest {
 	lateinit var subject: TestSubject
-	
+
 	@SetUp fun setup() {
 		subject = TestSubject()
 	}
-	
+
 	@Test fun test() {
-		subject.method() 
+		subject.method()
 	}
 }
 ```
 
-这个修饰符只能够被用在类的 var 类型的可变属性定义中,不能用在构造方法中.并且属性不能有自定义的 getter 和 setter访问器.这个属性的类型必须是非空的,同样也不能为一个基本类型.
+这个修饰符只能够被用在类的 `var` 类型的可变属性定义中,不能用在构造方法中.并且属性不能有自定义的 getter 和 setter访问器.这个属性的类型必须是非空的,同样也不能为一个基本类型.
 
-在一个延迟初始化的属性初始化前访问他,会导致一个特定异常,告诉你访问的时候值还没有初始化.
+在一个`lateinit`的属性初始化前访问他,会导致一个特定异常,告诉你访问的时候值还没有初始化.
 
 ### 复写属性
 参看[复写成员](http://kotlinlang.org/docs/reference/classes.html#overriding-members)
