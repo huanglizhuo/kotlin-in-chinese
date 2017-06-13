@@ -3,7 +3,7 @@
 高阶函数就是可以接受函数作为参数并返回一个函数的函数。比如 `lock()` 就是一个很好的例子，它接收一个 lock 对象和一个函数，运行函数并释放 lock;
 
 ```kotlin
-fun lock<T>(lock: Lock, body: () -> T ) : T {
+fun <T> lock(lock: Lock, body: () -> T ) : T {
 	lock.lock()
 	try {
 		return body()
