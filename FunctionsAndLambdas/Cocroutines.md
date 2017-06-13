@@ -16,7 +16,7 @@
 另一个不同就是协程不能被任意的操作挂起，而仅仅可以在被标记为 *挂起点*  的地方进行挂起。
 
 ### 挂起函数
-当一个函数被 `suspend` 修饰时表示可以背挂起。
+当一个函数被 `suspend` 修饰时表示可以被挂起。
 
 ```kotlin
 suspend fun doSomething(foo: Foo): Bar{
