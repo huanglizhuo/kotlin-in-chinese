@@ -136,5 +136,121 @@ fun demo(x: Comparable<Number>) {
 
 #### 使用处变型：类型投影
 
+声明类型参数 T 为 *out* 很方便，而且可以避免在使用出子类型的麻烦，但有些类 **不能** 限制它只返回 `T` ，Array 就是一个例子：
 
+```kotlin
+class Array<T>(val size: Int) {
+    fun get(index: Int): T { /* ... */ }
+    fun set(index: Int, value: T) { /* ... */ }
+}
+```
+
+这个类既不能是协变的也不能是逆变的，这会在一定程度上降低灵活性。考虑下面的函数：
+
+```kotlin
+fun copy(from: Array<Any>, to: Array<Any>) {
+    assert(from.size == to.size)
+    for (i in from.indices)
+        to[i] = from[i]
+}
+```
+
+该函数作用是复制 array ，让我们来实际应用一下：
+
+```kotlin
+val ints: Array<Int> = arrayOf(1, 2, 3)
+val any = Array<Any>(3) { "" } 
+copy(ints, any) // Error: expects (Array<Any>, Array<Any>)
+```
+
+这里我们又遇到了同样的问题 `Array<T>` 中的`T` 是不可变型的，因此 `Array<Int>` 和 `Array<Any>` 互不为对方的子类，导致复制失败。为什么呢？应为复制可能会有不合适的操作，比如尝试写入，当我们尝试将 Int 写入 String 类型的 array 时候将会导致 `ClassCastException` 异常。
+
+我们想做的就是确保 `copy()` 不会做类似的不合适的操作，为阻止向`from`写入，我们可以这样：
+
+```kotlin 
+fun copy(from: Array<out Any>, to: Array<Any>) {
+ // ...
+}
+```
+
+这就是类型投影：这里的`from`不是一个简单的 array， 而是一个投影，我们只能调用那些返回类型参数 `T` 的方法，在这里意味着我们只能调用`get()`。这是我们处理调用处变型的方法，类似 Java 中`Array<? extends Object>`，但更简单。
+
+当然也可以用`in`做投影：
+
+```kotin
+fun fill(dest: Array<in String>, value: String) {
+    // ...
+}
+```
+
+`Array<in String>` 对应 Java 中的 `Array<? super String>`，`fill()`函数可以接受任何`CharSequence` 类型或 `Object`类型的 array 。
+
+#### 星投影
+
+有时你对类型参数一无所知，但任然想安全的使用它。保险的方法就是定一个该范型的投影，每个该范型的正确实例都将是该投影的子类。
+
+Kotlin 提供了一种星投影语法：
+
+- For `Foo<out T>`, where `T` is a covariant type parameter with the upper bound `TUpper`, `Foo<*>` is equivalent to `Foo<out TUpper>`. It means that when the `T` is unknown you can safely *read* values of `TUpper` from `Foo<*>`.
+- For `Foo<in T>`, where `T` is a contravariant type parameter, `Foo<*>` is equivalent to `Foo<in Nothing>`. It means there is nothing you can *write* to `Foo<*>` in a safe way when `T` is unknown.
+- For `Foo<T>`, where `T` is an invariant type parameter with the upper bound `TUpper`, `Foo<*>` is equivalent to `Foo<out TUpper>` for reading values and to `Foo<in Nothing>` for writing values.
+
+If a generic type has several type parameters each of them can be projected independently. For example, if the type is declared as `interface Function<in T, out U>` we can imagine the following star-projections:
+
+- `Function<*, String>` means `Function<in Nothing, String>`;
+- `Function<Int, *>` means `Function<Int, out Any?>`;
+- `Function<*, *>` means `Function<in Nothing, out Any?>`.
+
+*Note*: star-projections are very much like Java's raw types, but safe.   (这部分暂未翻译)
+
+### 范型函数
+
+函数也可以像类一样有类型参数。类型参数在函数名之前：
+
+```kotlin
+fun <T> singletonList(item: T): List<T> {
+    // ...
+}
+
+fun <T> T.basicToString() : String {  // extension function
+    // ...
+}
+```
+
+调用范型函数需要在函数名后面制定类型参数：
+
+```kotlin
+val l = singletonList<Int>(1)
+```
+
+### 范型约束
+
+指定类型参数代替的类型集合可以用通过范型约束进行限制。
+
+#### 上界(**upper bound**)
+
+最常用的类型约束是上界，在 Java 中对应 `extends`关键字：
+
+```kotlin
+fun <T : Comparable<T>> sort(list: List<T>) {
+    // ...
+}	
+```
+
+冒号后面指定的类型就是上界：只有 `Comparable<T>`的子类型才可以取代 `T` 比如：
+
+```kotlin
+sort(listOf(1, 2, 3)) // OK. Int is a subtype of Comparable<Int>
+sort(listOf(HashMap<Int, String>())) // Error: HashMap<Int, String> is not a subtype of Comparable<HashMap<Int, String>>
+```
+
+默认的上界是 `Any?`。在尖括号内只能指定一个上界。如果要指定多种上界，需要用 **where** 语句指定：
+
+```kotlin
+fun <T> cloneWhenGreater(list: List<T>, threshold: T): List<T>
+    where T : Comparable,
+          T : Cloneable {
+  return list.filter { it > threshold }.map { it.clone() }
+}
+```
 
