@@ -1,6 +1,7 @@
 ## 类和继承
 ### 类
-在 Kotlin 中类用 `class` 声明：
+
+在 Kotlin 中类用 `class` 声：
 
 ```kotlin
 class Invoice {
