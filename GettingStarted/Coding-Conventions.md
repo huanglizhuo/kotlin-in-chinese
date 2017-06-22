@@ -1,4 +1,7 @@
-## 代码风格
+[原文](http://kotlinlang.org/docs/reference/coding-conventions.html)
+
+## 编码规范
+
 本页包含了当前 kotlin 语言的代码风格。
 
 ### 命名风格
@@ -19,12 +22,12 @@
 
 ```kotlin
 interface Foo<out T : Any> : Bar {
-	fun foo(a: Int): T
+    fun foo(a: Int): T
 }
 ```
 
 ### Lambdas
-在 Lambdas 表达式中，大括号与表达式间要有空格，箭头与参数和函数体间要有空格。尽可能的把 lambda 放在括号外面传入
+在 Lambdas 表达式中，大括号与表达式间要有空格，箭头与参数和函数体间要有空格。lambda表达应尽可能不要写在圆括号中
 
 ```Kotlin
 list.filter { it > 10 }.map { element -> element * 2 }
@@ -79,6 +82,6 @@ fun foo() { // ": Unit"被省略了
 
 在下面的情况下，更偏向于属性而不是一个函数:
 > -- 不需要抛出异常
-> -- 拥有O(1)复杂度
+> -- 复杂度为O(1)
 > -- 低消耗的计算(或首次运行结果会被缓存)
 > -- 返回与调用相同的结果
