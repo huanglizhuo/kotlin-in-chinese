@@ -16,7 +16,7 @@ fun <T> lock(lock: Lock, body: () -> T ) : T {
 
 现在解释一下上面的代码吧：`body` 有一个函数类型 `() -> T`,把它设想为没有参数并返回 T 类型的函数。它引发了内部的 try 函数块，并被 `lock` 保护，结果是通过 `lock()` 函数返回的。
 
-如果我们想调用 `lock()` ，函数，我们可以传给它另一个函数做参数，参看[函数参考](http://kotlinlang.org/docs/reference/reflection.html#function-references)：
+如果我们想调用 `lock()` ，函数，我们可以传给它另一个函数做参数，参看[函数引用](http://kotlinlang.org/docs/reference/reflection.html#function-references)：
 
 ```kotlin
 fun toBeSynchroized() = sharedResource.operation()
@@ -39,7 +39,7 @@ sharedResource.operation() })
 
 > 函数体在 `->` 之后
 
-在 kotlin 中有一个约定，如果最后一个参数是函数，可以省略括号：
+在 kotlin 中有一个约定，如果某一个函数的最后一个参数是函数，并且你向那个位置传递了一个 lambda 表达式，那么，你可以在括号外面定义这个 lambda 表达式：
 
 ```kotlin
 lock (lock) {
