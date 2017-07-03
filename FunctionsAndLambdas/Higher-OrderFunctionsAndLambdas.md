@@ -1,6 +1,6 @@
 ## 高阶函数与 lambda 表达式
 ### 高阶函数
-高阶函数就是可以接受函数作为参数并返回一个函数的函数。比如 `lock()` 就是一个很好的例子，它接收一个 lock 对象和一个函数，运行函数并释放 lock;
+高阶函数就是可以接受函数作为参数或者返回一个函数的函数。比如 `lock()` 就是一个很好的例子，它接收一个 lock 对象和一个函数，运行函数并释放 lock;
 
 ```kotlin
 fun <T> lock(lock: Lock, body: () -> T ) : T {
@@ -16,7 +16,7 @@ fun <T> lock(lock: Lock, body: () -> T ) : T {
 
 现在解释一下上面的代码吧：`body` 有一个函数类型 `() -> T`,把它设想为没有参数并返回 T 类型的函数。它引发了内部的 try 函数块，并被 `lock` 保护，结果是通过 `lock()` 函数返回的。
 
-如果我们想调用 `lock()` ，函数，我们可以传给它另一个函数做参数，参看[函数参考](http://kotlinlang.org/docs/reference/reflection.html#function-references)：
+如果我们想调用 `lock()` ，函数，我们可以传给它另一个函数做参数，参看[函数引用](http://kotlinlang.org/docs/reference/reflection.html#function-references)：
 
 ```kotlin
 fun toBeSynchroized() = sharedResource.operation()
@@ -39,7 +39,7 @@ sharedResource.operation() })
 
 > 函数体在 `->` 之后
 
-在 kotlin 中有一个约定，如果最后一个参数是函数，可以省略括号：
+在 kotlin 中有一个约定，如果某一个函数的最后一个参数是函数，并且你向那个位置传递了一个 lambda 表达式，那么，你可以在括号外面定义这个 lambda 表达式：
 
 ```kotlin
 lock (lock) {
@@ -68,7 +68,7 @@ val doubled = ints.map {it -> it * 2}
 如果字面函数只有一个参数，则声明可以省略，名字就是 `it` :
 
 ```kotlin
-ints map {it * 2}
+ints.map {it * 2}
 ```
 
 这样就可以写[LINQ-风格](http://msdn.microsoft.com/en-us/library/bb308959.aspx)的代码了：
