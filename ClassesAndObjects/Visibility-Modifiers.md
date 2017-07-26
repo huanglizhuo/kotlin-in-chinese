@@ -55,7 +55,7 @@ java 使用者注意：外部类不可以访问内部类的 private 成员。
 ```kotlin
 open class Outer {
 	private val a = 1
-	protected val b = 2
+	protected open val b = 2
 	internal val c = 3
 	val d = 4 // 默认是public
 
