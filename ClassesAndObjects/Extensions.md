@@ -6,7 +6,7 @@
 
 ```kotlin
 fun MutableList<Int>.swap(x: Int, y: Int) {
-	val temp = this[x] // this 对应 list
+	val tmp = this[x] // this 对应 list
 	this[x] = this[y]
 	this[y] = tmp
 }
@@ -34,14 +34,22 @@ fun <T> MutableList<T>.swap(x: Int, y: Int) {
 ### 扩展是被**静态**解析的
 扩展实际上并没有修改它所扩展的类。定义一个扩展，你并没有在类中插入一个新的成员，只是让这个类的实例对象能够通过`.`调用新的函数。
 
-需要强调的是扩展函数是静态分发的，举个例子,它们并不是接受者类型的虚拟方法。这意味着扩展函数的调用时由发起函数调用的表达式的类型决定的，而不是在运行时动态获得的表达式的类型决定。比如
+需要强调的是扩展函数是静态分发的，举个例子,它们并不是接受者类型的虚拟方法。这意味着扩展函数的调用是由发起函数调用的表达式的类型决定的，而不是在运行时动态获得的表达式的类型决定。比如
 
 ```Kotlin
 open class C 
 
-class D: C()fun C.foo() = "c" 
-fun D.foo() = "d"fun printFoo(c: C) { 	println(c.foo())} 
-printFoo(D())
+class D: C()
+
+fun C.foo() = "c" 
+
+fun D.foo() = "d"
+
+fun printFoo(c: C) { 
+	println(c.foo())
+} 
+
+printFoo(D())
 ```
 
 这个例子会输出 `c`，因为这里扩展函数的调用决定于声明的参数 `c` 的类型，也就是 `C`。
@@ -126,7 +134,7 @@ fun Baz.goo() { ... }
 为了在除声明的包外使用这个扩展，我们需要在 import 时导入：
 
 ```kotlin
-package com.example,usage
+package com.example.usage
 
 import foo.bar.goo // 导入所有名字叫 "goo" 的扩展
 				
