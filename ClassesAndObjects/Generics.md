@@ -36,7 +36,7 @@ String s = strs.get(0); // !!! ClassCastException: Cannot cast Integer to String
 ```java
 //java
 interface Collection<E> ... {
-	void addAdd(Collection<E> items);
+	void addAll(Collection<E> items);
 }
 ```
 但接下来我们就不能做下面这些操作了(虽然这些操作都是安全的)：
@@ -95,7 +95,7 @@ void demo(Source<String> strs) {
 
 为次，我们不得不声明对象类型为 `Source<? extends Object>`，这样做并没有太大的意义，因为我们可以像以前一样调用所有方法，因此并没有通过复杂的类型添加什么值。但编译器不知道。
 
-在 Kotlin 中，有种可以讲这些东西解释给编译器的办法，叫做声明处变型：通过注解**类型参数** `T` 的来源，来确保它仅从 `Source<T>` 成员中**返回**（生产），并从不被消费。 为此，我们提供 **out** 修饰符：
+在 Kotlin 中，有种可以将这些东西解释给编译器的办法，叫做声明处变型：通过注解**类型参数** `T` 的来源，来确保它仅从 `Source<T>` 成员中**返回**（生产），并从不被消费。 为此，我们提供 **out** 修饰符：
 
 ```Kotlin 
 abstract class Source<out T> {
@@ -110,7 +110,7 @@ fun demo(strs: Source<String>) {
 
 一般原则是：当一个类 `C` 的类型参数 `T` 被声明为 **out** 时，它就只能出现在 `C` 的成员的**输出**-位置，结果是 `C<Base>` 可以安全地作为 `C<Derived>`的超类。
 
-更聪明的说法就是，当类 C 在类型参数 T 之下是协变的，或者 T 是一个斜变类型。可以把 C 想象成 T 的生产这，而不是 T 的消费者。
+更聪明的说法就是，当类 C 在类型参数 T 之下是协变的，或者 T 是一个协变类型。可以把 C 想象成 T 的生产这，而不是 T 的消费者。
 
 `out` 修饰符本来被称之为变型注解，但由于同处与类型参数声明处，我们称之为声明处变型。这与 Java 中的使用处变型相反。
 
