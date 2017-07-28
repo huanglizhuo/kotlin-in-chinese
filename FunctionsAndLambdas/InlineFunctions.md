@@ -19,9 +19,9 @@ finally {
 }
 ```
 
-这好像不是我们开始想要的
+这不正是我们最开始想要的吗?
 
-想要让编译器不这样做的话，我们需要用 `inline` 标记 `lock()` 函数：
+为了让编译器这样做，我们需要用 `inline` 标记 `lock()` 函数：
 ```kotlin
 inline fun lock<T>(lock: Lock,body: ()-> T): T {
 	//...
