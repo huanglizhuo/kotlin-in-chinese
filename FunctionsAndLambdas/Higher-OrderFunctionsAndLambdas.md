@@ -74,7 +74,7 @@ ints.map {it * 2}
 这样就可以写[LINQ-风格](http://msdn.microsoft.com/en-us/library/bb308959.aspx)的代码了：
 
 ```kotlin
-strings filter {it.length == 5} sortBy {it} map {it.toUpperCase()}
+strings.filter{ it.length == 5 }.sortedBy{ it }.map{ it.toUpperCase() }
 ```
 
 ### 内联函数
@@ -169,7 +169,7 @@ ints.filter(fun(item) = item > 0)
 ```kotlin
 var sum = 0
 
-ins filter {it > 0} forEach {
+ints.filter{it > 0}.forEach {
 	sum += it
 }
 print(sum)
@@ -191,9 +191,8 @@ val sum = fun Int.(other: Int): Int = this + other
 ```kotlin
 sum : Int.(other: Int) -> Int
 ```
-可以用 . 或前缀来使用这样的函数：
+可以用 . 来使用这样的函数：
 
 ```kotlin
 1.sum(2)
-1 sum 2
 ```
