@@ -40,7 +40,7 @@ print(adHoc.x + adHoc.y)
 像 java 的匿名内部类一样，对象表达式可以访问闭合范围内的变量 (和 java 不一样的是，这些变量不用是 final 修饰的)
 
 ```kotlin
-fun countClicks(windows: JComponent) {
+fun countClicks(window: JComponent) {
 	var clickCount = 0
 	var enterCount = 0
 	window.addMouseListener(object : MouseAdapter() {
@@ -122,7 +122,7 @@ class MyClass {
 注意，尽管伴随对象的成员很像其它语言中的静态成员，但在运行时它们任然是真正对象的成员实例，比如可以实现接口：
 
 ```kotlin
-inerface Factory<T> {
+interface Factory<T> {
 	fun create(): T
 }
 
