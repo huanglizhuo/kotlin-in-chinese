@@ -52,7 +52,7 @@ fun powerOf(number: Int, exponent: Int) {
 函数参数可以设置默认值,当参数被忽略时会使用默认值。这样相比其他语言可以减少重载。
 
 ```kotlin
-fun read(b: Array<Byte>, off: Int = 0, len: Int = b.size() ) {
+fun read(b: Array<Byte>, off: Int = 0, len: Int = b.size ) {
 ...
 }
 ```
@@ -141,7 +141,7 @@ fun double(x: Int) = x * 2
 函数的参数(通常是最后一个参数)可以用 vararg 修饰符进行标记：
 
 ```kotlin
-fun asList<T>(vararg ts: T): List<T> {
+fun <T> asList(vararg ts: T): List<T> {
 	val result = ArrayList<T>()
 	for (t in ts)
 		result.add(t)
@@ -230,10 +230,10 @@ Sample.foo()
 更多请参看[类](http://kotlinlang.org/docs/reference/classes.html)和[继承](http://kotlinlang.org/docs/reference/classes.html#inheritance)
 
 ### 泛型函数
-函数可以有泛型参数，样式是在函数后跟上尖括号。
+函数可以有泛型参数，样式是在函数名前加上尖括号。
 
 ```kotlin
-fun sigletonArray<T>(item: T): Array<T> {
+fun <T> sigletonArray(item: T): Array<T> {
 	return Array<T>(1, {item})
 }
 ```
