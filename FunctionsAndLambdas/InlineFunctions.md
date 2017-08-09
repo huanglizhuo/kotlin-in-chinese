@@ -19,9 +19,9 @@ finally {
 }
 ```
 
-这好像不是我们开始想要的
+这不正是我们最开始想要的吗?
 
-想要让编译器不这样做的话，我们需要用 `inline` 标记 `lock()` 函数：
+为了让编译器这样做，我们需要用 `inline` 标记 `lock()` 函数：
 ```kotlin
 inline fun lock<T>(lock: Lock,body: ()-> T): T {
 	//...
@@ -33,7 +33,7 @@ inline fun lock<T>(lock: Lock,body: ()-> T): T {
 内联可能会引起生成代码增长，但我们可以合理的解决它(不要内联太大的函数)
 
 ### @noinline
-为了你想要一些 lambda 表达式传递给内联函数时是内联的，你可以给你的一些函数参数标记 `@noinline` 注解：
+如果只需要在内联函数中内联部分Lambda表达式，可以使用`@noinline` 注解来标记不需要内联的参数：
 
 ```kotlin
 inline fun foo(inlined: () -> Uint, @noinline notInlined: () -> Unit) {

@@ -10,7 +10,7 @@ Kotlin 标准库是一系列实现了常用模式的函数和类型，可以用�
 [kotlin.dom](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.dom/index.html) | 用在 W3C DOM 的函数
 [kotlin.io](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.io/index.html) | 用于文件和流的 IO API
 [kotlin.jvm](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/index.html) | 专门用于 java 平台的函数和注解
-[kotlin.math](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.math/index.html) | 数学反面的 API
+[kotlin.math](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.math/index.html) | 数学方面的 API
 [kotlin.platform](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.platform/index.html) | 用于自定义 Kotlin 编译器生成的代码，使其在目标平台上更好的交互
 [kotlin.properties](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.properties/index.html) | 实现泛型和[泛型属性](http://kotlinlang.org/docs/reference/delegated-properties.html)的标准并帮助函数实现自定义泛型
 [kotlin.reflect](http://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/index.html) | [Kotlin reflection](http://kotlinlang.org/docs/reference/reflection.html) 运行时 API

@@ -13,7 +13,8 @@ class Example {
 }
 ```
 
-语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValues()` 函数(如果是 var 还需要 `setValue()`)。比如：
+语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValue()` 函数(如果是 var 还需要 `setValue()`)。像这样：
+>>>>>>> 5796600a68f18f230fd54def39df0c67d8a2e86c
 
 ```kotlin
 class Delegate {
@@ -78,11 +79,11 @@ Hello
 Hello
 ```
 
-默认情况下延迟熟悉的计算是同步的：该值的计算只在一个线程里，其他所有线程都将读取同样的值。如果代理不需要同步初始化，而且允许出现多线程同时执行该操作，可以传 `LazyThreadSafetyMode.PUBLICATION` 参数给 `lazy()` 。如果你确信初始化只会在单线程中出现，那么可以使用 `LazyThreadSafetyMode.NONE` 该模式不会提供任何线程安全相关的保障。
+默认情况下延迟属性的计算是同步的：该值的计算只在一个线程里，其他所有线程都将读取同样的值。如果代理不需要同步初始化，而且允许出现多线程同时执行该操作，可以传 `LazyThreadSafetyMode.PUBLICATION` 参数给 `lazy()` 。如果你确信初始化只会在单线程中出现，那么可以使用 `LazyThreadSafetyMode.NONE` 该模式不会提供任何线程安全相关的保障。
 
 如果你想要线程安全，使用 `blockingLazy()`: 它还是按照同样的方式工作，但保证了它的值只会在一个线程中计算，并且所有的线程都获取的同一个值。
 
-#### 可观察熟悉
+#### 可观察属性
 `Delegates.observable()` 需要两个参数：一个初始值和一个用于修改的 handler 。每次我们给属性赋值时都会调用handler (在赋值操作进行之前)。它有三个参数：一个将被赋值的属性，旧值，新值：
 
 ```kotlin
@@ -103,15 +104,15 @@ fun main(args: Array<String>) {
 ```
 打印结果
 
-><no name> -> first
->first -> second
+> \<no name\> -> first  
+> first -> second  
 
 如果你想能够打断赋值并取消它，用 `vetoable()`代替  `observable()` 。传递给`vetoable`  的 handler 会在赋新值之前调用。
 
 #### 在 Map 中存储属性
-把熟悉值存储在 map 中是一种常见的使用方式，这种操作经常出现在解析 JSON 或者其它动态的操作中。这种情况下你可以使用 map 来代理它的属性。
+把属性值存储在 map 中是一种常见的使用方式，这种操作经常出现在解析 JSON 或者其它动态的操作中。这种情况下你可以使用 map 来代理它的属性。
 
-```k
+```kotlin
 class User(val map: Map<String, Any?>) {
     val name: String by map
     val age: Int     by map
@@ -145,7 +146,7 @@ class MutableUser(val map: MutableMap<String, Any?>) {
 
 ### 本地代理属性（从1.1开始支持）
 
-你可以声明本地变量作为代理属性。比如你可以创建一个本来延迟变量：
+你可以声明本地变量作为代理属性。比如你可以创建一个本地延迟变量：
 
 ```kotlin 
 fun example(computeFoo: () -> Foo) {
@@ -201,7 +202,7 @@ interface ReadWriteProperty<in R, T> {
 
 在每个代理属性的实现的背后，Kotlin 编译器都会生成辅助属性并代理给它。 例如，对于属性 `prop`，生成隐藏属性 `prop$delegate`，而访问器的代码只是简单地代理给这个附加属性：
 
-```
+```kotlin
 class C {
     var prop: Type by MyDelegate()
 }
@@ -227,7 +228,7 @@ Kotlin 编译器在参数中提供了关于 `prop` 的所有必要信息：第�
 
 例如，如果你想要在绑定之前检查属性名称，可以这样写：
 
-```
+```kotlin
 class ResourceLoader<T>(id: ResourceID<T>) {
     operator fun provideDelegate(
             thisRef: MyUI,
@@ -257,7 +258,7 @@ class MyUI {
 
 如果没有这种打断属性与其代理之间的绑定的能力，为了实现相同的功能， 你必须显式传递属性名，这不是很方便：
 
-```
+```kotlin
 // Checking the property name without "provideDelegate" functionality
 class MyUI {
     val image by bindResource(ResourceID.image_id, "image")
@@ -275,7 +276,7 @@ fun <T> MyUI.bindResource(
 
 在生成的代码中， `provideDelegate` 方法用来初始化辅助 `prop$delegate` 属性的初始化。 下面是属性声明 `val prop: Type by MyDelegate()` 生成的代码与 [上面](http://kotlinlang.org/docs/reference/delegated-properties.html#translation-rules)（当 `provideDelegate` 方法不存在时）生成的代码的对比：
 
-```
+```kotlin
 class C {
     var prop: Type by MyDelegate()
 }
