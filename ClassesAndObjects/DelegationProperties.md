@@ -13,21 +13,21 @@ class Example {
 }
 ```
 
-语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValues()` 函数(如果是 var 还需要 `setValue()`)。像这样：
+语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValues()` 函数(如果是 var 还需要 `setValue()`)。比如：
 
 ```kotlin
 class Delegate {
     operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
         return "$thisRef, thank you for delegating '${property.name}' to me!"
     }
-
+ 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
         println("$value has been assigned to '${property.name} in $thisRef.'")
     }
 }
 ```
 
-当我们从 `p` 也就是一个 `Delegate` 实例进行读取操作时，会调用 `Delegate` 的 `getValue()` 函数，因此第一个参数是我们从 `p` 中读取的，第二个参数是持有 `p` 的一个描述。比如：
+当我们从 `p` 也就	是一个 `Delegate` 实例进行读取操作时，会调用 `Delegate` 的 `getValue()` 函数，因此第一个参数是我们从 `p` 中读取的，第二个参数是持有 `p` 的一个描述。比如：
 
 ```kotlin
 val e = Example()
