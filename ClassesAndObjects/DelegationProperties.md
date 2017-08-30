@@ -84,7 +84,7 @@ Hello
 如果你想要线程安全，使用 `blockingLazy()`: 它还是按照同样的方式工作，但保证了它的值只会在一个线程中计算，并且所有的线程都获取的同一个值。
 
 #### 可观察属性
-`Delegates.observable()` 需要两个参数：一个初始值和一个用于修改的 handler 。每次我们给属性赋值时都会调用handler (在赋值操作进行之前)。它有三个参数：一个将被赋值的属性，旧值，新值：
+`Delegates.observable()` 需要两个参数：一个初始值和一个用于修改的 handler 。每次我们给属性赋值时都会调用handler (在初始赋值操作后)。它有三个参数：一个将被赋值的属性，旧值，新值：
 
 ```kotlin
 import kotlin.properties.Delegates
