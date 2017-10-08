@@ -14,7 +14,6 @@ class Example {
 ```
 
 语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValue()` 函数(如果是 var 还需要 `setValue()`)。像这样：
->>>>>>> 5796600a68f18f230fd54def39df0c67d8a2e86c
 
 ```kotlin
 class Delegate {
