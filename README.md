@@ -1,6 +1,3 @@
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/tgcRCjt4g5ZLTsJ5F2MY6FXQ/huanglizhuo/kotlin-in-chinese'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/tgcRCjt4g5ZLTsJ5F2MY6FXQ/huanglizhuo/kotlin-in-chinese.svg' />
-</a>
 
 [![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
 
