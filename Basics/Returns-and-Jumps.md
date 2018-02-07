@@ -1,7 +1,7 @@
 ## 返回与跳转
 Kotlin 有三种结构跳转表达式：
 
-> -- return   
+> -- return 默认情况下从最近的闭合函数或者[匿名函数](https://kotlinlang.org/docs/reference/lambdas.html#anonymous-functions)返回。
 > -- break 结束最近的闭合循环  
 > -- continue 跳到最近的闭合循环的下一次循环  
 
@@ -14,7 +14,7 @@ val s = person.name ?: return
 这些表达式的类型是 [Nothing type](http://kotlinlang.org/docs/reference/exceptions.html#the-nothing-type)
 
 ### break 和 continue 标签
-在 Kotlin 中表达式可以添加标签。标签通过 @ 结尾来表示，比如：`abc@`，`fooBar@` 都是有效的(参看[语法](http://kotlinlang.org/docs/reference/grammar.html#label))。使用标签语法只需像这样：
+Kotlin 中任意表达式可以添加标签。标签通过 @ 结尾来标识，比如：`abc@`，`fooBar@` 都是有效的(参看[语法](http://kotlinlang.org/docs/reference/grammar.html#label))。使用标签表达式，只需像这样：
 
 ```kotlin
 loop@ for (i in 1..100){
