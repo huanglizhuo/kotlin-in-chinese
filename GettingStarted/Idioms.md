@@ -14,7 +14,7 @@ data class Customer(val name: String, val email: String)
 
 >  --为所有属性添加 getters ，如果为 var 类型同时添加 setters
 >  --`equals()`
->  --`haseCode()`
+>  --`hashCode()`
 >  --`toString()`
 >  --`copy()`
 >  --`component1()` , `component1()` , ... 参看[数据类](../ClassesAndObjects/Data-Classes.md)
