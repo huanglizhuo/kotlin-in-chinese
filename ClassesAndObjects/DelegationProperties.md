@@ -38,7 +38,7 @@ println(e.p)
 
 >Example@33a17727, thank you for delegating ‘p’ to me!
 
-同样当我们给 `p` 赋值时 `setValue()` 函数就将被调用。前俩个参数所以一样的，第三个持有分配的值：
+同样当我们给 `p` 赋值时 `setValue()` 函数就将被调用。前俩个参数是一样的，第三个持有分配的值：
 
 ```kotlin
 e.p = "NEW"
@@ -167,7 +167,7 @@ fun example(computeFoo: () -> Foo) {
 
 > `thisRef`接收者--必须是属性拥有者是同一种类型，或者是其父类
 
-> `property`  必须是 KProperty<*> 或这它的父类
+> `property`  必须是 KProperty<*> 或者它的父类
 
 这个函数必须返回同样的类型或子类作为属性。
 
@@ -176,6 +176,7 @@ fun example(computeFoo: () -> Foo) {
 > `thisRef  `与 `getValue()` 一样
 >
 > `property` 与 `getValue()` 一样
+>
 > 新值--必须和属性类型一致或是它的父类
 
 
