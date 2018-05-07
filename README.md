@@ -19,7 +19,7 @@ Kotlin 1.1 正式发布，这次最令人振奋的莫过于协程的发布，有
 
 更多新特性请参看[what's new in kotlin 1.1](https://kotlinlang.org/docs/reference/whatsnew11.html)
 
-[pd下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
+[pdf下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
 
 记得要点 star star star
 
