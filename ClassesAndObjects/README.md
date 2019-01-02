@@ -9,5 +9,6 @@
    * [嵌套类](NestedClasses.md)
    * [枚举类](EnumClasses.md)
    * [对象表达式和声明](ObjectExpressicAndDeclarations.md)
-   * [委派模式](Delegation.md)
-   * [委派属性](DelegationProperties.md)
+   * [内联类](InlineClasses).md)
+   * [委托模式](Delegation.md)
+   * [委托属性](DelegationProperties.md)
