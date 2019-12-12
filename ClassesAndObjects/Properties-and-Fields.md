@@ -87,7 +87,7 @@ var setterWithAnnotation: Any?
 ###  备用字段
 在 kotlin 中类不可以有字段。然而当使用自定义的访问器时有时候需要备用字段。出于这些原因 kotlin 使用 `field` 关键词提供了自动备用字段，
 
-```kotllin
+```kotlin
 var counter = 0 // 初始化值会直接写入备用字段
 	set(value) {
 		if (value >= 0)
