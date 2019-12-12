@@ -67,17 +67,17 @@ if (x in 1..10) { ... }
 ```
 
 ### 只读 list
-```kotllin
+```kotlin
 val list = listOf("a", "b", "c")
 ```
 
 ### 只读map
-```kotllin
+```kotlin
 val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
 ### 访问 map
-```kotllin
+```kotlin
 println(map["key"])
 map["key"] = value
 ```
