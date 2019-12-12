@@ -78,7 +78,7 @@ strings.filter{ it.length == 5 }.sortedBy{ it }.map{ it.toUpperCase() }
 ```
 
 ### 内联函数
-有些时候可以用 [内联函数](http://kotlinlang.org/docs/reference/inline-functions.html) 提高高阶函数的性能。
+有些时候可以用 [内联函数](https://github.com/huanglizhuo/kotlin-in-chinese/blob/master/FunctionsAndLambdas/InlineFunctions.md) 提高高阶函数的性能。
 
 ### 字面函数和函数表达式
 字面函数或函数表达式就是一个 "匿名函数"，也就是没有声明的函数，但立即作为表达式传递下去。想想下面的例子：
