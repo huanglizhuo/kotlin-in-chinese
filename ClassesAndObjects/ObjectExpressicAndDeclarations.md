@@ -1,14 +1,14 @@
-## 对象表达式和声明
-有时候我们想要创建一个对当前类有一点小修改的对象，但不想重新声明一个子类。java 用匿名内部类的概念解决这个问题。Kotlin 用对象表达式和对象声明巧妙的实现了这一概念。
+## 对象表达式和对象声明
+有时候我们想要创建一个对某个类有一点小修改的对象，而不是声明一个新子类。Kotlin 中用*对象表达式*和*对象声明*来实现。
 
 ### 对象表达式
-通过下面的方式可以创建继承自某种(或某些)匿名类的对象：
+以下方式可以创建继承自某种(或某些)匿名类的对象：
 
 ```kotlin
-window.addMouseListener(object: MouseAdapter () {
-	override fun mouseClicked(e: MouseEvent) {
-		//...
-	}
+window.addMouseListener(object : MouseAdapter() {
+    override fun mouseClicked(e: MouseEvent) { /*...*/ }
+
+    override fun mouseEntered(e: MouseEvent) { /*...*/ }
 })
 ```
 
@@ -26,36 +26,62 @@ val ab = object : A(1), B {
 }
 ```
 
-有时候我们只是需要一个没有父类的对象，我们可以这样写：
+有时候我们只是需要一个的对象，没有任何父类,我们可以这样写：
 
 ```kotlin
-val adHoc = object {
-	var x: Int = 0
-	var y: Int = 0
+fun foo() {
+    val adHoc = object {
+        var x: Int = 0
+        var y: Int = 0
+    }
+    print(adHoc.x + adHoc.y)
 }
-
-print(adHoc.x + adHoc.y)
 ```
 
-像 java 的匿名内部类一样，对象表达式可以访问闭合范围内的变量 (和 java 不一样的是，这些变量不用是 final 修饰的)
+这里需要注意匿名对象作为类型只能出现在本地或者私有声明中. 如果把匿名对象作为公有函数返回类型或者公有属性时, 真正的类型将会是匿名函数的超类,如果声明没有超类则会使 `Any` .作为成员变量的匿名对象是不可访问的.
+
 
 ```kotlin
+class C {
+    // Private function, so the return type is the anonymous object type
+    private fun foo() = object {
+        val x: String = "x"
+    }
+
+    // Public function, so the return type is Any
+    fun publicFoo() = object {
+        val x: String = "x"
+    }
+
+    fun bar() {
+        val x1 = foo().x        // Works
+        val x2 = publicFoo().x  // ERROR: Unresolved reference 'x'
+    }
+}
+```
+
+在对象表达式中可以访问来自包含它的作用域的变量.
+
+```kotlinl 
 fun countClicks(window: JComponent) {
-	var clickCount = 0
-	var enterCount = 0
-	window.addMouseListener(object : MouseAdapter() {
-		override fun mouseClicked(e: MouseEvent) {
-			clickCount++
-		}
-		override fun mouseEntered(e: MouseEvent){
-			enterCount++
-		}
-	})
+    var clickCount = 0
+    var enterCount = 0
+
+    window.addMouseListener(object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent) {
+            clickCount++
+        }
+
+        override fun mouseEntered(e: MouseEvent) {
+            enterCount++
+        }
+    })
+    // ...
 }
 ```
 
 ### 对象声明
-[单例模式](http://en.wikipedia.org/wiki/Singleton_pattern)是一种很有用的模式，Kotln 中声明它很方便：
+[单例模式](http://en.wikipedia.org/wiki/Singleton_pattern)在很多情形中很实用，Kotln(在 Scala 之后)大大简化了声明方式：
 
 ```kotlin
 object DataProviderManager {
@@ -69,6 +95,8 @@ object DataProviderManager {
 ```
 
 这叫做对象声明，跟在 object 关键字后面是对象名。和变量声明一样，对象声明并不是表达式，而且不能作为右值用在赋值语句。
+
+对象声明的初始化
 
 想要访问这个类，直接通过名字来使用这个类：
 

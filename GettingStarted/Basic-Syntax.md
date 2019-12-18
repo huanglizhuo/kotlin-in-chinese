@@ -2,20 +2,35 @@
 
 ## 基本语法
 
-### 包定义
+### 包定义和引入
+
 在源文件的开头定义包：
 
 ```kotlin
 package my.demo
-import java.util.*
-//...
+
+import kotlin.text.*
+
+// ...
 ```
 
 包名不必和文件夹路径一致：源文件可以放在任意位置。
 
 更多请参看 [包(package)](../Basics/Packages.md)
-### 定义函数
-定义一个函数接受两个 int 型参数，返回值为 int ：
+
+### 程序入口
+
+Kotlin 应用的入口是 `main` 函数.
+
+```kotlin
+fun main() {
+    println("Hello world!")
+}
+```
+
+### 函数
+
+下面的函数接受两个 `Int` 型参数，返回值为 `Int` ：
 
 ```kotlin
 fun sum(a: Int, b: Int): Int {
@@ -23,17 +38,17 @@ fun sum(a: Int, b: Int): Int {
 }
 ```
 
-只有一个表达式作为函数体，以及自推导型的返回值：
+具有表达式主体和推断的返回类型的函数：
 
 ```kotlin
 fun sum(a: Int, b: Int) = a + b
 ```
 
-返回一个没有意义的值：
+返回无意义的值：
 
 ```kotlin
 fun printSum(a: Int, b: Int): Unit {
-  println("sum of $a and $b is ${a + b}")
+    println("sum of $a and $b is ${a + b}")
 }
 ```
 
@@ -47,39 +62,59 @@ fun printSum(a: Int, b: Int) {
 
 更多请参看[函数](../FunctionsAndLambdas/Functions.md)
 
-### 定义局部变量
-一次赋值（只读）的局部变量：
+### 变量
+
+只读的本地变量通过`val`关键字定义.该类变量只能赋值一次：
+
 ```kotlin
 val a: Int = 1  // 立刻赋值
 val b = 2   // `Int` 类型是自推导的
 val c: Int  // 没有初始化器时要指定类型
-c = 3       // 推导型赋值
+c = 3       // 推断型赋值
 ```
 
-可修改的变量：
+被关键字`var`修饰的变量可以重新赋值：
 
 ```kotlin
 var x = 5 // `Int` type is inferred
 x += 1
 ```
 
+顶级变量:
+
+```kotlin
+val PI = 3.14
+var x = 0
+
+fun incrementX() { 
+    x += 1 
+}
+```
+
 更多请参看[属性和字段](../ClassesAndObjects/Properties-and-Fields.md)
 
 ### 注释
-与 java 和 javaScript 一样，Kotlin 支持单行注释和块注释。
+与多数现代语言一样，Kotlin 支持单行注释(行尾注释)和多行注释(块注释)。
 
 ```kotlin
-// 单行注释
+// 行尾注释
 
-/*  哈哈哈哈
-    这是块注释 */
+/*  这是块注释
+    可以在多行注释 */
 ```
 
-与 java 不同的是 Kotlin 的 块注释可以级联。
+Kotlin 块注释可以嵌套.
 
-参看[文档化 Kotlin 代码](../Tools/Documenting-Kotlin-Code.md)学习更多关于文档化注释的语法。
+```kotlin 
+/* The comment starts here
+/* contains a nested comment */     
+and ends here. */
+```
 
-### 使用字符串模板
+参看[文档化 Kotlin 代码](../Tools/Documenting-Kotlin-Code.md)更多关于文档化注释的语法。
+
+### 字符串模板
+
 ```kotlin
 var a = 1
 // simple name in template:
@@ -92,7 +127,8 @@ val s2 = "${s1.replace("is", "was")}, but now is $a"
 
 更多请参看[字符串模板](../Basics/Basic-Types.md)
 
-### 使用条件表达式
+### 条件表达式
+
 ```kotlin
 fun maxOf(a: Int, b: Int): Int {
     if (a > b) {
@@ -103,7 +139,7 @@ fun maxOf(a: Int, b: Int): Int {
 }
 ```
 
-使用 if 作为表达式：
+kotin 中可以使用 if 作为表达式：
 
 ```kotlin
 fun maxOf(a: Int, b: Int) = if (a > b) a else b
@@ -111,8 +147,9 @@ fun maxOf(a: Int, b: Int) = if (a > b) a else b
 
 更多请参看 [if 表达式](../Basics/Control-Flow.md)
 
-### 使用可空变量以及空值检查
-当空值可能出现时应该明确指出该引用可空。
+### 可空变量以及空值检查
+
+当空值可能出现时必须明确标注该引用可空。
 
 当 str 中不包含整数时返回空:
 
@@ -122,37 +159,33 @@ fun parseInt(str: String): Int? {
 }
 ```
 
-使用一个返回可空值的函数：
+使用函数返回空值：
 
 ```kotlin
-fun parseInt(str: String): Int? {
-  return str.toIntOrNull()
-}
-
 fun printProduct(arg1: String, arg2: String) {
-  val x = parseInt(arg1)
-  val y = parseInt(arg2)
+    val x = parseInt(arg1)
+    val y = parseInt(arg2)
 
-  // 直接使用 x*y 会产生错误因为它们中有可能会有空值
-  if (x != null && y != null) {
-    // x 和 y 将会在空值检测后自动转换为非空值
-    println(x * y)
-  }
-  else {
-    println("either '$arg1' or '$arg2' is not a number")
-  }    
+    // Using `x * y` yields error because they may hold nulls.
+    if (x != null && y != null) {
+        // x and y are automatically cast to non-nullable after null check
+        println(x * y)
+    }
+    else {
+        println("'$arg1' or '$arg2' is not a number")
+    }    
 }
 ```
 
-或者这样
+或者
 
 ```kotlin
 if (x == null) {
-    println("Wrong number format in arg1: '${arg1}'")
+    println("Wrong number format in arg1: '$arg1'")
     return
 }
 if (y == null) {
-    println("Wrong number format in arg2: '${arg2}'")
+    println("Wrong number format in arg2: '$arg2'")
     return
 }
 
@@ -162,13 +195,14 @@ println(x * y)
 
 更多请参看[空安全](../Other/Null-Safety.md)
 
-### 使用值检查以及自动转换
-使用 is 操作符检查一个表达式是否是某个类型的实例。如果对不可变的局部变量或属性进行过了类型检查，就没有必要明确转换：
+### 类型检查以及自动转换
+
+`is` 操作符可以检查表达式是否是是某个类型的实例。如果不可变的局部变量或属性进行过了类型检查，就没有必要显示转换：
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
   if (obj is String) {
-    // obj 将会在这个分支中自动转换为 String 类型
+    // obj 将会在这个分支中自动转换为 `String` 类型
     return obj.length
   }
 
@@ -177,13 +211,13 @@ fun getStringLength(obj: Any): Int? {
 }
 ```
 
-或者这样
+或者
 
 ```kotlin
 fun getStringLength(obj: Any): Int? {
   if (obj !is String) return null
   
-  // obj 将会在这个分支中自动转换为 String 类型
+  // obj 将会在这个分支中自动转换为 `String` 类型
   return obj.length
 }
 ```
@@ -203,9 +237,9 @@ fun getStringLength(obj: Any): Int? {
 
 更多请参看 [类](../ClassesAndObjects/Classes-and-Inheritance.md#3) 和 [类型转换](../Other/Type-Checks-and-Casts.md)
 
-### 使用 for 循环
+### for 循环
 ```kotlin
-val items = listOf("apple", "banana", "kiwi")
+val items = listOf("apple", "banana", "kiwifruit")
 for (item in items) {
     println(item)
 }
@@ -214,7 +248,7 @@ for (item in items) {
 或者
 
 ```kotlin
-val items = listOf("apple", "banana", "kiwi")
+val items = listOf("apple", "banana", "kiwifruit")
 for (index in items.indices) {
     println("item at $index is ${items[index]}")
 }
@@ -222,9 +256,9 @@ for (index in items.indices) {
 
 参看[for循环](../Basics/Control-Flow.md)
 
-### 使用 while 循环
+### while 循环
 ```kotlin
-val items = listOf("apple", "banana", "kiwi")
+val items = listOf("apple", "banana", "kiwifruit")
 var index = 0
 while (index < items.size) {
     println("item at $index is ${items[index]}")
@@ -234,22 +268,23 @@ while (index < items.size) {
 
 参看[while循环](../Basics/Control-Flow.md)
 
-### 使用 when 表达式
+### when 表达式
 ```kotlin
 fun describe(obj: Any): String =
-when (obj) {
-    1          -> "One"
-    "Hello"    -> "Greeting"
-    is Long    -> "Long"
-    !is String -> "Not a string"
-    else       -> "Unknown"
-}
+    when (obj) {
+        1          -> "One"
+        "Hello"    -> "Greeting"
+        is Long    -> "Long"
+        !is String -> "Not a string"
+        else       -> "Unknown"
+    }
 ```
 
 参看[when表达式](../Basics/Control-Flow.md)
 
-###  使用ranges
-使用 in 操作符检查数值是否在某个范围内：
+###  ranges
+
+使用 `in` 操作符判断数值是否在某个范围内：
 
 ```kotlin
 val x = 10
@@ -268,33 +303,15 @@ if (-1 !in 0..list.lastIndex) {
     println("-1 is out of range")
 }
 if (list.size !in list.indices) {
-    println("list size is out of valid list indices range too")
-}
-```
-
-使用范围内迭代：
-
-```kotlin
-for (x in 1..5) {
-    print(x)
-}
-```
-
-或者使用步进：
-
-```kotlin
-for (x in 1..10 step 2) {
-    print(x)
-}
-for (x in 9 downTo 0 step 3) {
-    print(x)
+    println("list size is out of valid list indices range, too")
 }
 ```
 
 参看[Ranges](../Other/Ranges.md)
 
-### 使用集合
-对一个集合进行迭代：
+### 集合
+
+遍历集合：
 
 ```kotlin
 for (item in items) {
@@ -302,7 +319,7 @@ for (item in items) {
 }
 ```
 
-使用 in 操作符检查集合中是否包含某个对象
+使用 `in` 操作符检查集合中是否包含某个对象:
 
 ```kotlin
 when {
@@ -314,12 +331,21 @@ when {
 使用lambda表达式过滤和映射集合：
 
 ```kotlin
+val fruits = listOf("banana", "avocado", "apple", "kiwifruit")
 fruits
-.filter { it.startsWith("a") }
-.sortedBy { it }
-.map { it.toUpperCase() }
-.forEach { println(it) }
+  .filter { it.startsWith("a") }
+  .sortedBy { it }
+  .map { it.toUpperCase() }
+  .forEach { println(it) }
 ```
 
-参看[高阶函数和lambda表达式](../FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md)
+参看[集合概述](../Collections/CollectionsOverview.md)
 
+### 创建基本类以及实例: 
+
+```kotlin
+val rectangle = Rectangle(5.0, 2.0)
+val triangle = Triangle(3.0, 4.0, 5.0)
+```
+
+参看[类](../ClassesAndObjects/Classes-and-Inheritance.md)和[对象及实例](../ClassesAndObjects/ObjectExpressicAndDeclarations.md)

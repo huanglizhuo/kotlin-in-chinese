@@ -1,11 +1,11 @@
-## 代理属性
+## 委托属性
 Kotlin 很多常用属性，虽然我们可以在每次需要的时候手动实现它们，但更好的办法是一次实现多次使用，并放到库里。比如：
 
 > 延迟属性：只在第一次访问时计算它的值。
 > 可观察属性：监听者从这获取这个属性更新的通知。
-> 在 map 中存储的属性，而不是为每个属性创建一个字段。
+> 把多个属性储存在一个映射（map）中，而不是每个存在单独的字段中。
 
-为了满足这些情形，Kotllin 支持代理属性：
+为了满足这些情形，Kotlin 支持委托属性：
 
 ```kotlin
 class Example {
@@ -13,7 +13,7 @@ class Example {
 }
 ```
 
-语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*代理*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法代理。属性代理不需要任何接口的实现，但必须要提供 `getValue()` 函数(如果是 var 还需要 `setValue()`)。像这样：
+语法结构是： `val/var <property name>: <Type> by <expression>` 在 by 后面的表达式就是*委托*，因为`get()` `set()` 对应的属性会被 `getValue()` `setValue()` 方法委托。属性委托不需要任何接口的实现，但必须要提供 `getValue()` 方法(如果是 var 还需要 `setValue()`)。像这样：
 
 ```kotlin
 class Delegate {
@@ -27,7 +27,7 @@ class Delegate {
 }
 ```
 
-当我们从 `p` 也就	是一个 `Delegate` 实例进行读取操作时，会调用 `Delegate` 的 `getValue()` 函数，因此第一个参数是我们从 `p` 中读取的，第二个参数是持有 `p` 的一个描述。比如：
+当我们从 `p` 也就委托给 `Delegate` 的一个实例进行读取操作时，会调用 `Delegate` 的 `getValue()` 方法，因此第一个参数是我们从 `p` 中读取的，第二个参数是持有 `p` 的一个描述。比如：
 
 ```kotlin
 val e = Example()
@@ -38,7 +38,7 @@ println(e.p)
 
 >Example@33a17727, thank you for delegating ‘p’ to me!
 
-同样当我们给 `p` 赋值时 `setValue()` 函数就将被调用。前俩个参数所以一样的，第三个持有分配的值：
+同样当我们给 `p` 赋值时 `setValue()` 函数就将被调用。前两个参数是一样的，第三个持有分配的值：
 
 ```kotlin
 e.p = "NEW"
@@ -48,15 +48,13 @@ e.p = "NEW"
 
 >NEW has been assigned to ‘p’ in Example@33a17727.
 
-从 Kotlin 1.1 开始支持在函数内部或者代码块内声明代理，而不必是类成员。
+从 Kotlin 1.1 开始支持在函数内部或者代码块内声明委托，而不必是类成员。你可以在后面的例子中找到用法
 
-> 
-
-### 标准代理
-Kotlin 标准库为几种常用的代理提供了工厂方法
+### 标准委托
+Kotlin 标准库为几种常用的委托提供了工厂方法
 
 #### 延迟
-`lazy()` 是一个接受 lamdba 并返回一个实现延迟属性的代理：第一次调用 `get()` 执行 lamdba 并传递 `lazy()` 并存储结果，以后每次调用 `get()` 时只是简单返回之前存储的值。
+`lazy()`  是接受一个 lambda 并返回一个 `Lazy <T>` 实例的函数,返回的实例可以作为实现延迟属性的委托：第一次调用 `get()` 执行传递给 `lazy()` 的lamdba，并存储结果，以后每次调用 `get()` 时只是简单返回之前存储的值。
 
 ```kotlin
 val lazyValue: String by lazy {
@@ -78,7 +76,7 @@ Hello
 Hello
 ```
 
-默认情况下延迟属性的计算是同步的：该值的计算只在一个线程里，其他所有线程都将读取同样的值。如果代理不需要同步初始化，而且允许出现多线程同时执行该操作，可以传 `LazyThreadSafetyMode.PUBLICATION` 参数给 `lazy()` 。如果你确信初始化只会在单线程中出现，那么可以使用 `LazyThreadSafetyMode.NONE` 该模式不会提供任何线程安全相关的保障。
+默认情况下延迟属性的计算是同步的：该值的计算只在一个线程里，其他所有线程都将读取同样的值。如果委托不需要同步初始化，而且允许出现多线程同时执行该操作，可以传 `LazyThreadSafetyMode.PUBLICATION` 参数给 `lazy()` 。如果你确信初始化只会在单线程中出现，那么可以使用 `LazyThreadSafetyMode.NONE` 该模式不会提供任何线程安全相关的保障。
 
 如果你想要线程安全，使用 `blockingLazy()`: 它还是按照同样的方式工作，但保证了它的值只会在一个线程中计算，并且所有的线程都获取的同一个值。
 
@@ -106,10 +104,10 @@ fun main(args: Array<String>) {
 > \<no name\> -> first  
 > first -> second  
 
-如果你想能够打断赋值并取消它，用 `vetoable()`代替  `observable()` 。传递给`vetoable`  的 handler 会在赋新值之前调用。
+如果你想打断赋值并“否决”它，就使用 [`vetoable()`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlinproperties/-delegates/vetoable.html) 取代 `observable()`。在属性被赋新值生效之前会调用传递给 `vetoable` 的处理程序。
 
 #### 在 Map 中存储属性
-把属性值存储在 map 中是一种常见的使用方式，这种操作经常出现在解析 JSON 或者其它动态的操作中。这种情况下你可以使用 map 来代理它的属性。
+把属性值存储在 map 中是一种常见的使用方式，这种操作经常出现在解析 JSON 或者其它动态的操作中。这种情况下你可以使用 map 来委托它的属性。
 
 ```kotlin
 class User(val map: Map<String, Any?>) {
@@ -118,7 +116,7 @@ class User(val map: Map<String, Any?>) {
 }
 ```
 
-在这个例子中，构造函数接受一个 map :
+在这个例子中，构造函数接收一个 map :
 
 ```kotlin
 val user = User(mapOf(
@@ -127,14 +125,14 @@ val user = User(mapOf(
 ))
 ```
 
-代理属性将从这个 map 中取指(通过属性的名字)：
+委托属性将从这个 map 中取值(通过属性的名字)：
 
 ```kotlin
 println(user.name) // Prints "John Doe"
 println(user.age)  // Prints 25
 ```
 
-var 属性可以用 MutableMap 代替只读的 `Map`：
+var 属性可以用 `MutableMap` 代替只读的 `Map`：
 
 ```kotlin 
 class MutableUser(val map: MutableMap<String, Any?>) {
@@ -143,9 +141,9 @@ class MutableUser(val map: MutableMap<String, Any?>) {
 }
 ```
 
-### 本地代理属性（从1.1开始支持）
+### 本地委托属性（从1.1开始支持）
 
-你可以声明本地变量作为代理属性。比如你可以创建一个本地延迟变量：
+你可以声明本地变量作为委托属性。比如你可以创建一个本地延迟变量：
 
 ```kotlin 
 fun example(computeFoo: () -> Foo) {
@@ -159,30 +157,29 @@ fun example(computeFoo: () -> Foo) {
 
 `memoizedFoo` 只会在第一次访问时求值。如果 `someCondition`  不符合，那么该变量将根本不会被计算。
 
-### 属性代理的要求
+### 属性委托的要求
 
-这里总结一些代理对象的要求。
+这里总结一些委托对象的要求。
 
-只读属性 (val)，代理必须提供一个名字叫 `getValue` 的函数并接受如下参数：
+只读属性 (val)，委托必须提供一个名字叫 `getValue` 的函数并接受如下参数：
 
-> `thisRef`接收者--必须是属性拥有者是同一种类型，或者是其父类
+> `thisRef`接收者--必须于属性拥有者是同一种类型，或者是其父类 （对于扩展属性——指被扩展的类型）
 
-> `property`  必须是 KProperty<*> 或这它的父类
+> `property`  必须是 KProperty<*> 或者它的父类
 
 这个函数必须返回同样的类型或子类作为属性。
 
-可变属性 (var)，代理必须添加一个叫 `setValue` 的函数并接受如下参数：
+可变属性 (var)，委托必须添加一个叫 `setValue` 的函数并接受如下参数：
 
 > `thisRef  `与 `getValue()` 一样
 >
 > `property` 与 `getValue()` 一样
+>
 > 新值--必须和属性类型一致或是它的父类
 
+`getValue()` 和 `setValue()` 函数可以由委托类的成员函数或者扩展函数提供。扩展函数对与想要对对象委托原本没有的函数来说很方便。两种函数必须标记 `operator` 关键字。
 
-
-`getValue()` 和 `setValue()` 函数必须作为代理类的成员函数或者扩展函数。扩展函数对与想要对对象代理原本没有的函数是十分有用。两种 函数必须标记 `operator` 关键字。
-
-代理类可能实现 `ReadOnlyProperty` 和 `ReadWriteProperty` 中的一个并要求带有 `operator` 方法。这些接口在 Kotlin 标准库中有声明：
+委托类可能实现 `ReadOnlyProperty` 和 `ReadWriteProperty` 中的一个并要求带有 `operator` 方法。这些接口在 Kotlin 标准库中有声明：
 
 ```kotlin 
 interface ReadOnlyProperty<in R, out T> {
@@ -195,11 +192,9 @@ interface ReadWriteProperty<in R, T> {
 }
 ```
 
-
-
 ### 转换规则
 
-在每个代理属性的实现的背后，Kotlin 编译器都会生成辅助属性并代理给它。 例如，对于属性 `prop`，生成隐藏属性 `prop$delegate`，而访问器的代码只是简单地代理给这个附加属性：
+在每个委托属性的实现的背后，Kotlin 编译器都会生成辅助属性并委托给它。 例如，对于属性 `prop`，生成隐藏属性 `prop$delegate`，而访问器的代码只是简单地委托给这个附加属性：
 
 ```kotlin
 class C {
@@ -219,9 +214,9 @@ Kotlin 编译器在参数中提供了关于 `prop` 的所有必要信息：第�
 
 注意，直接在代码中引用[绑定的可调用引用](http://kotlinlang.org/docs/reference/reflection.html#bound-function-and-property-references-since-11)的语法 `this::prop` 自 Kotlin 1.1 起才可用。
 
-### 提供代理（自 1.1 起）
+### 提供委托（自 1.1 起）
 
-通过定义 `provideDelegate` 操作符，可以扩展创建属性实现所代理对象的逻辑。 如果 `by` 右侧所使用的对象将 `provideDelegate` 定义为成员或扩展函数，那么会调用该函数来创建属性代理实例。
+通过定义 `provideDelegate` 操作符，可以扩展创建属性实现所委托对象的逻辑。 如果 `by` 右侧所使用的对象将 `provideDelegate` 定义为成员或扩展函数，那么会调用该函数来创建属性委托实例。
 
 `provideDelegate` 的一个可能的使用场景是在创建属性时检查属性一致性。
 
@@ -255,7 +250,7 @@ class MyUI {
 
 在创建 `MyUI` 实例期间，为每个属性调用 `provideDelegate` 方法，并立即执行必要的验证。
 
-如果没有这种打断属性与其代理之间的绑定的能力，为了实现相同的功能， 你必须显式传递属性名，这不是很方便：
+如果没有这种打断属性与其委托之间的绑定的能力，为了实现相同的功能， 你必须显式传递属性名，这不是很方便：
 
 ```kotlin
 // Checking the property name without "provideDelegate" functionality

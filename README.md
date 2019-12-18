@@ -1,4 +1,3 @@
-
 [![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
 
 2017.5.17
@@ -19,7 +18,7 @@ Kotlin 1.1 正式发布，这次最令人振奋的莫过于协程的发布，有
 
 更多新特性请参看[what's new in kotlin 1.1](https://kotlinlang.org/docs/reference/whatsnew11.html)
 
-[pd下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
+[pdf下载](https://www.gitbook.com/download/pdf/book/huanglizhuo/kotlin-in-chinese)  [ePub下载](https://www.gitbook.com/download/epub/book/huanglizhuo/kotlin-in-chinese)
 
 记得要点 star star star
 
@@ -39,8 +38,6 @@ Kotlin 是一个实用性很强的语言，专注于互通，安全，简洁，�
 Kotlin LOC (软件规模代码行) 如下图
 
 ![kotlin](./kotlinLOC.png)
-
-近期我会重新读一遍 Kotlin 官方文档 并对现在的这份文档进行更新(又立 flag 了) -- 2016.2.16
 
 * [准备开始](GettingStarted/README.md) 
    * [基本语法](GettingStarted/Basic-Syntax.md) 
@@ -101,5 +98,3 @@ Kotlin LOC (软件规模代码行) 如下图
 * [FAQ](FAQ/README.md)
    * [与java对比](FAQ/Comparison2java.md) 
    * [与Scala对比](FAQ/Comparison2Scala.md) 
-
-

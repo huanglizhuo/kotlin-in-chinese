@@ -14,7 +14,7 @@ data class Customer(val name: String, val email: String)
 
 >  --为所有属性添加 getters ，如果为 var 类型同时添加 setters
 >  --`equals()`
->  --`haseCode()`
+>  --`hashCode()`
 >  --`toString()`
 >  --`copy()`
 >  --`component1()` , `component1()` , ... 参看[数据类](../ClassesAndObjects/Data-Classes.md)
@@ -67,17 +67,17 @@ if (x in 1..10) { ... }
 ```
 
 ### 只读 list
-```kotllin
+```kotlin
 val list = listOf("a", "b", "c")
 ```
 
 ### 只读map
-```kotllin
+```kotlin
 val map = mapOf("a" to 1, "b" to 2, "c" to 3)
 ```
 
 ### 访问 map
-```kotllin
+```kotlin
 println(map["key"])
 map["key"] = value
 ```

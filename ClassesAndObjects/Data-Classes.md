@@ -7,7 +7,7 @@ data class User(val name: String, val age: Int)
 
 编译器会自动根据主构造函数中声明的所有属性添加如下方法：
 
->`equals()`/`hashCode` 函数
+> `equals()`/`hashCode` 函数
 
 > `toString` 格式是 "User(name=john, age=42)"
 
