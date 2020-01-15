@@ -1,4 +1,4 @@
-* [协程](./Concurency.md)
+* [并行](./Concurency.md)
 * [不变性](./Immutability.md)
 * [Kotlin 库](./Kotlin-Libraries.md)
 * [平台库](./Platform-Libraries.md)
