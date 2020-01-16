@@ -554,3 +554,6 @@ JVM，Android，Linux，Windows和macOS当前默认支持在Gradle构建中运�
 对于 Kotlin/JS 目标，添加 `kotlin-test-js` 作为测试依赖项。至此，创建了 Kotlin/JS 的测试任务，但默认情况下不运行测试。应该手动配置它们以使用JavaScript测试框架运行测试。
 
 Kotlin/Native 目标不需要其他测试依赖项，内置了 `kotlin.test` API实现。
+
+## 发布多平台库
+
