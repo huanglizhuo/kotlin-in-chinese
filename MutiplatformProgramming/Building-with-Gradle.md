@@ -1,13 +1,13 @@
 ## 使用 Gradle 构建
 
-**跨平台项目是 Kotlin 1.2 和 1.3 中的实验性特性。本文档中描述的所有语言和工具功能都可能在将来的Kotlin版本中发生变更**
+**多平台项目是 Kotlin 1.2 和 1.3 中的实验性特性。本文档中描述的所有语言和工具功能都可能在将来的Kotlin版本中发生变更**
 
-这篇文档解释了 [Kotlin 跨平台项目](https://kotlinlang.org/docs/reference/multiplatform.html) 并且描述了gradle 中是如何配置的。
+这篇文档解释了 [Kotlin 多平台项目](https://kotlinlang.org/docs/reference/multiplatform.html) 并且描述了gradle 中是如何配置的。
 
 内容目录
 
 - 项目结构
-- 设置跨平台项目
+- 设置多平台项目
 - gradle 插件
 - 设置 Targets（目标）
     - 支持的平台
@@ -18,7 +18,7 @@
     - 语言设置
 - 默认项目结构
 - 运行测试
-- 发布跨平台库
+- 发布多平台库
 - JVM 目标的Java 支持
 - Android支持
     - 发布 Android 库
@@ -28,7 +28,7 @@
 
 ## 项目结构
 
-Kotlin 跨平台项目的结构由下面的构建块组成：
+Kotlin 多平台项目的结构由下面的构建块组成：
 
 - [targets(目标)](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#setting-up-targets) 是构建的一部分，负责构建，测试和打包用于其中一个平台的完整软件。因此，一个多平台项目通常包含多个目标。
 
@@ -139,7 +139,7 @@ plugins {
 
 这将在顶层创建 `kotlin` 扩展。接下来你就可以在构建脚本中使用它：
 
-- 为跨平台设置目标(默认是不会创建目标的)
+- 为多平台设置目标(默认是不会创建目标的)
 - 配置源集和各自依赖
 
 ## 设置目标
@@ -230,7 +230,7 @@ kotlin {
 
     注意这里有些 Kotlin/Native 目标需要[适当的硬件主机](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#using-kotlinnative-targets)构建
 
-一些目标需要附加的配置. 关于 Android 和 iOS 例子,可以参看[跨平台项目:Android 和 iOS](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)教程
+一些目标需要附加的配置. 关于 Android 和 iOS 例子,可以参看[多平台项目:Android 和 iOS](https://kotlinlang.org/docs/tutorials/native/mpp-ios-android.html)教程
 
 ### 配置编译
 
@@ -452,6 +452,105 @@ kotlin {
 }
 ```
 
-请注意，为了使IDE能够正确分析公共源的依赖关系，除了平台指定的源集需要与平台指定的组件依赖关系之外，公共源集还必须具有与 Kotlin 元数据包相对应的依赖关系。 通常，在使用已发布的库时（除非它与Gradle元数据一起发布，如下所述），需要后缀为-common（如kotlin-stdlib-common）或-metadata的组件。
+注意，为了使IDE能够正确分析公共源的依赖关系，除了平台特定源集需要声明与平台特定组件依赖之外，公共源集还必须具有与 Kotlin 元数据包相对应的依赖关系。 通常，在使用已发布的库时（除非它与Gradle元数据一起发布，如下所述），需要后缀为-common（如kotlin-stdlib-common）或-metadata的组件。
 
-但是，对另一个多平台项目的project（'...'）依赖关系会自动解析为适当的目标。 在源集的依赖项中指定单个project（'...'）依赖项就足够了，并且包含源集的编译将收到该项目的相应平台特定工件，只要它具有兼容的目标即可：
+然而 project（'...'）依赖于另一个多平台项目时会自动解析为适当的目标。 在源集的依赖项中指定单个project（'...'）依赖项就足够了，并且包含源集的编译将收到该项目的对应平台特定产物，只要它具有兼容的目标即可：
+
+```Kotlin
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                // All of the compilations that include source set 'commonMain'
+                // will get this dependency resolved to a compatible target, if any:
+                api(project(":foo-lib"))
+            }
+        }
+    }
+}
+```
+
+同样，如果以实验性 Gradle 元数据发布模式发布了多平台库，并且该项目也设置为使用元数据，那么只需为公共源集指定一次依赖项就足够了。 否则，除了公共模块之外，每个平台特定的源集还应提供库的相应平台模块，如上所示。
+
+指定依赖关系的另一种方法是在顶层使用Gradle内置DSL，其配置名称遵循模式<sourceSetName> <DependencyKind>：
+
+```Kotlin
+dependencies {
+    "commonMainApi"("com.example:foo-common:1.0")
+    "jvm6MainApi"("com.example:foo-jvm6:1.0")
+}
+```
+
+源集合依赖项DSL中不提供某些Gradle内置依赖项，例如 `gradleApi()` ,`localGroovy()`或`gradleTestKit()`。 但你可以将它们添加到顶级依赖项块中，如上所示。
+
+可以使用 kotlin("stdlib") 添加像 `kotlin-stdlib` 或 `kotlin-reflect` 之类的Kotlin 依赖模块，这是 `org.jetbrains.kotlin：kotlin-stdlib` 的缩写。
+
+### 语言设定
+
+可以如下指定源集的语言设置：
+
+```Kotlin
+kotlin {
+    sourceSets {
+        val commonMain by getting {
+            languageSettings.apply {
+                languageVersion = "1.3" // possible values: '1.0', '1.1', '1.2', '1.3'
+                apiVersion = "1.3" // possible values: '1.0', '1.1', '1.2', '1.3'
+                enableLanguageFeature("InlineClasses") // language feature name
+                useExperimentalAnnotation("kotlin.ExperimentalUnsignedTypes") // annotation FQ-name
+                progressiveMode = true // false by default
+            }
+        }
+    }
+}
+```
+
+也可以为所有源集配置语言:
+
+```Kotlin
+kotlin.sourceSets.all {
+    languageSettings.progressiveMode = true
+}
+```
+
+源集的语言设置会影响在IDE中分析来源的方式。 由于当前的限制，在Gradle构建中，仅使用编译的默认源集的语言设置并将其应用于参与编译的所有源。
+
+检查语言设置是否相互依赖，以确保源集之间的一致性。 即，如果 `foo` 依赖 `bar`：
+
+- foo应该将languageVersion设置为大于或等于bar的语言；
+- foo应该启用bar启用的所有不稳定的语言功能（错误修正功能没有这种要求）；
+- foo应该使用bar使用的所有实验性注释；
+- 可以任意设置apiVersion，错误修正语言功能和ProgressiveMode。
+
+## 默认项目结构
+
+默认情况下，每个项目都包含两个源集，`commonMain` 和 `commonTest`，在其中可以放置应在所有目标平台之间共享的所有代码。这些源集分别添加到各自生产和测试编译中。
+
+添加目标后，将为其创建默认编译：
+
+- 为 JAM,JS,以及原生目标创建 `main` 和 `test` 编译
+- 针对Android目标的每个[Android构建变体](https://developer.android.com/studio/build/build-variants)的编译；
+
+对于每个编译，在由 `<targetName> <CompilationName>` 组成的名称下都有一个默认源集。此默认源集参与了编译，因此应将其用于特定于平台的代码和依赖项，并通过“依赖于”的方式将其他源集添加到编译中。例如，目标为jvm6（JVM）和nodeJs（JS）的项目将具有源集：commonMain，commonTest，jvm6Main，jvm6Test，nodeJsMain，nodeJsTest。
+
+默认用例集涵盖了绝大多数用例，不需要自定义用例集。
+
+默认情况下，每个源集在 `src/<sourceSetName>/kotlin` 目录是Kotlin源码，在 `src/<sourceSetName>/resources下` 有资源文件。
+
+在Android项目中，会为不同 [Android 源集](https://developer.android.com/studio/build/#sourcesets)创建对应的 Kotlin 源集。如果Android目标的名称为foo，则Android源集 bar 将会有 与Kotlin源集合对应的fooBar。但是，Kotlin编译能够从所有目录 `src/bar/java`，`src/bar/kotlin` 以及 ``src/foobar/kotlin`中使用Kotlin源。 Java源仅从这些目录中的第一个读取。
+
+## 运行测试
+
+JVM，Android，Linux，Windows和macOS当前默认支持在Gradle构建中运行测试。 JS和其他Kotlin/Native 目标需要手动配置以在适当的环境，模拟器或测试框架下运行测试。
+
+每个适合测试的目标以名称 `<targetName>Test` 创建一个测试任务。`Check` 会运行所有目标的测试。
+
+在将 `commonTest` 默认源集添加到所有测试编译后，所有目标平台上所需的测试和测试工具都可以添加在此处。
+
+[kotlin.test API](https://kotlinlang.org/api/latest/kotlin.test/index.html) 可用于多平台测试。将 `kotlin-test-common` 和 `kotlin-test-annotations-common` 依赖项添加到 `commonTest` 以使用诸如 `kotlin.test.assertTrue（...）` 断言函数,以及 `@Test` / `@Ignore` / `@BeforeTest` / `@AfterTest` 等注解。
+
+对于JVM目标，可以使用 `kotlin-test-junit` 或 `kotlin-test-testng` 用于相应的断言器实现和注解映射。
+
+对于 Kotlin/JS 目标，添加 `kotlin-test-js` 作为测试依赖项。至此，创建了 Kotlin/JS 的测试任务，但默认情况下不运行测试。应该手动配置它们以使用JavaScript测试框架运行测试。
+
+Kotlin/Native 目标不需要其他测试依赖项，内置了 `kotlin.test` API实现。

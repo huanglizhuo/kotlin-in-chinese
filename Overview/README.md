@@ -4,7 +4,7 @@
 * [Kotlin 原生](KotlinForNative.md)
 * [Kotlin 数据科学](KotlinForDateScience.md)
 * [协程](Coroutines.md)
-* [跨平台](Mutiplatform.md)
+* [多平台](Mutiplatform.md)
 * [1.1 新特性](WhatNewIn1.1.md)
 * [1.2 新特性](WhatNewIn1.2.md)
 * [1.3 新特性](WhatNewIn1.3.md)
