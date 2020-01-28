@@ -557,3 +557,457 @@ Kotlin/Native 目标不需要其他测试依赖项，内置了 `kotlin.test` API
 
 ## 发布多平台库
 
+可以使用 [maven-publish Gradle](https://docs.gradle.org/current/userguide/publishing_maven.html) 插件将由多平台项目构建的库发布到Maven存储库，该插件可以按以下方式使用：
+
+```Kotlin
+plugins {
+    /* ... */
+    id("maven-publish")
+}
+```
+
+库还需要在项目中设置 `group` 和 `version`:
+
+```Kotlin
+plugins { /* ... */ }
+
+group = "com.example.my.library"
+version = "0.0.1"
+```
+
+与发布普通的 Kotlin/JVM 或 Java 项目相比，不需要通过 `publishing{...}` DSL手动创建发布。将自动为可在当前主机上构建的每个目标 创建发布，但Android目标除外，Android目标需要额外的步骤来配置发布，请参阅[发布Android库](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#publishing-android-libraries)。
+
+如 [Maven Publish插件](https://docs.gradle.org/current/userguide/publishing_maven.html#publishing_maven:repositories) 中所述，将通过 `publishing{...}` DSL中的 `repositories` 块添加将要发布库的存储库。
+
+默认工件ID遵循如下格式 `<projectName>-<targetNameToLowerCase>` ，例如，`sample-lib-nodejs` 是指 `sample-lib` 中名为 `nodeJs` 的目标.
+
+默认情况下，除了其主要工件之外，还将源JAR添加到每个发布中。源JAR包含目标`main`编译所使用的源。如果还需要发布文档工件（如Javadoc JAR），则需要手动配置其构建并将其作为工件添加到相关发布中，像下面这样。
+
+另外，默认情况下会添加一个名为 `metadata` 的附加发布，其中包含序列化的 Kotlin 声明，并且IDE可以使用它来分析多平台库。该发布的默认工件ID形成为 `<projectName>-metadata`。
+
+可以更改Maven，并且可以将其他工件文件添加到 `targets { ... }` 块或  `publishing{...}` DSL中：
+
+```Kotlin
+kotlin {
+    jvm("jvm6") {
+        mavenPublication { // Setup the publication for the target 'jvm6'
+            // The default artifactId was 'foo-jvm6', change it:  
+            artifactId = "foo-jvm"
+            // Add a docs JAR artifact (it should be a custom task): 
+            artifact(jvmDocsJar)
+        }
+    }
+}
+
+// Alternatively, configure the publications with the `publishing { ... }` DSL:
+publishing {
+    publications.withType<MavenPublication>().apply {
+        val jvm6 by getting { /* Setup the publication for target 'jvm6' */ }
+        val metadata by getting { /* Setup the publication for Kotlin metadata */ }
+    }
+}
+```
+
+由于组装 Kotlin/Native 工件需要在不同的主机平台上运行的多个版本，因此发布包含 Kotlin/Native  目标的多平台库需要使用同一套主机完成。 为了避免重复发布可以在多个平台（例如JVM，JS，Kotlin元数据，WebAssembly）上构建的模块，可以将这些模块的发布任务配置为有条件地运行。
+
+这个简化的示例确保仅在将 `-PisLinux = true` 传递到命令行中的构建时，才上载JVM，JS和Kotlin元数据发布：
+
+```Kotlin
+kotlin {
+    jvm()
+    js()
+    mingwX64()
+    linuxX64()
+       
+    // Note that the Kotlin metadata is here, too. 
+    // The mingwx64() target is automatically skipped as incompatible in Linux builds.
+    configure(listOf(metadata(), jvm(), js())) {
+        mavenPublication { 
+            val targetPublication = this@mavenPublication
+            tasks.withType<AbstractPublishToMaven>()
+                .matching { it.publication == targetPublication }
+                .all { onlyIf { findProperty("isLinux") == "true" } }            
+        }
+    }
+}
+```
+
+### 实验性元数据发布模式
+
+Gradle模块元数据提供了丰富的发布和依赖关系解析功能，这些功能在Kotlin多平台项目中使用，可简化构建作者的依赖关系配置。特别是，多平台库的出版物可能包括一个特殊的 root 模块，该模块代表整个库，并在作为依赖项添加时自动解析为适当的特定于平台的工件，如下所述。
+
+在Gradle 5.3及更高版本中，模块元数据始终在依赖关系解析期间使用，但默认情况下发布不包含任何模块元数据。要启用模块元数据发布，请将 `enableFeaturePreview("GRADLE_METADATA")` 添加到根项目的settings.gradle文件中。对于较旧的Gradle版本，模块元数据消费也需要此功能。
+
+请注意，Gradle 5.3及更高版本发布的模块元数据不能被5.3之前的Gradle版本读取。
+
+启用Gradle元数据后，会将名为 `kotlinMultiplatform` “root” 发布添加到项目的发布中。该发布的默认工件(artifact)ID与项目名称匹配，没有任何其他后缀。要配置此发布，请通过 `maven-publish` 插件的 `publishing{...}` DSL操作：
+
+```Kotlin
+kotlin { /* ... */ }
+
+publishing {
+    publications {
+        val kotlinMultiplatform by getting {
+            artifactId = "foo"        
+        }
+    }
+}
+```
+
+该出发布不包含任何工件(artifact)，仅引用其他发布作为其变体。 但是，如果存储库需要，则可能需要源和文档工件。 在这种情况下，请使用发布区域内使用artifact（...）添加这些工件，如上所示进行访问。
+
+如果某个库具有 “root” 发布，则使用者可以在一个通用源集中指定对整个库的单个依赖项，并且将为包括以下内容的每个编译选择一个对应的特定于平台的变体（如果有）。下面的 `sample-lib` 就是一个以作为 root 发布的面向JVM和JS构建的示例库：
+
+```kotlin
+kotlin {
+    jvm("jvm6")
+    js("nodeJs")
+        
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                // This single dependency is resolved to the appropriate target modules, 
+                // for example, `sample-lib-jvm6` for JVM, `sample-lib-js` for JS:
+                api("com.example:sample-lib:1.0") 
+            }
+        }
+    }
+}
+```
+
+这要求使用者的 Gradle 构建能够读取 Gradle 模块的元数据,要么使用 Gradle 5.3+ ,要么在 `settings.gradle` 中显示声明 `enableFeaturePreview("GRADLE_METADATA")`
+
+###明确构建目标
+
+在多平台库中，单个平台可能有多个目标。例如，这些目标可以提供相同的API，但在运行时与它们交互的库（例如测试框架或日志记录解决方案）不同。
+
+但是，对这种多平台库的依赖性可能是模棱两可的，因此可能无法解决，因为没有足够的信息来决定选择哪个目标。
+
+解决方案是用自定义属性标记目标，Gradle在依赖关系解析过程中会考虑到该属性。但是，这必须在库作者和使用者方面同时进行，库作者有责任将属性及其可能的值传达给使用者。
+
+添加属性时需要对称添加,需要在库和使用项目中对称添加. 比如,在一个测试库中,在两个目标中都支持JUnit和TestNG。库作者需要向两个目标添加一个属性，如下所示：
+
+```Kotlin
+val testFrameworkAttribute = Attribute.of("com.example.testFramework", String::class.java)
+  
+kotlin {
+    jvm("junit") {
+        attributes.attribute(testFrameworkAttribute, "junit")
+    }
+    jvm("testng") {
+        attributes.attribute(testFrameworkAttribute, "testng")
+    }
+}
+```
+
+使用者只需要只需要将属性添加到产生歧义的单个目标即可。
+
+如果将依赖项添加到自定义配置而不是插件创建的配置之一时出现了相同的歧义，则可以通过相同的方式将属性添加到配置中：
+
+
+```Kotlin
+val testFrameworkAttribute = Attribute.of("com.example.testFramework", String::class.java)
+
+configurations {
+    val myConfiguration by creating {
+        attributes.attribute(testFrameworkAttribute, "junit")
+    }
+}
+```
+
+## JVM 目标中的 Java 支持
+
+从Kotlin 1.3.40开始，此功能可用。
+
+默认情况下，JVM目标会忽略Java源代码，仅编译Kotlin源文件。
+要将Java源代码包含在JVM目标的编译中，或应用要求Java插件起作用的Gradle插件，需要显式启用对目标的Java支持：
+
+```Kotlin
+kotlin {
+    jvm {
+        withJava()
+    } 
+}
+```
+
+这可以调用 Gradle Java 插件并配置目标与之交互。注意，仅应用Java插件而不在JVM目标中指定withJava（）不会对目标产生影响。
+
+Java源文件系统的位置与Java插件的默认位置不同。 Java源文件需要放置在Kotlin源根目录的同级目录中。例如，如果JVM目标具有默认名称jvm，则路径为：
+
+```Kotlin
+src
+├── jvmMain
+│   ├── java // production Java sources
+│   ├── kotlin
+│   └── resources
+├── jvmTest
+│   ├── java // test Java sources
+│   ├── kotlin
+…   └── resources
+```
+
+通用源集不能包括Java源。
+
+由于当前的限制，禁用了Java插件配置的某些任务，而使用了Kotlin插件添加的相应任务：
+
+- 禁用 `jar` 以便支持目标的JAR任务（例如jvmJar）
+- 禁用 `test`，并使用目标的测试任务（例如jvmTest）
+- `* ProcessResources` 任务被禁用，并且资源由编译的等效任务处理
+
+该目标的发布由Kotlin插件处理，不需要特定于 Java 插件的步骤，例如手动创建发布并将其配置为 `from（components.java）`.
+
+## Android 支持
+
+Kotlin Multiplatform项目通过提供android预设来支持Android平台。创建Android目标需要手动将一个Android Gradle插件（例如com.android.application或com.android.library）应用到项目。每个Gradle子项目只能创建一个Android目标：
+
+```Kotlin
+plugins {
+    id("com.android.library")
+    kotlin("multiplatform").version("1.3.61")
+}
+
+android { /* ... */ }
+
+kotlin {
+    android { // Create the Android target
+        // Provide additional configuration if necessary
+    }
+}
+```
+
+默认情况下创建的Android目标的编译与[Android构建变体](https://developer.android.com/studio/build/build-variants)相关：对于每个构建变体，均以相同的名称创建Kotlin编译。
+
+然后，对于由变体编译的每个Android源集，将在目标名称前的源集名称下创建Kotlin源集，例如Kotlin源集 `androidDebug` 是为Android 源集 `debug` 和名为android的Kotlin目标。这些Kotlin源集将相应地添加到变体编辑中。
+
+默认的源集commonMain被添加到每个生产（应用程序或库）变体的编译中。同样，将commonTest源集添加到单元测试和检测测试变体的编译中。
+
+还支持使用 [kapt](https://kotlinlang.org/docs/reference/kapt.html) 进行注释处理，但是由于当前的限制，它要求在配置kapt依赖项之前创建Android目标，这需要在最外层 `depedencies{...}` 块中完成，而不是在内部Kotlin源设置依赖项。
+
+```Kotlin
+// ...
+
+kotlin {
+    android { /* ... */ }
+}
+
+dependencies {
+    kapt("com.my.annotation:processor:1.0.0")
+}
+```
+
+### 发布Android库
+
+要将Android库发布为多平台库的一部分，需要设置该库的发布并为Android库目标提供其他配置。
+
+默认情况下，不发布Android库的任何工件。要发布由一组Android变体产生的工件，请在Android目标块中指定变体名称，如下所示：
+
+```Kotlin
+kotlin {
+    android {
+        publishLibraryVariants("release", "debug")
+    }
+}
+```
+
+上面的示例适用于没有产品特性的Android库。对于具有产品特性的库，变体名称也包含样式，例如fooBarDebug或fooBazRelease。
+
+请注意，如果库使用者定义了库中缺少的变体，则它们需要提供匹配和回滚。例如，如果库不具有或不发布 `staging` 构建类型，则必须为具有这种构建类型的使用者提供备用，并至少指定该库发布的构建类型之一：
+
+```Kotlin
+android {
+    buildTypes {
+        val staging by creating {
+            // ...
+            matchingFallbacks = listOf("release", "debug") 
+        }
+    }
+}
+```
+
+类似地，如果库发布中缺少某些特性，则库使用者可能需要为定制产品特性提供匹配的回滚。
+
+可以选择发布按产品特性分组的变体，以便将不同构建类型的输出放置在单个模块中，并使构建类型成为工件的分类器（发布构建类型仍未发布而没有分类器）。此模式默认情况下处于禁用状态，可以按以下方式启用：
+
+```Kotlin
+kotlin {
+    android {
+        publishLibraryVariantsGroupedByFlavor = true
+    }
+}
+```
+
+如果它们具有不同的依赖性，则不建议发布按产品特性分组的变体，因为这些变体将合并到一个依赖列表中。
+
+## 使用 Kotlin/Native 目标
+
+需要特别注意某些 Kotlin/Native 目标只能使用适当的主机构建：
+
+- Linux MIPS目标（linuxMips32和linuxMipsel32）需要Linux主机。可以在任何受支持的主机上构建其他Linux目标。
+- Windows目标需要Windows主机；
+- macOS和iOS目标只能在macOS主机上构建；
+- 64位 Android Native 目标需要Linux或macOS主机。可以在任何受支持的主机上构建32位 Android Native目标。
+
+当前主机不支持的目标在构建期间将被忽略，不会发布。库作者可能希望按照库目标平台的要求从不同的主机上进行构建和发布。
+
+### 目标快捷方式
+
+某些 native 目标通常一起创建并使用相同的源。例如，为iOS设备和模拟器进行构建由不同的目标（分别为iosArm64和iosX64）表示，但它们的源代码通常相同。在多平台项目模型中表达此类共享代码的一种规范方法是创建一个中间源集（iosMain）并配置它与平台源集之间的链接：
+
+```Kotlin
+val commonMain by sourceSets.getting
+val iosDeviceMain by sourceSets.getting
+val iosSimulatorMain by sourceSets.getting
+
+val iosMain by sourceSets.creating {
+    dependsOn(commonMain)
+    iosDeviceMain.dependsOn(this)
+    iosSimulatorMain.dependsOn(this)
+}
+```
+
+从1.3.60版本开始，`kotlin-multiplaform` 插件提供了可自动执行此类配置的快捷方式：他们允许用户使用单个DSL方法为用户创建一组目标以及一个通用源集。
+
+可以使用以下快捷方式：
+
+- `ios` 为 `iosArm64` 和 `iosX64` 创建目标。
+- `watchos` 为 `watchosArm32`，`watchosArm64` 和 `watchosX86` 创建目标。
+- `tvos` 为 `tvosArm64` 和 `tvosX64` 创建目标。
+
+```Kotlin
+// Create two targets for iOS.
+// Create common source sets: iosMain and iosTest.
+ios {
+    // Configure targets.
+    // Note: this lambda will be called for each target.
+}
+
+// You can also specify a name prefix for created targets.
+// Common source sets will also have this prefix:
+// anotherIosMain and anotherIosTest.
+ios("anotherIos")
+```
+
+### 构建最终的 native 二进制文件
+
+默认情况下，Kotlin/Native目标被编译为 *.klib，Kotlin/Native 本身可以将其作为依赖项使用，但不能执行或用作 native 库。要声明最终的 native 二进制文件（如可执行文件或共享库），请使用 native 目标的 `binaries` 属性。除了默认的 *.klib工件之外，此属性还代表为此目标构建的本机二进制文件的集合，并提供了一组声明和配置它们的方法。
+
+请注意，默认情况下，`kotlin-multiplaform` 插件不会创建任何生产二进制文件。默认情况下，唯一可用的二进制文件是调试可执行文件，该文件允许运行来自测试编译的测试。
+
+#### **声明二进制**
+
+一组工厂方法用于声明 `binaries` 集合的元素。这些方法允许指定创建的二进制类型并对其进行配置。支持以下二进制种类（请注意，并非所有种类都可用于所有native平台）：
+
+| 工厂方法 | 二进制种类 | 可用于 |
+| ---- | ---- | ---- |
+| excutable | 用于生产的可执行文件 | 所有 native 目标 |
+| test | 用于 test 的可执行文件  |  所有 native 目标 |
+| sharedLib | 共享的 native 库 |  所有 native 目标除了 wasm32 |
+| staticLib | 静态 native 库 |  所有 native 目标除了 wasm32 |
+| framework  | Objective-C framework  |  只用于 macOS, iOS, watchOS, tvOS 目标 |
+
+每个工厂方法都有多个版本。通过 `executable` 方法示例学习使用它们。所有相同的版本对于所有其他工厂方法均可使用。
+
+最简单的版本不需要任何其他参数，并为每种构建类型创建一个二进制文件。当前有两种可用的构建类型：DEBUG（产生带有调试信息的未优化的二进制文件）和RELEASE（产生没有调试信息的已优化的二进制文件）。因此，以下代码段创建了两个可执行二进制文件：debug和release。
+
+```Kotlin
+kotlin {
+    linuxX64 { // Use your target instead.
+        binaries {
+            executable {
+                // Binary configuration.
+            }
+        }
+    }
+}
+```
+
+上例中的 `executable` 方法接受的lambda表达式将应用于所创建的每个二进制文件，并允许其配置二进制文件（请参见相应部分）。请注意，如果不需要其他配置，则可以删除此lambda：
+
+```Kotlin
+binaries {
+    executable()
+}
+```
+
+可以指定将使用哪些构建类型来创建二进制文件，而不使用哪些构建类型。在以下示例中，仅创建调试可执行文件。
+
+```Kotlin
+binaries {
+    executable(listOf(DEBUG)) {
+        // Binary configuration.
+    }
+}
+```
+最后一个工厂方法版本允许自定义二进制名称。
+
+```Kotlin
+binaries {
+    executable("foo", listOf(DEBUG)) {
+        // Binary configuration.
+    }
+
+    // It's possible to drop the list of build types (all the available build types will be used in this case).
+    executable("bar") {
+        // Binary configuration.
+    }
+}
+```
+
+在此示例中，第一个参数允许为所创建的二进制文件设置名称前缀，该名称前缀用于在构建脚本中访问它们（请参阅“访问二进制文件”部分）。此前缀也用作二进制文件的默认名称。例如，在Windows上，以上示例生成文件foo.exe和bar.exe。
+
+访问二进制文件
+二进制DSL不仅允许创建二进制文件，还可以访问已创建的二进制文件以配置它们或获取其属性（例如，输出文件的路径）。 Binaries集合实现DomainObjectSet接口，并提供所有方法或匹配方法，允许配置元素组。
+
+也有可能获得集合的某个元素。有两种方法可以做到这一点。首先，每个二进制文件都有一个唯一的名称。该名称基于名称前缀（如果已指定），构建类型和二进制种类，根据以下模式：<optional-name-prefix> <build-type> <binary-kind>，例如releaseFramework或testDebugExecutable。
+
+注意：静态库和共享库的后缀分别为静态库和共享库，例如fooDebugStatic或barReleaseShared
+
+此名称可用于访问二进制文件：
+
+GroovyKotlin
+//如果没有这样的二进制文件则失败。
+binaries ['fooDebugExecutable']
+binaries.fooDebugExecutable
+binaries.getByName（'fooDebugExecutable'）
+
+ //如果没有这样的二进制数，则返回null。
+binaries.findByName（'fooDebugExecutable'）
+//如果没有这样的二进制文件则失败。
+binaries [“ fooDebugExecutable”]
+binaries.getByName（“ fooDebugExecutable”）
+
+ //如果没有这样的二进制数，则返回null。
+binaries.findByName（“ fooDebugExecutable”）
+第二种方法是使用类型化的吸气剂。这些获取器允许通过其名称前缀和构建类型来访问某种类型的二进制文件。
+
+GroovyKotlin
+//如果没有这样的二进制文件则失败。
+binaries.getExecutable（'foo'，DEBUG）
+binaries.getExecutable（DEBUG）//如果未设置名称前缀，则跳过第一个参数。
+binaries.getExecutable（'bar'，'DEBUG'）//您也可以使用字符串作为构建类型。
+
+//类似的getter可用于其他二进制类型：
+// getFramework，getStaticLib和getSharedLib。
+
+//如果没有这样的二进制数，则返回null。
+binaries.findExecutable（'foo'，DEBUG）
+
+//类似的getter可用于其他二进制类型：
+// findFramework，findStaticLib和findSharedLib。
+//如果没有这样的二进制文件则失败。
+binaries.getExecutable（“ foo”，DEBUG）
+binaries.getExecutable（DEBUG）//如果未设置名称前缀，则跳过第一个参数。
+binaries.getExecutable（“ bar”，“ DEBUG”）//您也可以使用字符串作为构建类型。
+
+//类似的getter可用于其他二进制类型：
+// getFramework，getStaticLib和getSharedLib。
+
+//如果没有这样的二进制数，则返回null。
+binaries.findExecutable（“ foo”，DEBUG）
+
+//类似的getter可用于其他二进制类型：
+// findFramework，findStaticLib和findSharedLib。
+在1.3.40之前，测试可执行文件和产品可执行文件都由相同的二进制类型表示。因此，要访问由插件创建的默认测试二进制文件，请使用以下行：
+
+binaries.getExecutable（“ test”，“ DEBUG”）
+从1.3.40开始，测试可执行文件由单独的二进制类型表示，并具有自己的getter。符合
