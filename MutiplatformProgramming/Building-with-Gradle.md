@@ -953,61 +953,214 @@ binaries {
 }
 ```
 
-在此示例中，第一个参数允许为所创建的二进制文件设置名称前缀，该名称前缀用于在构建脚本中访问它们（请参阅“访问二进制文件”部分）。此前缀也用作二进制文件的默认名称。例如，在Windows上，以上示例生成文件foo.exe和bar.exe。
+在此示例中，第一个参数允许为所创建的二进制文件设置名称前缀，该名称前缀用于在构建脚本中访问它们（请参阅[“访问二进制文件”](https://kotlinlang.org/docs/reference/building-mpp-with-gradle.html#accessing-binaries)部分）。此前缀也用作二进制文件的默认名称。例如，在Windows上，以上示例生成文件foo.exe和bar.exe。
 
-访问二进制文件
-二进制DSL不仅允许创建二进制文件，还可以访问已创建的二进制文件以配置它们或获取其属性（例如，输出文件的路径）。 Binaries集合实现DomainObjectSet接口，并提供所有方法或匹配方法，允许配置元素组。
+### **访问二进制文件**
 
-也有可能获得集合的某个元素。有两种方法可以做到这一点。首先，每个二进制文件都有一个唯一的名称。该名称基于名称前缀（如果已指定），构建类型和二进制种类，根据以下模式：<optional-name-prefix> <build-type> <binary-kind>，例如releaseFramework或testDebugExecutable。
+二进制 DSL 不仅允许创建二进制文件，还可以访问已创建的二进制文件以配置它们或获取其属性（例如，输出文件的路径）。 `binaries` 集合实现 [`DomainObjectSet`](https://docs.gradle.org/current/javadoc/org/gradle/api/DomainObjectSet.html) 接口，并提供 `all` 或 `matching` 方法，允许配置元素组。
 
-注意：静态库和共享库的后缀分别为静态库和共享库，例如fooDebugStatic或barReleaseShared
+也有可以获得集合的某个元素。有两种方法可以做到这一点。首先，每个二进制文件都有一个唯一的名称。该名称基于名称前缀（如果已指定），构建类型和二进制种类，根据以下模式：`<optional-name-prefix><build-type><binary-kind>` ，例如 `releaseFramework` 或 `testDebugExecutable`。
+
+注意：静态库和共享库的后缀分别为 Static 和 Shared，例如 fooDebugStatic 或 barReleaseShared
 
 此名称可用于访问二进制文件：
 
-GroovyKotlin
-//如果没有这样的二进制文件则失败。
-binaries ['fooDebugExecutable']
-binaries.fooDebugExecutable
-binaries.getByName（'fooDebugExecutable'）
+```Kotlin
+// Fails if there is no such a binary.
+binaries["fooDebugExecutable"]
+binaries.getByName("fooDebugExecutable")
 
- //如果没有这样的二进制数，则返回null。
-binaries.findByName（'fooDebugExecutable'）
-//如果没有这样的二进制文件则失败。
-binaries [“ fooDebugExecutable”]
-binaries.getByName（“ fooDebugExecutable”）
+ // Returns null if there is no such a binary.
+binaries.findByName("fooDebugExecutable")
+```
 
- //如果没有这样的二进制数，则返回null。
-binaries.findByName（“ fooDebugExecutable”）
-第二种方法是使用类型化的吸气剂。这些获取器允许通过其名称前缀和构建类型来访问某种类型的二进制文件。
 
-GroovyKotlin
-//如果没有这样的二进制文件则失败。
-binaries.getExecutable（'foo'，DEBUG）
-binaries.getExecutable（DEBUG）//如果未设置名称前缀，则跳过第一个参数。
-binaries.getExecutable（'bar'，'DEBUG'）//您也可以使用字符串作为构建类型。
+第二种方法是使用类型化的获取器(getter) 。这些获取器允许通过其名称前缀和构建类型来访问某种类型的二进制文件。
 
-//类似的getter可用于其他二进制类型：
-// getFramework，getStaticLib和getSharedLib。
+```Kotlin
+// Fails if there is no such a binary.
+binaries.getExecutable("foo", DEBUG)
+binaries.getExecutable(DEBUG)          // Skip the first argument if the name prefix isn't set.
+binaries.getExecutable("bar", "DEBUG") // You also can use a string for build type.
 
-//如果没有这样的二进制数，则返回null。
-binaries.findExecutable（'foo'，DEBUG）
+// Similar getters are available for other binary kinds:
+// getFramework, getStaticLib and getSharedLib.
 
-//类似的getter可用于其他二进制类型：
-// findFramework，findStaticLib和findSharedLib。
-//如果没有这样的二进制文件则失败。
-binaries.getExecutable（“ foo”，DEBUG）
-binaries.getExecutable（DEBUG）//如果未设置名称前缀，则跳过第一个参数。
-binaries.getExecutable（“ bar”，“ DEBUG”）//您也可以使用字符串作为构建类型。
+// Returns null if there is no such a binary.
+binaries.findExecutable("foo", DEBUG)
 
-//类似的getter可用于其他二进制类型：
-// getFramework，getStaticLib和getSharedLib。
+// Similar getters are available for other binary kinds:
+// findFramework, findStaticLib and findSharedLib.
+```
 
-//如果没有这样的二进制数，则返回null。
-binaries.findExecutable（“ foo”，DEBUG）
+### **配置二进制文件**
 
-//类似的getter可用于其他二进制类型：
-// findFramework，findStaticLib和findSharedLib。
-在1.3.40之前，测试可执行文件和产品可执行文件都由相同的二进制类型表示。因此，要访问由插件创建的默认测试二进制文件，请使用以下行：
+二进制文件具有一组属性，以下选项可用于配置：
 
-binaries.getExecutable（“ test”，“ DEBUG”）
-从1.3.40开始，测试可执行文件由单独的二进制类型表示，并具有自己的getter。符合
+- **Compliation** 每个二进制文件都是基于同一目标中可用的一些编译构建的。此参数的默认值取决于二进制类型：测试二进制基于 `test` 编译，而其他二进制基于 `main` 编译。
+
+- **Linker options** 选项在二进制构建过程中传递给系统链接器。可以使用此设置链接到某些 native 库。
+
+- *Output file name* 默认情况下，输出文件名基于二进制名称前缀，或者，如果未指定名称前缀，则基于项目名称。但是可以使用baseName属性独立配置输出文件名。请注意，最终文件名将通过在该基本名称中添加与系统相关的前缀和后缀来形成。例如。将为基本名称为foo的Linux共享库生成libfoo.so。
+
+- **Entry point** （仅适用于可执行二进制文件）默认情况下，Kotlin/Native 程序的入口点是位于根包中的 `main` 方法。此设置允许更改此默认设置，并使用自定义函数作为入口点。例如，可以使用它从根包中移出 `main` 方法。
+- **Access to the output file**
+
+- **Access to a link task**
+
+- **Access to a run task**（仅适用于可执行二进制文件）。 `kotlin-multiplatform` 插件为 native 平台（Windows，Linux和macOS）的所有可执行二进制文件创建运行任务。此类任务的名称基于二进制名称，例如 `runReleaseExecutable<target-name>` 或者 `runFooDebugExecutable<target-name>`。可以使用可执行二进制文件的 `runTask` 属性访问运行任务。
+
+- **Framework type**（仅适用于Objective-C框架） 默认情况下，由Kotlin/Native 构建的框架包含一个动态库。但是可以用静态库替换它。
+
+以下示例显示如何使用这些设置。
+
+```Kotlin
+binaries {
+    executable("my_executable", listOf(RELEASE)) {
+        // Build a binary on the basis of the test compilation.
+        compilation = compilations["test"]
+
+        // Custom command line options for the linker.
+        linkerOpts = mutableListOf("-L/lib/search/path", "-L/another/search/path", "-lmylib")
+
+        // Base name for the output file.
+        baseName = "foo"
+
+        // Custom entry point function.
+        entryPoint = "org.example.main"
+
+        // Accessing the output file.
+        println("Executable path: ${outputFile.absolutePath}")
+
+        // Accessing the link task.
+        linkTask.dependsOn(additionalPreprocessingTask)
+
+        // Accessing the run task.
+        // Note that the runTask is null for non-host platforms.
+        runTask?.dependsOn(prepareForRun)
+    }
+
+    framework("my_framework" listOf(RELEASE)) {
+        // Include a static library instead of a dynamic one into the framework.
+        isStatic = true
+    }
+}
+```
+
+### 在框架中导出依赖项
+
+在构建 Objective-C 框架时，通常不仅要打包当前项目的类，还要打包其某些依赖项的类。 Binaries DSL允许使用 `export` 方法来指定将在框架中导出哪些依赖项。请注意，只能导出相应源集的API依赖项。
+
+```Kotlin
+kotlin {
+    sourceSets {
+        macosMain.dependencies {
+            // Will be exported in the framework.
+            api(project(":dependency"))
+            api("org.example:exported-library:1.0")
+
+            // Will not be exported in the framework.
+            api("org.example:not-exported-library:1.0")
+        }
+    }
+
+    macosX64("macos").binaries {
+        framework {
+            export(project(":dependency"))
+            export("org.example:exported-library:1.0")
+        }
+    }
+}
+```
+
+如本例所示，还可以导出maven依赖项。但是由于Gradle元数据的当前限制，这种依赖关系应该是平台依赖项(例如kotlinx-coroutines-core-native_debug_macos_x64 而不是 kotlinx-coroutines-core-传递性地导出（请参见下文）。
+
+默认情况下，导出工作是非传递的。如果导出了依赖于库 `bar` 的库 `foo` ，则只会在输出框架中添加 foo 。可以通过 `transitiveiveExport` 标志更改此行为。
+
+```Kotlin
+binaries {
+    framework {
+        export(project(":dependency"))
+        // Export transitively.
+        transitiveExport = true
+    }
+}
+```
+
+### **建立通用框架**
+
+默认情况下，由Kotlin / Native生产的Objective-C框架仅支持一个平台。但是，可以使用 `lipo` 实用程序将此类框架合并为单个通用（富）二进制文件。特别是，这种操作对于32位和64位iOS框架是有意义的。在这种情况下，最终的通用框架可以在32位和64位设备上使用。
+
+Gradle插件提供了一个单独的任务，该任务从多个常规目标为iOS目标创建通用框架。下面的示例显示如何使用此任务。请注意，富框架必须具有与初始框架相同的基本名称。
+
+```Kotlin
+import org.jetbrains.kotlin.gradle.tasks.FatFrameworkTask
+
+kotlin {
+    // Create and configure the targets.
+    val ios32 = iosArm32("ios32")
+    val ios64 = iosArm64("ios64")
+
+    configure(listOf(ios32, ios64)) {
+        binaries.framework {
+            baseName = "my_framework"
+        }
+    }
+
+    // Create a task building a fat framework.
+    tasks.create("debugFatFramework", FatFrameworkTask::class) {
+        // The fat framework must have the same base name as the initial frameworks.
+        baseName = "my_framework"
+
+        // The default destination directory is '<build directory>/fat-framework'.
+        destinationDir = buildDir.resolve("fat-framework/debug")
+
+        // Specify the frameworks to be merged.
+        from(
+            ios32.binaries.getFramework("DEBUG"),
+            ios64.binaries.getFramework("DEBUG")
+        )
+    }
+}
+```
+CInterop支持
+
+由于Kotlin/Native提供了[与 native 语言的互操作性](https://kotlinlang.org/docs/reference/native/c_interop.html)，因此有DSL允许人们为特定的编译配置此功能。
+
+编译可以与多个本机库交互。可以在编译的 `cinterops` 块中配置与它们每个的互操作性：
+
+```Kotlin
+kotlin {
+    linuxX64 {  // Replace with a target you need.
+        compilations.getByName("main") {
+            val myInterop by cinterops.creating {
+                // Def-file describing the native API.
+                // The default path is src/nativeInterop/cinterop/<interop-name>.def
+                defFile(project.file("def-file.def"))
+
+                // Package to place the Kotlin API generated.
+                packageName("org.sample")
+
+                // Options to be passed to compiler by cinterop tool.
+                compilerOpts("-Ipath/to/headers")
+
+                // Directories to look for headers.
+                includeDirs.apply {
+                    // Directories for header search (an analogue of the -I<path> compiler option).
+                    allHeaders("path1", "path2")
+
+                    // Additional directories to search headers listed in the 'headerFilter' def-file option.
+                    // -headerFilterAdditionalSearchPrefix command line option analogue.
+                    headerFilterOnly("path1", "path2")
+                }
+                // A shortcut for includeDirs.allHeaders.
+                includeDirs("include/directory", "another/directory")
+            }
+
+            val anotherInterop by cinterops.creating { /* ... */ }
+        }
+    }
+}
+```
+
+通常，需要为使用 native 库的二进制文件指定特定于目标的链接器选项。 可以通过使用二进制文件的 linkerOpts 属性来完成。 有关详细信息，请参见“配置二进制文件”部分。
