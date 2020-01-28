@@ -38,7 +38,7 @@ fun main() {
 Hello,
 World!
 ```
-本质上讲，协程是轻量级的线程。它们由 `launch` 协程构建器在某些 `[CoroutineScope](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html)` 上下文中启动。在本例中是 `[GlobalScope](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html)` , 意味着新协程的生命周期受限于整个应用生命周期。
+本质上讲，协程是轻量级的线程。它们由 `launch` 协程构建器在对应的 `[CoroutineScope](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/coroutine-scope.html)` 上下文中启动。在本例中是 `[GlobalScope](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-global-scope/index.html)` , 意味着新协程的生命周期受限于整个应用生命周期。
 
 你可以用
 `GlobalScope.launch { …… }` 替换为 `thread { …… }`，将 `delay(……)` 替换为 `Thread.sleep(……)` 达到同样目的。
@@ -102,7 +102,7 @@ class MyTest {
 
 ### 等待一个任务
 
-指定延迟时间去等待另一个协程结束并不是一个好办法。我们可以显示的等待一个`[Job](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html)` 是否完成：
+指定延迟时间去等待另一个协程结束并不是一个好办法。我们可以显式的等待一个`[Job](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-job/index.html)` 是否完成：
 
 ```kotlin
 val job = GlobalScope.launch { // launch a new coroutine and keep a reference to its Job
