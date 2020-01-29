@@ -66,7 +66,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 
 如果 doSomethingUsefulOne 与 doSomethingUsefulTwo 之间没有依赖，如何能更快的得到结果，让它们进行并发执行呢? [async](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/async.html) 可以很好的完成这点。
 
-概念上讲 async 与 launch 是一致的. 它启动了一个单独的协程,该协程是一个轻量级的线程并可以和其它所有的协程并发工作. 不同的是 launch 会返回一个 job 并且不带有任何结果值, 而 async 会返回一个 延期[Deffered](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/index.html) 一个轻量级的非阻塞的 future 表示一个会稍后提供结果的 promise. 你可以在延期值上使用 .await() 以获得结果,同时延期也是一个 job ,可以执行取消操作.
+概念上讲 async 与 launch 是一致的. 它启动了一个单独的协程,该协程是一个轻量级的线程并可以和其它所有的协程并发工作. 不同的是 launch 会返回一个 job 并且不带有任何结果值, 而 async 会返回一个 延期[Deffered](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-deferred/index.html) 一个轻量级的非阻塞的 future 表示一个会稍后提供结果的 promise. 你可以在延期值上使用 .await() 以获得结果,同时 Deffered 也是一个 job ,可以执行取消操作.
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -99,11 +99,11 @@ The answer is 42
 Completed in 1017 ms
 ```
 
-速度提升了两倍,这是因为我们并发执行了两个协程.记住协程的并发永远是显示的.
+速度提升了两倍,这是因为我们并发执行了两个协程.记住协程的并发永远是显式的.
 
 ### 惰性启动的async
 
-使用值为 CoroutineStart.LAZY 的可选启动参数进行异步时设置惰性选项。 它仅在出现 await 调用或者调用 start 函数时才启动协同程序。 运行以下示例：
+使用值为 CoroutineStart.LAZY 的可选启动参数进行异步时设置惰性选项。 它仅在出现 await 调用或者调用 start 函数时才启动协程。 运行以下示例：
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -137,7 +137,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 The answer is 42
 Completed in 1017 ms
 
-所以，这里定义了两个协同程序，但是没有像前面的例子那样执行，但是程序员在完全通过调用start开始执行时会给出控制权。 我们首先启动一个，然后启动两个，然后等待各个协同程序完成。
+所以，这里定义了两个协程，但是没有像前面的例子那样执行，但是程序员在完全通过调用start开始执行时会给出控制权。 我们首先启动一个，然后启动两个，然后等待各个协程完成。
 
 注意，如果我们在println中调用了await并且在各个协程上省略了start，那么我们就会得到顺序行为，因为await启动协程执行并等待执行完成，这不是懒惰的预期用例。 在计算值涉及挂起函数的情况下，async（start = CoroutineStart.LAZY）的用例是标准惰性函数的替代。
 
@@ -159,7 +159,7 @@ fun somethingUsefulTwoAsync() = GlobalScope.async {
 
 请注意，这些xxxAsync函数不是挂起函数。 它们可以在任何地方使用。 但是，它们的使用总是意味着它们的动作与调用代码的异步（这里意味着并发）。
 
-以下示例显示了它们在协同程序之外的用法：
+以下示例显示了它们在协程之外的用法：
 
 ```kotlin
 import kotlinx.coroutines.*
@@ -199,7 +199,7 @@ suspend fun doSomethingUsefulTwo(): Int {
 }
 ```
 
-> 这里提供了具有异步功能的编程风格，仅用于说明，因为在其他编程语言中很流行。 由于下面解释的原因，强烈建议不要将这种风格与Kotlin协同程序一起使用。
+> 这里提供了具有异步功能的编程风格，仅用于说明，因为在其他编程语言中很流行。 由于下面解释的原因，强烈建议不要将这种风格与Kotlin协程一起使用。
 
 考虑一下如果 val one = somethingUsefulOneAsync() 这一行和 one.await() 表达式这里在代码中有逻辑错误， 并且程序抛出了异常以及程序在操作的过程中被中止，将会发生什么。 通常情况下，一个全局的异常处理者会捕获这个异常，将异常打印成日记并报告给开发者，但是反之该程序将会继续执行其它操作。但是这里我们的 somethingUsefulOneAsync 仍然在后台执行， 尽管如此，启动它的那次操作也会被终止。这个程序将不会进行结构化并发，如下一小节所示。
 
@@ -235,12 +235,12 @@ suspend fun concurrentSum(): Int = coroutineScope {
 }
 
 suspend fun doSomethingUsefulOne(): Int {
-    delay(1000L) // 假设我们在这里做了些有用的事
+    delay(1000L) 
     return 13
 }
 
 suspend fun doSomethingUsefulTwo(): Int {
-    delay(1000L) // 假设我们在这里也做了些有用的事
+    delay(1000L) 
     return 29
 }
 ```
