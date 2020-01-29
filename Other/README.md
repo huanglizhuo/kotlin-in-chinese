@@ -1,4 +1,4 @@
- * [销毁声明](DestructuringDeclarations.md)
+ * [解构声明](DestructuringDeclarations.md)
  * [类型检查和自动转换](Type-Checks-and-Casts.md)
  * [This表达式](This-Expression.md)
  * [等式](Equality.md)
@@ -9,4 +9,4 @@
  * [反射](Reflection.md)
  * [作用域函数](ScopeFunctions.md)
  * [类型安全构造器](Type-SafeBuilders.md)
- * [试验性 API 标注]()
+ * [试验性 API 标注](ExperimentalAPIMarkers.md)
