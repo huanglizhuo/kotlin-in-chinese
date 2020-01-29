@@ -69,7 +69,7 @@ Kotlin LOC (软件规模代码行) 如下图
    * [高阶函数和lambda表达式](FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md) 
    * [内联函数](FunctionsAndLambdas/InlineFunctions.md) 
 
-* [更多语言机构](MoreLanguageConstructs/README.md)
+* [更多语言结构](MoreLanguageConstructs/README.md)
    * [解构声明](MoreLanguageConstructs/DestructuringDeclarations.md)
    * [类型检查和自动转换](MoreLanguageConstructs/Type-Checks-and-Casts.md)
    * [This表达式](MoreLanguageConstructs/This-Expression.md)
