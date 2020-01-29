@@ -1,5 +1,9 @@
 [![Analytics](https://ga-beacon.appspot.com/UA-80536214-1/readme)](https://github.com/huanglizhuo/kotlin-in-chinese)
 
+2020.1.30
+
+开始同步 Kotlin 1.3.61 文档
+
 2017.5.17
 
 Android Announces Support for Kotlin
@@ -68,6 +72,38 @@ Kotlin LOC (软件规模代码行) 如下图
    * [函数](FunctionsAndLambdas/Functions.md) 
    * [高阶函数和lambda表达式](FunctionsAndLambdas/Higher-OrderFunctionsAndLambdas.md) 
    * [内联函数](FunctionsAndLambdas/InlineFunctions.md) 
+
+* [集合](Collections/README.md)
+   * [集合概览](Collections/CollectionsOverview.md)
+   * [结构化集合](Collections/ConstructionCollections.md)
+   * [迭代器](Collections/Iterators.md)
+   * [范围和进度](Collections/RangesandProgressions.md)
+   * [序列](Collections/Squences.md)
+   * [操作概览](Collections/OperationsOverview.md)
+   * [转化](Collections/Transformations.md)
+   * [过滤](Collections/Filtering.md)
+   * [加减操作符](Collections/PlusandMinusOperators.md)
+   * [分组](Collections/Grouping.md)
+   * [取得部分集合](Collections/RetrievingCollectionParts.md)
+   * [取得单个元素](Collections/RetrivingSingleElements.md)
+   * [排序](Collections/Ording.md)
+   * [聚合操作](Collections/AggregateOperations.md)
+   * [集合写曹锁](Collections/CollectionWriteOperations.md) 
+   * [只针对于 list 的操作](Collections/ListSepcificOperations.md)
+   * [只针对于 set 的操作](Collections/SetSepcificOperations.md)
+   * [只针对于 map 的操作](Collections/MapSepcificOperations.md)
+
+* [协程](Coroutines/README.md)
+   * [协程指南](Coroutines/CoroutinesGuide.md)
+   * [基础](Coroutines/Basics.md)
+   * [取消和超时](Coroutines/CancellationAndTimeouts.md)
+   * [频道](Coroutines/Channels.md)
+   * [组合挂起函数](Coroutines/ComposingSuspendingFunctions.md)
+   * [协程上下文和调度器](Coroutines/CoroutineContextAndDispatchers.md)
+   * [异常处理](Coroutines/ExceptionHandling.md)
+   * [Select 表达式](Coroutines/SelectExpression.md)
+   * [共享可变状态与并发](Coroutines/SharedMutableStateAndConcurrency.md)
+
 
 * [更多语言结构](MoreLanguageConstructs/README.md)
    * [解构声明](MoreLanguageConstructs/DestructuringDeclarations.md)
