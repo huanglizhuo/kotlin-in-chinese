@@ -54,12 +54,14 @@
    * [协程指南](Coroutines/CoroutinesGuide.md)
    * [基础](Coroutines/Basics.md)
    * [取消和超时](Coroutines/CancellationAndTimeouts.md)
-   * [频道](Coroutines/Channels.md)
    * [组合挂起函数](Coroutines/ComposingSuspendingFunctions.md)
    * [协程上下文和调度器](Coroutines/CoroutineContextAndDispatchers.md)
+   * [异步流](Coroutines/AsynchronousFlow.md)
+   * [频道](Coroutines/Channels.md)   
    * [异常处理](Coroutines/ExceptionHandling.md)
-   * [Select 表达式](Coroutines/SelectExpression.md)
    * [共享可变状态与并发](Coroutines/SharedMutableStateAndConcurrency.md)
+   * [Select 表达式](Coroutines/SelectExpression.md)
+
 
 
 * [更多语言结构](MoreLanguageConstructs/README.md)
