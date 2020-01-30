@@ -165,44 +165,50 @@ fun main() = runBlocking {
 
 [actor](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/actor.html) 协程生成器，可以方便地将actor的邮箱通道合并到其作用域中，以从中接收消息，并将send通道合并到结果 job 对象中，actor的单个引用作为其句柄。
 
-使用actor的第一步是定义actor将要处理的消息类。 Kotlin的 [sealed 类](https://kotlinlang.org/docs/reference/sealed-classes.html) 非常适合该目的。我们使用IncCounter消息定义CounterMsg密封类以增加计数器，并使用GetCounter消息获取其值。稍后需要发送响应。为此，此处使用了CompletableDeferred通信原语，该原语表示将来将要知道（传递）的单个值。
+使用actor的第一步是定义actor将要处理的消息类。 Kotlin的 [sealed 类](https://kotlinlang.org/docs/reference/sealed-classes.html) 非常适合该目的。我们定义 CounterMsg 密封类,IncCounter 消息以增加计数器，GetCounter 消息获取其值。后者需要发送响应。为此，此处使用了 [CompletableDeferred](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines/-completable-deferred/index.html) 通信原语，该原语表示将来将要知道（传递）的单个值。
 
-// counterActor的消息类型
-密封类CounterMsg
-object IncCounter：CounterMsg（）//增加计数器的单向消息
-class GetCounter（val response：CompletableDeferred <Int>）：CounterMsg（）//带有回复的请求
+```Kotlin
+// Message types for counterActor
+sealed class CounterMsg
+object IncCounter : CounterMsg() // one-way message to increment counter
+class GetCounter(val response: CompletableDeferred<Int>) : CounterMsg() // a request with reply
+```
+
 然后，我们定义一个使用actor协程生成器启动actor的函数：
 
-//此函数启动一个新的反作用器
-有趣的CoroutineScope.counterActor（）= actor <CounterMsg> {
-    var counter = 0 //演员状态
-    for（频道中的味精）{//遍历传入消息
-        当（msg）{
-            是IncCounter-> counter ++
-            是GetCounter-> msg.response.complete（counter）
-        }
-    }
+```Kotln
+// This function launches a new counter actor
+fun CoroutineScope.counterActor() = actor<CounterMsg> {
+    var counter = 0 // actor state
+    for (msg in channel) { // iterate over incoming messages
+        when (msg) {
+            is IncCounter -> counter++
+            is GetCounter -> msg.response.complete(counter)
+        }
+    }
 }
+```
+
 主要代码很简单：
 
-有趣的main（）= runBlocking <Unit> {
-    val counter = counterActor（）//创建角色
-    withContext（Dispatchers.Default）{
-        massRun {
-            counter.send（IncCounter）
-        }
-    }
-    //发送消息以从actor获取计数器值
-    val响应= CompletableDeferred <Int>（）
-    counter.send（GetCounter（response））
-    println（“ Counter = $ {response.await（）}”）
-    counter.close（）//关闭actor
+```Kotlin
+fun main() = runBlocking<Unit> {
+    val counter = counterActor() // create the actor
+    withContext(Dispatchers.Default) {
+        massiveRun {
+            counter.send(IncCounter)
+        }
+    }
+    // send a message to get a counter value from an actor
+    val response = CompletableDeferred<Int>()
+    counter.send(GetCounter(response))
+    println("Counter = ${response.await()}")
+    counter.close() // shutdown the actor
 }
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以在此处获取完整的代码。
+```
 
-正确执行角色本身在什么上下文中都没有关系（正确性）。角色是协程，协程是顺序执行的，因此将状态限制为特定协程可以解决共享可变状态的问题。实际上，参与者可以修改自己的私有状态，但只能通过消息相互影响（避免使用任何锁）。
+正确执行 actor 本身在什么上下文中都没有关系（正确性）。actor 是一个协程,而协程是顺序执行的，因此将状态限制为特定协程可以解决共享可变状态的问题。实际上，参与者可以修改自己的私有状态，但只能通过消息相互影响（避免使用任何锁）。
 
-Actor比在负载下锁定更有效，因为在这种情况下，Actor总是有工作要做，并且根本不必切换到其他上下文。
+Actor比在负载锁定更有效，因为在这种情况下，Actor总是有工作要做，并且根本不必切换到其他上下文。
 
-请注意，演员协程构建器是生产协程构建器的对偶。参与者与它从中接收消息的通道相关联，而生产者与它向其发送元素的通道相关联。
+请注意， [actor](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/actor.html) 协程构建器是 [produce](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.channels/produce.html) 协程构建器的对偶。actor 有一个接收消息的通道相关联，而生产者与其发送元素的通道相关联。
