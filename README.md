@@ -18,6 +18,7 @@
    * [可见性修饰词](ClassesAndObjects/Visibility-Modifiers.md) 
    * [扩展](ClassesAndObjects/Extensions.md) 
    * [数据对象](ClassesAndObjects/Data-Classes.md) 
+   * [密封类](ClassesAndObjects/SealedClasses.md)
    * [泛型](ClassesAndObjects/Generics.md)
    * [嵌套类](ClassesAndObjects/NestedClasses.md) 
    * [枚举类](ClassesAndObjects/EnumClasses.md) 

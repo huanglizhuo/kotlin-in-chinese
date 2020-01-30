@@ -5,6 +5,7 @@
    * [可见性修饰词](Visibility-Modifiers.md)
    * [扩展](Extensions.md)
    * [数据对象](Data-Classes.md)
+   * [密封类](SealedClasses.md)
    * [泛型](Generics.md)
    * [嵌套类](NestedClasses.md)
    * [枚举类](EnumClasses.md)
