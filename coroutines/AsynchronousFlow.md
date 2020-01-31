@@ -486,3 +486,127 @@ fun main() = runBlocking<Unit> {
 另一个需要注意的是,这里的 [flowOn](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flow-on.html) 操作符改变了流天然的顺序性. 现在，收集发生在一个协程（“协程1”）中，发射发生在另一个协程（“协程2”）中，该协程与收集协程同时在另一个线程中运行。 当FlowOn运算符必须在其上下文中更改CoroutineDispatcher时，它会为上游流创建另一个协程。
 
 ### 缓冲
+
+从收集流程所花费的总时间来看，尤其是在涉及长时间运行的异步操作时，以不同的协程运行流程的不同部分可能会有所帮助。 例如，考虑以下情况：foo（）流的发射速度很慢，花费100毫秒来生成一个元素； 收集器也很慢，需要300毫秒来处理一个元素。 让我们看看用流收集三个数字需要多长时间：
+
+```Kotlin
+fun foo(): Flow<Int> = flow {
+    for (i in 1..3) {
+        delay(100) // pretend we are asynchronously waiting 100 ms
+        emit(i) // emit next value
+    }
+}
+
+fun main() = runBlocking<Unit> { 
+    val time = measureTimeMillis {
+        foo().collect { value -> 
+            delay(300) // pretend we are processing it for 300 ms
+            println(value) 
+        } 
+    }   
+    println("Collected in $time ms")
+}
+```
+
+产生结果如下，整个集合大约需要1200毫秒（三个数字，每个数字400毫秒）：
+
+```shell
+1
+2
+3
+Collected in 1220 ms
+```
+
+我们可以在流上使用 [buffer](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/buffer.html) 运算符，可以在收集开始时并行发送数据, 而不是顺序进行:
+
+```Kotlin
+val time = measureTimeMillis {
+    foo()
+        .buffer() // buffer emissions, don't wait
+        .collect { value -> 
+            delay(300) // pretend we are processing it for 300 ms
+            println(value) 
+        } 
+}   
+println("Collected in $time ms")
+```
+
+由于我们已经有效地创建了处理管道，因此它只需要等待100毫秒即可处理第一个数字，然后只需花费300毫秒来处理每个数字，因此它会更快地产生相同的数字。这样大约需要1000毫秒才能运行：
+
+```Kotlin
+1
+2
+3
+Collected in 1071 ms
+```
+
+请注意，flowOn运算符在必须更改CoroutineDispatcher时使用相同的缓冲机制，但是在这里，我们显式地请求缓冲而不更改执行上下文。
+
+**合并**
+
+当流表示操作的部分结果或操作状态更新时，可能不必处理每个值，而只需要处理最近的值即可。在这种情况下，当收集器太慢而无法处理中间值时，可以使用合并运算符跳过中间值。以前面的示例为基础：
+
+val time = measureTimeMillis {
+    foo（）
+        .conflate（）//混合排放，不处理每个排放
+        .collect {值->
+            delay（300）//假设我们正在处理300毫秒
+            println（值）
+        }
+}
+println（“在$ time ms中收集”）
+目标平台：在kotlin v.1.3.61上运行的JVM
+您可以从此处获取完整的代码。
+
+我们看到，虽然第一个数字仍在处理中，第二个已经被处理，而第三个已经产生，所以第二个被混合了，只有最新的（第三个）被交付给收集器：
+
+1个
+3
+758毫秒内收集
+处理最新价值
+当发射器和收集器都很慢时，合并是加快处理速度的一种方法。它通过删除发射值来实现。另一种方法是取消缓慢的收集器，并在每次发出新值时重新启动它。有一组xxxLatest运算符，它们执行与xxx运算符相同的基本逻辑，但是会在其块上取消新值的代码。在上一个示例中，让我们尝试将comlate更改为collectLatest：
+
+val time = measureTimeMillis {
+    foo（）
+        .collectLatest {value-> //取消并重新启动最新值
+            println（“收集$ value”）
+            delay（300）//假设我们正在处理300毫秒
+            println（“完成$ value”）
+        }
+}
+println（“在$ time ms中收集”）
+目标平台：在kotlin v.1.3.61上运行的JVM
+您可以从此处获取完整的代码。
+
+由于collectLatest的主体需要300毫秒，但是每100毫秒会发出一个新值，因此我们可以看到该块在每个值上运行，但仅针对最后一个值才完成：
+
+收集1
+收集2
+收集3
+完成3
+741毫秒内收集
+组成多个流
+有很多方法可以组成多个流。
+
+压缩
+就像Kotlin标准库中的Sequence.zip扩展功能一样，流具有zip运算符，该运算符结合了两个流的相应值：
+
+
+val nums =（1..3）.asFlow（）//数字1..3
+val strs = flowOf（“一个”，“两个”，“三个”）//字符串
+nums.zip（strs）{a，b->“ $ a-> $ b”} //组成一个字符串
+    .collect {println（it）} //收集并打印
+目标平台：在kotlin v.1.3.61上运行的JVM
+您可以从此处获取完整的代码。
+
+该示例打印：
+
+1->一
+2->两个
+3->三个
+结合
+当流表示变量或操作的最新值时（另请参阅有关合并的部分），可能需要执行依赖于相应流的最新值的计算，并在任何上游出现时重新进行计算。流发出一个值。相应的运算符家族称为合并。
+
+例如，如果上一个示例中的数字每300毫秒更新一次，但是字符串每400毫秒更新一次，那么即使使用每400毫秒打印一次的结果，使用zip运算符对它们进行压缩仍会产生相同的结果：
+
+在此示例中，我们使用onEach中间运算符来延迟每个元素，并使发出采样流的代码更具声明性且更短。
