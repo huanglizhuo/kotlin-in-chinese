@@ -611,7 +611,7 @@ Collected in 741 ms
 
 有很多方法可以组和多个流。
 
-**zip**
+**zip (压缩)**
 
 就像Kotlin标准库中的 [Sequence.zip](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/zip.html) 扩展功能一样，流具有zip运算符，该运算符结合了两个流的相应值：
 
@@ -630,7 +630,7 @@ nums.zip(strs) { a, b -> "$a -> $b" } // compose a single string
 3 -> three
 ```
 
-**Combine**
+**Combine (组合)**
 
 当流表示变量或操作的最新值时（另请参阅有关[合并](https://kotlinlang.org/docs/reference/coroutines/flow.html#conflation)的部分），可能需要执行依赖于相应流的最新值的计算，并在任何上游有变动时重新进行计算。流发出一个值。相应的运算符族称为[Combine](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/combine.html)。
 
@@ -674,3 +674,240 @@ nums.combine(strs) { a, b -> "$a -> $b" } // compose a single string with "combi
 
 ### 扁平化流
 
+流表示异步接收的值序列，因此会有每产生一个值,就会触发对另一个值序列的请求的情形。例如，我们可以具有以下函数，该函数返回两个字符串，每个字符串的间隔为500 ms：
+
+```Kotlin
+fun requestFlow(i: Int): Flow<String> = flow {
+    emit("$i: First") 
+    delay(500) // wait 500 ms
+    emit("$i: Second")    
+}
+```
+
+现在，如果我们有三个整数流，并为每个整数调用 `requestFlow` ，如下所示：
+
+```Kotlin
+(1..3).asFlow().map { requestFlow(it) }
+```
+
+然后，我们得到一个流的流（Flow<Flow<String>>），该流需要扁平化为单个流以进行进一步处理。集合和序列为此具有 [flatten](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/flatten.html) 和 [flatMap](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/flat-map.html) 运算符。但是，由于流的异步性质，它们要求使用不同的扁平化模式，因此，在流上有一系列扁平化运算符。
+
+**flatMapConcat**
+
+串联模式由 [flatMapConcat](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flat-map-concat.html) 和 [flattenConcat](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flatten-concat.html) 运算符实现。它们是相应序列运算符的最直接类似物。他们等待内部流完成，然后开始收集下一个，如以下示例所示：
+
+```Kotlin
+package kotlinx.coroutines.guide.flow23
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+fun requestFlow(i: Int): Flow<String> = flow {
+    emit("$i: First") 
+    delay(500) // wait 500 ms
+    emit("$i: Second")    
+}
+
+fun main() = runBlocking<Unit> { 
+    val startTime = currentTimeMillis() // remember the start time 
+    (1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+        .flatMapConcat { requestFlow(it) }                                                                           
+        .collect { value -> // collect and print 
+            println("$value at ${currentTimeMillis() - startTime} ms from start") 
+        } 
+}
+```
+
+从输出中可以清楚地看到f latMapConcat 的顺序性质：
+
+```shell
+1: First at 121 ms from start
+1: Second at 622 ms from start
+2: First at 727 ms from start
+2: Second at 1227 ms from start
+3: First at 1328 ms from start
+3: Second at 1829 ms from start
+```
+
+**flatMapMerge**
+
+另一种扁平模式是同时收集所有传入流并将其值合并为单个流，以便尽快发出值。它由 [flatMapMerge](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flat-map-merge.html) 和 [flattenMerge](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flatten-merge.html) 运算符实现。它们都接受一个可选的 `concurrency` 参数，该参数限制了同时收集的并发流的数量（默认情况下它等于 [DEFAULT_CONCURRENCY](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-d-e-f-a-u-l-t_-c-o-n-c-u-r-r-e-n-c-y.html) ）。
+
+```Kotlin
+val startTime = System.currentTimeMillis() // remember the start time 
+(1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+    .flatMapMerge { requestFlow(it) }                                                                           
+    .collect { value -> // collect and print 
+        println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
+    } 
+```
+
+flatMapMerge 的并发本质是显而易见的：
+
+```Kotlin
+1: First at 136 ms from start
+2: First at 231 ms from start
+3: First at 333 ms from start
+1: Second at 639 ms from start
+2: Second at 732 ms from start
+3: Second at 833 ms from start
+```
+
+请注意，flatMapMerge 顺序调用其代码块（在此示例中为{requestFlow（it）}），但同时收集结果流，这等效于先执行顺序映射{requestFlow（it）}，然后在对结果调用[flattenMerge](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flatten-merge.html)
+
+**flatMapLatest**
+
+用与“处理最新值”一节中所示的 collectLatest 运算符类似的方式，存在对应的“最新”扁平模式，在该模式下，一旦发出新流，就会取消先前流的集合。它由 [flatMapLatest](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/flat-map-latest.html) 运算符实现。
+
+```Kotlin
+package kotlinx.coroutines.guide.flow25
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+fun requestFlow(i: Int): Flow<String> = flow {
+    emit("$i: First") 
+    delay(500) // wait 500 ms
+    emit("$i: Second")    
+}
+
+fun main() = runBlocking<Unit> { 
+    val startTime = currentTimeMillis() // remember the start time 
+    (1..3).asFlow().onEach { delay(100) } // a number every 100 ms 
+        .flatMapLatest { requestFlow(it) }                               
+        .collect { value -> // collect and print 
+            println("$value at ${currentTimeMillis() - startTime} ms from start") 
+        } 
+}
+```
+
+此示例中的输出很好地演示了flatMapLatest的工作方式：
+
+```Kotlin
+1: First at 142 ms from start
+2: First at 322 ms from start
+3: First at 425 ms from start
+3: Second at 931 ms from start
+```
+
+请注意，flatMapLatest取消了其块（在此示例中为{requestFlow（it）}）上的所有代码的新值。在此特定示例中，这没有什么区别，因为对requestFlow本身的调用是快速，非挂起的并且无法取消。但是，如果要在其中使用诸如delay之类的暂停功能，它的优点才显示出来。
+
+### Flow异常
+
+当运算符中的发射器或代码引发异常时，流收集将提前完成并带有返回异常。有几种处理这些异常的方法。
+
+**收集器 try catch**
+
+收集器可以使用 Kotlin 的 try/catch 块来处理异常：
+
+```Kotlin
+fun foo(): Flow<Int> = flow {
+    for (i in 1..3) {
+        println("Emitting $i")
+        emit(i) // emit next value
+    }
+}
+
+fun main() = runBlocking<Unit> {
+    try {
+        foo().collect { value ->         
+            println(value)
+            check(value <= 1) { "Collected $value" }
+        }
+    } catch (e: Throwable) {
+        println("Caught $e")
+    } 
+}        
+```
+
+这段代码成功地在collect终端操作符中捕获了一个异常，并且正如我们所看到的，此后不再发出任何值：
+
+```Kotlin
+Emitting 1
+1
+Emitting 2
+2
+Caught java.lang.IllegalStateException: Collected 2
+```
+
+**所有的东西都可以捕获**
+
+前面的示例实际上捕获了在发射器或任何中间或终端运算符中发生的任何异常。例如，让我们更改代码，以便将发出的值[映射](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/map.html)到字符串，但是相应的代码会产生异常：
+
+```Kotlin
+fun foo(): Flow<String> = 
+    flow {
+        for (i in 1..3) {
+            println("Emitting $i")
+            emit(i) // emit next value
+        }
+    }
+    .map { value ->
+        check(value <= 1) { "Crashed on $value" }                 
+        "string $value"
+    }
+
+fun main() = runBlocking<Unit> {
+    try {
+        foo().collect { value -> println(value) }
+    } catch (e: Throwable) {
+        println("Caught $e")
+    } 
+}        
+```
+
+仍然会捕获此异常，并且停止收集：
+
+```shell
+Emitting 1
+string 1
+Emitting 2
+Caught java.lang.IllegalStateException: Crashed on 2
+```
+
+### 异常透明化
+
+但是，发射器的代码如何封装其异常处理行为？
+
+流必须对异常透明，并且从 `try/catch` 块内部在 `flow{...}` 构建器中发出值违反了异常透明性。这样可以保证引发异常的收集器始终可以使用上一个示例中的 try/catch 捕获异常。
+
+发射器可以使用 [catch](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/catch.html) 运算符，该运算符保留此异常透明性并允许对其异常处理进行封装。 catch运算符的主体可以分析异常并根据捕获到的异常以不同的方式对异常作出反应：
+
+可以使用throw抛出异常。
+异常可以通过使用catch主体的发射转换为值的发射。
+异常可以被其他代码忽略，记录或处理。
+例如，让我们发出捕获异常的文本：
+
+foo（）
+    .catch {e-> generate（“ Caught $ e”）} //发生异常时发出
+    .collect {值-> println（value）}
+目标平台：在kotlin v.1.3.61上运行的JVM
+您可以从此处获取完整的代码。
+
+即使我们不再需要尝试/捕获代码，示例的输出也相同。
+
+透明渔获
+catch中间操作符遵循异常透明性，仅捕获上游异常（这是catch之上但之下的所有运算符的异常）。如果collect {...}中的块（放置在catch下方）抛出异常，则它逃逸：
+
+有趣的foo（）：Flow <Int> = flow {
+    对于（1..3中的i）{
+        println（“发出$ i”）
+        发射（i）
+    }
+}
+
+有趣的main（）= runBlocking <Unit> {
+    foo（）
+        .catch {e-> println（“ Caught $ e”）} //不捕获下游异常
+        .collect {值->
+            check（value <= 1）{“收集的$ value”}
+            println（值）
+        }
+}
+目标平台：在kotlin v.1.3.61上运行的JVM
+您可以从此处获取完整的代码。
+
+尽管有捕获操作员，但不会打印“已捕获...”消息：
+
+声明式捕捉
+通过将collect操作符的主体移到onEach并将其放在catch操作符之前，我们可以将catch操作符的声明性与处理所有异常的愿望结合起来。必须通过不带参数的调用collect（）来触发此流的收集：
