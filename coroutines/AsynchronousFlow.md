@@ -546,67 +546,131 @@ Collected in 1071 ms
 
 当流表示操作的部分结果或操作状态更新时，可能不必处理每个值，而只需要处理最近的值即可。在这种情况下，当收集器太慢而无法处理中间值时，可以使用合并运算符跳过中间值。以前面的示例为基础：
 
-val time = measureTimeMillis {
-    foo（）
-        .conflate（）//混合排放，不处理每个排放
-        .collect {值->
-            delay（300）//假设我们正在处理300毫秒
-            println（值）
-        }
+```Kotlin
+package kotlinx.coroutines.guide.flow18
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import kotlin.system.*
+
+fun foo(): Flow<Int> = flow {
+    for (i in 1..3) {
+        delay(100) // pretend we are asynchronously waiting 100 ms
+        emit(i) // emit next value
+    }
 }
-println（“在$ time ms中收集”）
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以从此处获取完整的代码。
 
-我们看到，虽然第一个数字仍在处理中，第二个已经被处理，而第三个已经产生，所以第二个被混合了，只有最新的（第三个）被交付给收集器：
+fun main() = runBlocking<Unit> { 
+    val time = measureTimeMillis {
+        foo()
+            .conflate() // conflate emissions, don't process each one
+            .collect { value -> 
+                delay(300) // pretend we are processing it for 300 ms
+                println(value) 
+            } 
+    }   
+    println("Collected in $time ms")
+}
+```
 
-1个
+我们看到，虽然第一个数字仍在处理中，第二个和第三个已经发出，所以第二个被合并了，只有最新的（第三个）被交付给收集器：
+
+```shell
+1
 3
-758毫秒内收集
-处理最新价值
-当发射器和收集器都很慢时，合并是加快处理速度的一种方法。它通过删除发射值来实现。另一种方法是取消缓慢的收集器，并在每次发出新值时重新启动它。有一组xxxLatest运算符，它们执行与xxx运算符相同的基本逻辑，但是会在其块上取消新值的代码。在上一个示例中，让我们尝试将comlate更改为collectLatest：
+Collected in 758 ms
+```
 
+### 处理最新值
+
+当发射器和收集器都很慢时，合并是加快处理速度的一种方法。它通过删除发射值来实现。另一种方法是取消缓慢的收集器，并在每次发出新值时重新启动它。有一组 `xxxLatest` 运算符，它们执行与 `xxx` 运算符相同的基本逻辑，但是会在其块上取消新值的代码。在上一个示例中，让我们尝试将 [conflate](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/conflate.html)  改为 [collectLatest](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/collect-latest.html):
+
+```Kotlin
 val time = measureTimeMillis {
-    foo（）
-        .collectLatest {value-> //取消并重新启动最新值
-            println（“收集$ value”）
-            delay（300）//假设我们正在处理300毫秒
-            println（“完成$ value”）
-        }
-}
-println（“在$ time ms中收集”）
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以从此处获取完整的代码。
+    foo()
+        .collectLatest { value -> // cancel & restart on the latest value
+            println("Collecting $value") 
+            delay(300) // pretend we are processing it for 300 ms
+            println("Done $value") 
+        } 
+}   
+println("Collected in $time ms")
+```
 
-由于collectLatest的主体需要300毫秒，但是每100毫秒会发出一个新值，因此我们可以看到该块在每个值上运行，但仅针对最后一个值才完成：
+由于 collectLatest 的主体需要300毫秒，但是每100毫秒会发出一个新值，因此我们可以看到该块在每个值上运行，但仅针对最后一个值才完成：
 
-收集1
-收集2
-收集3
-完成3
-741毫秒内收集
-组成多个流
-有很多方法可以组成多个流。
+```shell
+Collecting 1
+Collecting 2
+Collecting 3
+Done 3
+Collected in 741 ms
+```
 
-压缩
-就像Kotlin标准库中的Sequence.zip扩展功能一样，流具有zip运算符，该运算符结合了两个流的相应值：
+### 组和多个流
 
+有很多方法可以组和多个流。
 
-val nums =（1..3）.asFlow（）//数字1..3
-val strs = flowOf（“一个”，“两个”，“三个”）//字符串
-nums.zip（strs）{a，b->“ $ a-> $ b”} //组成一个字符串
-    .collect {println（it）} //收集并打印
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以从此处获取完整的代码。
+**zip**
 
-该示例打印：
+就像Kotlin标准库中的 [Sequence.zip](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/zip.html) 扩展功能一样，流具有zip运算符，该运算符结合了两个流的相应值：
 
-1->一
-2->两个
-3->三个
-结合
-当流表示变量或操作的最新值时（另请参阅有关合并的部分），可能需要执行依赖于相应流的最新值的计算，并在任何上游出现时重新进行计算。流发出一个值。相应的运算符家族称为合并。
+```Kotlin
+val nums = (1..3).asFlow() // numbers 1..3
+val strs = flowOf("one", "two", "three") // strings 
+nums.zip(strs) { a, b -> "$a -> $b" } // compose a single string
+    .collect { println(it) } // collect and print
+```
 
-例如，如果上一个示例中的数字每300毫秒更新一次，但是字符串每400毫秒更新一次，那么即使使用每400毫秒打印一次的结果，使用zip运算符对它们进行压缩仍会产生相同的结果：
+输出如下：
+
+```shell
+1 -> one
+2 -> two
+3 -> three
+```
+
+**Combine**
+
+当流表示变量或操作的最新值时（另请参阅有关[合并](https://kotlinlang.org/docs/reference/coroutines/flow.html#conflation)的部分），可能需要执行依赖于相应流的最新值的计算，并在任何上游有变动时重新进行计算。流发出一个值。相应的运算符族称为[Combine](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/combine.html)。
+
+例如，如果上一个示例中的数字每300毫秒更新一次，但是字符串每400毫秒更新一次，使用zip运算符对它们进行压缩仍会产生相同的结果,尽管结果任然是没 400
+毫秒打印一次：
 
 在此示例中，我们使用onEach中间运算符来延迟每个元素，并使发出采样流的代码更具声明性且更短。
+
+```Kotlin
+val nums = (1..3).asFlow().onEach { delay(300) } // numbers 1..3 every 300 ms
+val strs = flowOf("one", "two", "three").onEach { delay(400) } // strings every 400 ms
+val startTime = System.currentTimeMillis() // remember the start time 
+nums.zip(strs) { a, b -> "$a -> $b" } // compose a single string with "zip"
+    .collect { value -> // collect and print 
+        println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
+    } 
+```
+
+然而当使用 [combine](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/combine.html) 运算符取代 zip:
+
+```Kotlin
+val nums = (1..3).asFlow().onEach { delay(300) } // numbers 1..3 every 300 ms
+val strs = flowOf("one", "two", "three").onEach { delay(400) } // strings every 400 ms          
+val startTime = System.currentTimeMillis() // remember the start time 
+nums.combine(strs) { a, b -> "$a -> $b" } // compose a single string with "combine"
+    .collect { value -> // collect and print 
+        println("$value at ${System.currentTimeMillis() - startTime} ms from start") 
+    } 
+```
+
+我们会得到完全不同的结果,每次 `nums` 或者 `strs` 流都会打印一行:
+
+
+```shell
+1 -> one at 452 ms from start
+2 -> one at 651 ms from start
+2 -> two at 854 ms from start
+3 -> two at 952 ms from start
+3 -> three at 1256 ms from start
+```
+
+### 扁平化流
+
