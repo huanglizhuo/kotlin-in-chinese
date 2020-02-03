@@ -869,45 +869,244 @@ Caught java.lang.IllegalStateException: Crashed on 2
 
 但是，发射器的代码如何封装其异常处理行为？
 
-流必须对异常透明，并且从 `try/catch` 块内部在 `flow{...}` 构建器中发出值违反了异常透明性。这样可以保证引发异常的收集器始终可以使用上一个示例中的 try/catch 捕获异常。
+流必须对异常透明，`try/catch` 块内部的 `flow{...}` 构建器中发出值,违反了异常透明性。这样可以保证引发异常的收集器始终可以使用上一个示例中的 try/catch 捕获异常。
 
 发射器可以使用 [catch](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/catch.html) 运算符，该运算符保留此异常透明性并允许对其异常处理进行封装。 catch运算符的主体可以分析异常并根据捕获到的异常以不同的方式对异常作出反应：
 
-可以使用throw抛出异常。
-异常可以通过使用catch主体的发射转换为值的发射。
-异常可以被其他代码忽略，记录或处理。
-例如，让我们发出捕获异常的文本：
+- 可以使用 `throw` 再次抛出异常。
+- 异常可以在 [catch](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/catch.html) 块内借助 [emit](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-flow-collector/emit.html) 转换为异常为发射值。
+- 异常可以被记录,处理,或者被其他代码处理.
 
-foo（）
-    .catch {e-> generate（“ Caught $ e”）} //发生异常时发出
-    .collect {值-> println（value）}
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以从此处获取完整的代码。
+比如,我们可以在捕获异常时发出一段文本:
 
-即使我们不再需要尝试/捕获代码，示例的输出也相同。
+```Kotlin
+package kotlinx.coroutines.guide.flow28
 
-透明渔获
-catch中间操作符遵循异常透明性，仅捕获上游异常（这是catch之上但之下的所有运算符的异常）。如果collect {...}中的块（放置在catch下方）抛出异常，则它逃逸：
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
-有趣的foo（）：Flow <Int> = flow {
-    对于（1..3中的i）{
-        println（“发出$ i”）
-        发射（i）
-    }
+fun foo(): Flow<String> = 
+    flow {
+        for (i in 1..3) {
+            println("Emitting $i")
+            emit(i) // emit next value
+        }
+    }
+    .map { value ->
+        check(value <= 1) { "Crashed on $value" }                 
+        "string $value"
+    }
+
+fun main() = runBlocking<Unit> {
+    foo()
+        .catch { e -> emit("Caught $e") } // emit on exception
+        .collect { value -> println(value) }
+}        
+```
+
+即使我们不使用 try/catch 代码，示例的输出也相同。
+
+**透明 catch**
+
+[catch](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/catch.html) 中间操作符遵循异常透明性，仅捕获上游异常（这是catch之上而非之下所有运算符的异常）。如果collect {...}中的块（放置在catch下方）抛出异常，则它不会被捕获：
+
+```Kotlin
+fun foo(): Flow<Int> = flow {
+    for (i in 1..3) {
+        println("Emitting $i")
+        emit(i)
+    }
 }
 
-有趣的main（）= runBlocking <Unit> {
-    foo（）
-        .catch {e-> println（“ Caught $ e”）} //不捕获下游异常
-        .collect {值->
-            check（value <= 1）{“收集的$ value”}
-            println（值）
-        }
+fun main() = runBlocking<Unit> {
+    foo()
+        .catch { e -> println("Caught $e") } // does not catch downstream exceptions
+        .collect { value ->
+            check(value <= 1) { "Collected $value" }                 
+            println(value) 
+        }
+}            
+```
+
+尽管有捕获操作符，但不会打印“Caught…”消息：
+
+**声明式捕捉**
+
+我们可以将catch操作符的声明性与处理所有异常的目的结合起来,将collect操作符的主体移到[onEach](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/on-each.html) 内并将其放在catch操作符之前。这时必须通过不带参数的调用collect（）来触发此流的收集：
+
+```Kotlin
+foo()
+    .onEach { value ->
+        check(value <= 1) { "Collected $value" }                 
+        println(value) 
+    }
+    .catch { e -> println("Caught $e") }
+    .collect()
+```
+
+现在我们看到打印了一条“ Caught…”消息，因此我们可以捕获所有异常，而无需显式使用try / catch块：
+
+### 流完成
+
+流收集完成时（正常或异常），可能需要执行一个操作。你可能已经注意到，它可以通过两种方式完成：命令式或声明式。
+
+**必定执行的finaly块**
+
+除了try/catch之外，收集器还可以使用 `finally` 块在收集完成后执行操作。
+
+```Kotlin
+fun foo(): Flow<Int> = (1..3).asFlow()
+
+fun main() = runBlocking<Unit> {
+    try {
+        foo().collect { value -> println(value) }
+    } finally {
+        println("Done")
+    }
+}        
+```
+
+这段代码打印出foo()流产生的三个数字，后跟一个“Done”字符串：
+
+```shell
+1
+2
+3
+Done
+```
+
+**声明式处理**
+
+对于声明性方法，流具有 [onCompletion](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/on-completion.html) 中间操作符，该操作符在流已全部收集完成时被调用。
+
+可以使用onCompletion运算符重写前面的示例，并产生相同的输出：
+
+```Kotlin
+foo()
+    .onCompletion { println("Done") }
+    .collect { value -> println(value) }
+```
+
+onCompletion 的主要优点是 lambda 的可空的Throwable参数，可用于确定流收集是正常完成还是异常完成。在下面的示例中，foo() 流在发出数字1之后引发异常：
+
+```Kotlin
+fun foo(): Flow<Int> = flow {
+    emit(1)
+    throw RuntimeException()
 }
-目标平台：在kotlin v.1.3.61上运行的JVM
-您可以从此处获取完整的代码。
 
-尽管有捕获操作员，但不会打印“已捕获...”消息：
+fun main() = runBlocking<Unit> {
+    foo()
+        .onCompletion { cause -> if (cause != null) println("Flow completed exceptionally") }
+        .catch { cause -> println("Caught exception") }
+        .collect { value -> println(value) }
+}           
+```
 
-声明式捕捉
-通过将collect操作符的主体移到onEach并将其放在catch操作符之前，我们可以将catch操作符的声明性与处理所有异常的愿望结合起来。必须通过不带参数的调用collect（）来触发此流的收集：
+如你所料，它将打印：
+
+```Kotlin
+1
+Flow completed exceptionally
+Caught exception
+```
+
+与catch不同，onCompletion运算符不处理异常。从上面的示例代码可以看出，异常仍然向下游流动。它会交付给其他onCompletion运算符，并且可以由catch运算符处理。
+
+
+**仅上游处理Flow异常**
+
+就像catch运算符一样，仅来自上游的异常对 onCompletion 可见，而下游异常对其不可见。 例如，运行以下代码：
+
+```Kotlin
+fun foo(): Flow<Int> = (1..3).asFlow()
+
+fun main() = runBlocking<Unit> {
+    foo()
+        .onCompletion { cause -> println("Flow completed with $cause") }
+        .collect { value ->
+            check(value <= 1) { "Collected $value" }                 
+            println(value) 
+        }
+}
+```
+
+我们可以看到完成原因为null，但收集失败，出现以下异常：
+
+```Kotlin
+1
+Flow completed with null
+Exception in thread "main" java.lang.IllegalStateException: Collected 2
+```
+
+### 命令式与声明式
+
+现在我们知道了如何收集流，并以命令式和声明式方式处理流的完成和异常。那么问题来了，首选哪种方法，为什么？作为一个库，我们不主张采用任何特定的方法，并且认为这两个选项都是有效的，应根您自己的喜好和代码风格进行选择。
+
+### 启动流
+
+使用流来表示来自某个源的异步事件很容易。在这种情况下，我们需要一个 `addEventListener` 函数的类似物，该函数通过对传入事件的反应来注册一段代码，并继续进行进一步的工作。 onEach 运算符可以担任此角色。但是，onEach是中间运算符。我们还需要尾端操作符来收集流。否则，仅调用onEach无效。
+
+如果我们在onEach之后使用collect尾端操作符，那么它后面的代码将直到流收集完成后触发：
+
+```Kotlin
+// Imitate a flow of events
+fun events(): Flow<Int> = (1..3).asFlow().onEach { delay(100) }
+
+fun main() = runBlocking<Unit> {
+    events()
+        .onEach { event -> println("Event: $event") }
+        .collect() // <--- Collecting the flow waits
+    println("Done")
+}            
+```
+
+输出如下:
+
+```Kotlin
+Event: 1
+Event: 2
+Event: 3
+Done
+```
+
+[launchIn](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/launch-in.html) 尾端操作符出现了。通过用 launchIn 代替collect，我们可以在单独的协程中启动流的集合，以便立即继续执行其他代码：
+
+```Kotlin
+package kotlinx.coroutines.guide.flow36
+
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+// Imitate a flow of events
+fun events(): Flow<Int> = (1..3).asFlow().onEach { delay(100) }
+
+fun main() = runBlocking<Unit> {
+    events()
+        .onEach { event -> println("Event: $event") }
+        .launchIn(this) // <--- Launching the flow in a separate coroutine
+    println("Done")
+```
+
+它打印：
+
+```Kotlin
+Done
+Event: 1
+Event: 2
+Event: 3
+```
+
+launchIn的必需参数必须指定一个 CoroutineScope ，在其中启动用于收集流的协程。在上面的示例中，此作用域来自 runBlocking 协程构建器，因此，在运行流程时，此runBlocking范围等待其子协程完成，并防止main函数返回并终止此示例。
+
+在实际应用中，范围将来自生命周期有限的实体。一旦此实体的生命周期终止，则将取消相应的作用域，从而取消相应流的收集。这样，一对 onEach { ... }.launchIn(scope) 就像addEventListener 一样工作。但是，由于取消和结构化并发达到了此目的，因此不需要相应的removeEventListener函数。
+
+请注意，launchIn还返回一个Job，该Job仅可在不取消整个作用域或不加入整个作用域的情况下用于取消相应的流程集合协程。
+
+### Flow 和反应式 Streams
+
+对于那些熟悉[reactive stream](https://www.reactive-streams.org/)或反应式框架（例如RxJava和 project Reactor）的人来说，Flow的设计可能看起来非常熟悉。
+
+确实，它的设计受到了Reactive Streams及其各种实现的启发。但是Flow的主要目标是拥有尽可能简单的设计，是Kotlin和挂起(suspesion)友好且遵循结构化并发。没有 其它框架及其出色大量的工作，就不不会有 Kotlin 中 flowd 的实现。你可以在 [Reactive Streams和Kotlin Flows](https://medium.com/@elizarov/reactive-streams-and-kotlin-flows-bfd12772cda4) 文章中阅读完整故事。
+
+从概念上讲，Flow虽然有所不同，但它是反应性流，而且也可以将其转换为反应性（符合规范和TCK规范）的发布者，反之亦然。这样的转换器是由kotlinx.coroutines开箱即用地提供的，可以在相应的反应模块中找到（针对 Reactive Streams 的kotlinx-coroutines-active，用于P roject Reactor 的kotlinx-coroutines-reactor和针对RxJava2的kotlinx-coroutines-rx2） 。集成模块包括与 Flow 的相互转换，与Reactor的Context集成以及与各种反应式实体一起使用的易于挂起的方式。
